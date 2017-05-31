@@ -1,0 +1,39 @@
+{
+  "name": "game-price-tracker",
+  "version": "0.0.1",
+  "private": true,
+  "dependencies": {
+    "body-parser": "1.17.2",
+    "express": "4.13.3",
+    "mongodb": "2.2.27",
+    "node-horseman": "^3.3.0",
+    "node-schedule": "^1.2.3",
+    "nodemailer": "^4.0.1",
+    "phantomjs": "^2.1.7"
+  },
+  "scripts": {
+    "start": "concurrently \"npm run server\" \"npm run client\"",
+    "server": "nodemon server.js --exec babel-node --presets es2015,stage-2",
+    "client": "babel-node start-client.js",
+    "dev": "echo \"This command has been deprecated. Use 'npm start'\" && exit 1",
+    "lint": "eslint .",
+    "scrape": "node api/scrape.js",
+    "schedule": "node api/schedule.js"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.24.1",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-stage-2": "^6.24.1",
+    "concurrently": "3.1.0",
+    "eslint": "3.19.0",
+    "eslint-config-airbnb": "14.1.0",
+    "eslint-plugin-import": "2.2.0",
+    "eslint-plugin-jsx-a11y": "4.0.0",
+    "eslint-plugin-react": "6.9.0",
+    "nodemon": "^1.11.0"
+  },
+  "main": "server.js",
+  "author": "chris vita <chris.vita@gmail.com>",
+  "license": "ISC",
+  "description": ""
+}
