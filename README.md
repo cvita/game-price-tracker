@@ -12,7 +12,7 @@ You can use Postman to play around with the current build
 4. Open [Postman](https://www.getpostman.com/)
 5. Create a POST request to ````http://localhost:3001/games/```` with two key-value pairs: ```gameURL``` and ```userEmail```. Note the gameURL must come from the Sony PlayStation store. See example image below.
 
-[![postman example image](./api/postmanExample5_31_2017.png)]
+![postman example image](./api/postmanExample5_31_2017.png)
 
 That's it!
 
