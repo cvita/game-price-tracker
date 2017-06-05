@@ -1,5 +1,7 @@
 body {
-  margin: 0;
+  margin: 3%;
   padding: 0;
+  font-size: 16px;
+  background: whitesmoke;
   font-family: sans-serif;
 }
