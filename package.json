@@ -14,7 +14,7 @@
   "scripts": {
     "start": "concurrently \"npm run server\" \"npm run client\"",
     "server": "nodemon server.js --exec babel-node --presets es2015,stage-2",
-    "client": "babel-node start-client.js",
+    "client": "cd client && npm start",
     "dev": "echo \"This command has been deprecated. Use 'npm start'\" && exit 1",
     "lint": "eslint .",
     "scrape": "node api/scrape.js",
@@ -35,5 +35,5 @@
   "main": "server.js",
   "author": "chris vita <chris.vita@gmail.com>",
   "license": "ISC",
-  "description": ""
+  "description": "A price alert app"
 }
