@@ -1,25 +1,17 @@
 const ObjectID = require('mongodb').ObjectID;
-const scrapeSony = require('./scrape');
+const bodyParser = require('body-parser');
 
 module.exports = function (app, db) {
+    app.use(bodyParser.json());
+
     // Create
     app.post('/games', (req, res) => {
-        scrapeSony(req.body.gameUrl).then(result => {
-            const note = {
-                gameUrl: req.body.gameUrl,
-                userEmail: req.body.userEmail,
-                gameTitle: result.title,
-                originalPrice: result.price,
-                dateAdded: result.ut
-            };
-
-            db.collection('games').insert(note, (err, result) => {
-                if (err) {
-                    res.send({ 'error': 'An error has occurred' });
-                } else {
-                    res.send(result.ops[0]);
-                }
-            });
+        db.collection('games').insert(req.body, (err, result) => {
+            if (err) {
+                res.send({ 'error': 'An error has occurred' });
+            } else {
+                res.send(result.ops[0]);
+            }
         });
     });
 
@@ -40,17 +32,12 @@ module.exports = function (app, db) {
     app.put('/games/:id', (req, res) => {
         const id = req.params.id;
         const details = { '_id': new ObjectID(id) };
-        const note = {
-            gameTitle: req.body.gameTitle,
-            gameUrl: req.body.gameUrl,
-            originalPrice: req.body.originalPrice,
-            userEmail: req.body.userEmail
-        };
-        db.collection('games').update(details, note, (err, result) => {
+
+        db.collection('games').update(details, req.body, (err, result) => {
             if (err) {
                 res.send({ 'error': 'An error has occured' });
             } else {
-                res.send(note);
+                res.send(req.body);
             }
         });
     });

@@ -27,24 +27,29 @@ function checkPriceForEachGameInDatabase() {
                 console.error(err);
             }
 
-            const weeks18 = 10886400000;
             var today = new Date().getDate();
-
             docs.forEach((doc, index) => {
-                if (today < doc.dateAdded + weeks18) {
+                if (today < doc.expirationInt) {
                     scrapeSony(doc.gameUrl).then(result => {
-                        if (result.price < doc.originalPrice) {
+                        if (result.priceInt < doc.priceInt) {
 
                             sendEmail(
-                                doc.userEmail,
-                                'Your game is on sale',
-                                doc.gameTitle + ' is currently on sale for ' + result.literalPrice + '.'
+                                doc.email,
+                                doc.game + ' is on sale',
+                                doc.game + ' is currently on sale for ' + result.price + '.'
                             );
+                            // Todo: Consider deleting Mongo document or creating condition to avoid sending emails each day game is on sale
                         }
                     });
                 } else {
                     console.log('Deleting', doc._id);
                     games.deleteOne({ "_id": doc._id });
+                    sendEmail(
+                        doc.email,
+                        'Removing Game Price Tracker alert for ' + doc.game,
+                        doc.game + ' has not gone on sale for 18 weeks. We are removing this price alert. ' +
+                        'Feel free to visit Game Price Tracker to sign up for another 18 week period.'
+                    );
                 }
             });
         });

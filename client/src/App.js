@@ -14,10 +14,12 @@ class App extends Component {
         <Container>
           <Row>
             <Col md='12'>
-              <Jumbotron>
-                <h1 className='display-3'>Game Price Tracker</h1>
-                <p className='lead'>A price alert app for the Sony PlayStation store</p>
-                <UserSubmission />
+              <Jumbotron fluid>
+                <Container fluid>
+                  <h1 className='display-3'>Game Price Tracker</h1>
+                  <p className='lead'>A price alert app for the Sony PlayStation store</p>
+                  <UserSubmission />
+                </Container>
               </Jumbotron>
             </Col>
           </Row>

@@ -1,13 +1,18 @@
 import React, { Component } from 'react';
 import {
+    Badge,
     Button,
     Input,
     InputGroup,
     InputGroupButton,
+    Container,
+    Row,
+    Col
 } from 'reactstrap';
 import './UserSubmission.css';
+import Client from './Client';
 
-
+// Todo: Create visual feedback while scraping Sony PlayStation store
 class UserSubmit extends Component {
     constructor(props) {
         super(props);
@@ -34,23 +39,30 @@ class UserSubmit extends Component {
         this.props.onSubmit(this.state.gameUrl, this.state.email);
     }
     render() {
+        // Todo: Add more secure email validation to server side
+        const emailPattern = /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+        var emailIsValid = emailPattern.test(this.state.email);
+
         var submitButton = <Button disabled>Submit</Button>;
         if (this.state.gameUrl.indexOf('store.playstation.com') !== -1
-            && this.state.email.indexOf('@') !== -1) {
+            && emailIsValid) {
             submitButton = <Button onClick={this.handleClick} color='success' >Submit</Button>;
         }
 
         return (
             <div>
-                <InputGroup className='gameInput'>
+                <InputGroup>
                     <Input
-                        placeholder='Sony store game url'
+                        className='gameInput'
+                        placeholder='Paste in a PlayStation store url'
                         onChange={this.handleGameUrlChange}
                         value={this.state.gameUrl}
                     />
                     <Input
-                        placeholder='email@example.com'
+                        className='emailInput'
+                        placeholder='email to receive price alert'
                         onChange={this.handleEmailChange}
+                        type='email'
                         value={this.state.email}
                     />
                     <InputGroupButton>
@@ -62,39 +74,115 @@ class UserSubmit extends Component {
     }
 }
 
+function GamePreview(props) {
+    var game = props.gameInfo.game;
+    var gameImage = props.gameInfo.gameImage;
+    var price = props.gameInfo.price;
+    var expiration = props.gameInfo.expiration;
+    var email = props.gameInfo.email;
+
+    return (
+        <div>
+            <Container>
+                <Row>
+                    <Col md='6'>
+                        <img className='gameImage' src={gameImage} alt='game thumbnail' />
+                    </Col>
+                    <Col md='6'>
+                        <h3>{game} is currently <Badge>{price}</Badge></h3>
+                        <p className='gamePreviewMessage'>
+                            You will receive a message at {email} if {game} drops below {price} before {expiration}.
+                            </p>
+
+                        <Button
+                            className='gamePreviewButton'
+                            color='success'
+                            onClick={props.submissionConfirmed}
+                        >
+                            Sounds good
+                        </Button>
+
+                        <Button
+                            className='gamePreviewButton'
+                            color='danger'
+                            outline
+                            onClick={props.resetSubmission}
+                        >
+                            Reset
+                        </Button>
+                    </Col>
+                </Row>
+            </Container>
+        </div>
+    );
+}
+
 
 class UserSubmission extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            game: '',
+            game: '', // Empty string or null?
             gameImage: null,
+            price: '',
+            expiration: '',
             email: ''
         };
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.submissionConfirmed = this.submissionConfirmed.bind(this);
+        this.resetSubmission = this.resetSubmission.bind(this);
     }
     handleSubmit(gameUrl, userEmail) {
-        console.log('HandleSubmit from UserSubmission Component', gameUrl, userEmail);
+        Client.requestScrape(gameUrl).then(result => {
+            var expirationInt = new Date().toDateString() + 10886400000; // 18 weeks from now
+
+            this.setState({
+                game: result.title,
+                gameUrl: gameUrl,
+                gameImage: result.image,
+                price: result.price,
+                priceInt: result.priceInt,
+                expiration: new Date(expirationInt).toDateString(),
+                expirationInt: expirationInt,
+                email: userEmail
+            });
+        });
     }
-
+    submissionConfirmed() {
+        var gameInfo = this.state;
+        gameInfo.dateAdded = new Date().getTime();
+        Client.createDBEntry(gameInfo);
+        // Todo: Create visual feedback on success or failure
+    }
+    resetSubmission() {
+        this.setState({
+            game: null,
+            gameImage: null,
+            price: null,
+            email: null,
+            expiration: null
+        });
+    }
     render() {
-        var game = this.state.game;
-        var gameImage = this.state.gameImage;
-        var email = this.state.email;
-
         return (
             <div>
-                {!game &&
-                    <UserSubmit
-                        onSubmit={this.handleSubmit}
-                    />}
-                {gameImage !== null &&
+                {!this.state.game &&
+                    <UserSubmit onSubmit={this.handleSubmit} />}
+
+                {this.state.gameImage !== null &&
                     <div>
-                        A preview Component not yet made
+                        <hr className="my-2" />
+                        <GamePreview
+                            gameInfo={this.state}
+                            submissionConfirmed={this.submissionConfirmed}
+                            resetSubmission={this.resetSubmission}
+                        />
                     </div>}
             </div>
         );
     }
 }
+
+
 
 export default UserSubmission;

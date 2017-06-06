@@ -18,10 +18,10 @@ module.exports = function scrapeSony(gameUrl) {
             .waitForSelector('.buyPrice')
             .evaluate(() => {
                 return {
-                    price: Math.ceil($('.buyPrice .price').text().slice(1)),
-                    literalPrice: $('.buyPrice .price').text(),
-                    title: $('.productTitle').text(),
-                    ut: new Date().getTime()
+                    "priceInt": Math.ceil($('.buyPrice .price').text().slice(1)),
+                    "price": $('.buyPrice .price').text(),
+                    "title": $('.productTitle').text(),
+                    "image": $('.productThumbImg img').attr('src'),
                 }
             })
             .then(result => {
