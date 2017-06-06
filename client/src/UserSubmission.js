@@ -134,7 +134,7 @@ class UserSubmission extends Component {
     }
     handleSubmit(gameUrl, userEmail) {
         Client.requestScrape(gameUrl).then(result => {
-            var expirationInt = new Date().toDateString() + 10886400000; // 18 weeks from now
+            var expirationInt = new Date().getTime() + 10886400000; // 18 weeks from now
 
             this.setState({
                 game: result.title,

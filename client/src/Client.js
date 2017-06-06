@@ -32,6 +32,12 @@ function createDBEntry(gameInfo) {
     xhr.open("POST", "/games");
     xhr.setRequestHeader("content-type", "application/json");
     xhr.send(JSON.stringify(gameInfo));
+
+    // How to receive and display response?
+
+    if (xhr.readyState == 4)
+        if (xhr.status == 200)
+            console.log(xhr.responseText);
 }
 
 

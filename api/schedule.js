@@ -27,7 +27,7 @@ function checkPriceForEachGameInDatabase() {
                 console.error(err);
             }
 
-            var today = new Date().getDate();
+            var today = new Date().getTime();
             docs.forEach((doc, index) => {
                 if (today < doc.expirationInt) {
                     scrapeSony(doc.gameUrl).then(result => {
