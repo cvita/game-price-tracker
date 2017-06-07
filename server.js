@@ -7,7 +7,6 @@ const app = express();
 const MongoClient = MongoDB.MongoClient;
 
 const testSchedule = require('./api/schedule');
-
 const scrapeSony = require('./api/scrape');
 
 const localPort = 3001
