@@ -1,11 +1,7 @@
 import React, { Component } from 'react';
-import UserSubmission from './UserSubmission';
-import {
-  Container,
-  Row,
-  Col,
-  Jumbotron
-} from 'reactstrap';
+import PriceAlert from './price-alert/PriceAlert';
+import ViewSource from './ViewSource';
+import { Container, Row, Col, Jumbotron} from 'reactstrap';
 
 class App extends Component {
   render() {
@@ -18,11 +14,12 @@ class App extends Component {
                 <Container fluid>
                   <h1 className='display-3'>Game Price Tracker</h1>
                   <p className='lead'>A price alert app for the Sony PlayStation store</p>
-                  <UserSubmission />
+                  <PriceAlert />
                 </Container>
               </Jumbotron>
             </Col>
           </Row>
+          <ViewSource />
         </Container>
       </div>
     );

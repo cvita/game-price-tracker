@@ -23,6 +23,9 @@ app.use(BodyParser.json());
 app.post('/scrape', (req, res) => {
     scrapeSony(req.body.gameUrl).then(result => {
         res.send(result);
+    }).catch(() =>{
+        console.log('Unable to obtain results from Sony');
+        res.send(result);
     });
 });
 
