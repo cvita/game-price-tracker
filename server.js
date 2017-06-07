@@ -12,7 +12,7 @@ const scrapeSony = require('./api/scrape');
 
 const localPort = 3001
 app.set('port', (process.env.PORT || localPort));
-app.listen(localPort);
+
 
 if (process.env.NODE_ENV === 'production') {
     app.use(express.static('client/build'));
@@ -23,7 +23,7 @@ app.use(BodyParser.json());
 app.post('/scrape', (req, res) => {
     scrapeSony(req.body.gameUrl).then(result => {
         res.send(result);
-    }).catch(() =>{
+    }).catch(() => {
         console.log('Unable to obtain results from Sony');
         res.send(result);
     });
@@ -38,4 +38,8 @@ MongoClient.connect(database.url, (err, db) => {
     }
     crudApi(app, db);
     console.log('Ready... ' + new Date().getMinutes());
+});
+
+app.listen(app.get('port'), () => {
+    console.log(`Find the server at: http://localhost:${app.get('port')}/`); // eslint-disable-line no-console
 });
