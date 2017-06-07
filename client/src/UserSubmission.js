@@ -35,7 +35,7 @@ class UserSubmit extends Component {
         });
     }
     handleClick() {
-        console.log('Submit btn clicked!');
+        console.log('Scraping Sony for current price');
         this.props.onSubmit(this.state.gameUrl, this.state.email);
     }
     render() {
@@ -151,8 +151,10 @@ class UserSubmission extends Component {
     submissionConfirmed() {
         var gameInfo = this.state;
         gameInfo.dateAdded = new Date().getTime();
-        Client.createDBEntry(gameInfo);
-        // Todo: Create visual feedback on success or failure
+        Client.createDBEntry(gameInfo).then(result => {
+            console.log(result);
+            // Create confirmation that submission went through successfully
+        });
     }
     resetSubmission() {
         this.setState({

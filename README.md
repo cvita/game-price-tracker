@@ -1,17 +1,16 @@
 # Game Price Tracker
 
-*A price alert api for the Sony PlayStation store*  
-Consider the current build as a prototype. There's lots more to do. The notes below are mostly for myself, but feel free to check it out.
+*A price alert app for the Sony PlayStation store*  
 
-### You can use Postman to play around with the current build
-1. Clone this repo
-2. Install dependencies via npm
-3. Start 'er up! ```npm run server```
-4. Open [Postman](https://www.getpostman.com/)
-5. Create a POST request to ````http://localhost:3001/games/```` with two key-value pairs: ```gameURL``` and ```userEmail```. Note the gameURL must come from the Sony PlayStation store. See example image below.
-
-![postman example image](./api/postmanExample5_31_2017.png)
+This project is currently under development, but can be viewed by cloning the repo and typing ````npm start````
 
 
-**Then what happens?**  
-As long as your server is running, the program will check the current price of your submitted game once a day at 9:15am. If the new price is below the original price, it'll send you an email.
+If you didn't know, the PlayStation store has weekly sales with some surprisingly deep discounts their games. The problem: I don't care enough to check their sales regularly. The solution: some fancy-pants automation!
+
+### Details
+The app allows a user to paste in a valid Sony PlayStation store game URL and enter their email address. Upon confirmation, the game and user info are stored in a MongoDB collection. Then, once a day, the app's back-end will iterate through the database and scrape* the PlayStation store, comparing prices to determine if the game is on sale. If the game is on sale, the user will receive an email alert. If the game hasn't gone on sale for 18 weeks, the user's document in Mongo is deleted, and is emailed to sign up again.
+
+*The PlayStation store doesn't have a public API, and loads quite slowly. So far, scraping Sony's site with the help of [HorsemanJS](https://github.com/johntitus/node-horseman) is working quite well!
+
+### Preview screenshot
+![development screenshot as of 6-7-17](./demo-assets/screenshot-6-7-17.png "development screenshot as of 6-7-17")

@@ -18,14 +18,11 @@ if (process.env.NODE_ENV === 'production') {
     app.use(express.static('client/build'));
 }
 
-app.get('/testscrape', (req, res) => {
-    const gameUrlPrefix = 'https://store.playstation.com/#!/';
-    var gameUrl = gameUrlPrefix + req.query.q; // Todo: find a way to avoid this hack
-    console.log('From the server', gameUrl);
-    scrapeSony(gameUrl).then(result => {
-        res.json(
-            result
-        );
+app.use(BodyParser.json());
+
+app.post('/scrape', (req, res) => {
+    scrapeSony(req.body.gameUrl).then(result => {
+        res.send(result);
     });
 });
 

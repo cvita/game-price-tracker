@@ -1,43 +1,40 @@
 
 function requestScrape(gameUrl) {
     return new Promise((resolve, reject) => {
-        var sliceTo = gameUrl.indexOf('/#!/') + 4;
-        gameUrl = gameUrl.slice(sliceTo);
+        var request = new Request('/scrape', {
+            headers: new Headers({ 'Content-Type': 'application/json' })
+        });
 
-        return fetch(`/testscrape?q=${gameUrl}`, {
-            accept: 'application/json'
-        })
-            .then(parseJSON)
-            .then(result => {
-                console.log(result);
-                resolve(result);
-            })
+        fetch(request, {
+            method: 'POST',
+            body: JSON.stringify({"gameUrl": gameUrl})
+        }).then(response => {
+            if (response.ok) {
+                resolve(response.json());
+            } else {
+                reject('Unable to get info from store');
+            }
+        });
     });
 }
-
-function parseJSON(response) {
-    return response.json();
-}
-
 
 function createDBEntry(gameInfo) {
-    var xhr = new XMLHttpRequest();
+    return new Promise((resolve, reject) => {
+        var request = new Request('/games', {
+            headers: new Headers({ 'Content-Type': 'application/json' })
+        });
 
-    xhr.addEventListener("readystatechange", () => {
-        if (this.readyState === 4) {
-            console.log(this.responseText);
-        }
+        fetch(request, {
+            method: 'POST',
+            body: JSON.stringify(gameInfo)
+        }).then(response => {
+            if (response.ok) {
+                resolve('Successfully added to DB!');
+            } else {
+                reject('Unable to add to DB');
+            }
+        });
     });
-
-    xhr.open("POST", "/games");
-    xhr.setRequestHeader("content-type", "application/json");
-    xhr.send(JSON.stringify(gameInfo));
-
-    // How to receive and display response?
-
-    if (xhr.readyState == 4)
-        if (xhr.status == 200)
-            console.log(xhr.responseText);
 }
 
 

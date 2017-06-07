@@ -6,11 +6,12 @@ module.exports = function (app, db) {
 
     // Create
     app.post('/games', (req, res) => {
+        console.log('POST request being sent to DB');
         db.collection('games').insert(req.body, (err, result) => {
             if (err) {
                 res.send({ 'error': 'An error has occurred' });
             } else {
-                res.send(result.ops[0]);             
+                res.send(result.ops[0]);
             }
         });
     });

@@ -7,7 +7,8 @@ module.exports = function scrapeSony(gameUrl) {
             console.log('Error, must be a Sony PlayStation store url');
             return;
         }
-        console.log('scrape line 10');
+
+        console.log('Running scrapeSony() for ', gameUrl);
         var horseman = new Horseman({
             injectJquery: true
         });
@@ -25,7 +26,6 @@ module.exports = function scrapeSony(gameUrl) {
                 }
             })
             .then(result => {
-                console.log('Found it!, line 28');
                 horseman.close();
                 resolve(result);
             })

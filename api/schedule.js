@@ -26,7 +26,7 @@ function checkPriceForEachGameInDatabase() {
             if (err) {
                 console.error(err);
             }
-
+// Todo: break this out into its own function. 'comparePrice()'
             var today = new Date().getTime();
             docs.forEach((doc, index) => {
                 if (today < doc.expirationInt) {
