@@ -26,6 +26,7 @@ module.exports = function scrapeSony(gameUrl) {
                 }
             })
             .then(result => {
+                console.log('Scraped!', result);
                 horseman.close();
                 resolve(result);
             })
