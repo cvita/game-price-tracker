@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import './PriceAlert.css';
 
-import Client from '../Client';
+import Client from '../../Client';
 import UserSignUp from './components/UserSignUp';
 import GamePreview from './components/GamePreview';
 import UserSignUpFeedback from './components/UserSignUpFeedback';

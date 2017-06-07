@@ -26,7 +26,7 @@ function UserSignUpComplete(props) {
     return (
         <div>
             <Alert color='success'>
-                <strong>You're all set!</strong> Make sure you allows messages from <strong>nodeuser123@gmail.com</strong> or you might miss a sale.
+                <strong>You're all set!</strong> Make sure you allow messages from <strong>nodeuser123@gmail.com</strong> or you might miss a sale.
             </Alert>
             <Button
                 className='successComponentClearButton'
