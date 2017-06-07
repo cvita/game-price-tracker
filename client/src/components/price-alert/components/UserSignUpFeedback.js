@@ -21,7 +21,7 @@ function ProgressBarAndMessage(props) {
 }
 
 
-// Todo: create and use gamepricetracker@gmail.com
+// Todo: create and use a custom email instead of nodeuser123
 function UserSignUpComplete(props) {
     return (
         <div>
