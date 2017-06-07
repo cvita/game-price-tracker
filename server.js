@@ -1,14 +1,14 @@
-import express from 'express';
-import MongoDB from 'mongodb';
-import BodyParser from 'body-parser';
-import database from './db/database';
-import crudApi from './api/routes';
+const express = require('express');
+const MongoDB = require('mongodb');
+const BodyParser = require('body-parser');
+const database = require('./db/database');
+const crudApi = require('./api/routes');
 const app = express();
 const MongoClient = MongoDB.MongoClient;
 
-import testSchedule from './api/schedule';
+const testSchedule = require('./api/schedule');
 
-import scrapeSony from './api/scrape';
+const scrapeSony = require('./api/scrape');
 
 const localPort = 3001
 app.set('port', (process.env.PORT || localPort));
