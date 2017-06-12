@@ -21,7 +21,6 @@ function ProgressBarAndMessage(props) {
 }
 
 
-// Todo: create and use a custom email instead of nodeuser123
 function UserSignUpComplete(props) {
     return (
         <div>
@@ -29,7 +28,7 @@ function UserSignUpComplete(props) {
                 color='success'
                 toggle={props.handleToggle}
             >
-                <strong>You're all set!</strong> Make sure you allow messages from <strong>nodeuser123@gmail.com</strong> or you might miss a sale.
+                <strong>You're all set!</strong> Make sure you allow messages from <strong>game.price.tracker@gmail.com</strong> or you might miss a sale.
             </Alert>
         </div>
     );

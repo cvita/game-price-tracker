@@ -1,17 +1,18 @@
 const nodemailer = require('nodemailer');
-const decrypt = require('./decrypt');
+
+var emailPassword = process.env.emailPassword || require('../local-dev-creds').emailPassword;
 
 const transport = nodemailer.createTransport({
     service: 'Gmail',
     auth: {
-        user: 'nodeUser123@gmail.com',
-        pass: decrypt('0c70bbc027e5827b91a098')
+        user: 'game.price.tracker@gmail.com',
+        pass: emailPassword
     }
 });
 
 module.exports = function sendEmail(to, subject, message) {
     const mailOptions = {
-        from: 'nodeUser123@gmail.com',
+        from: 'game.price.tracker@gmail.com',
         to: to,
         subject: subject,
         html: message

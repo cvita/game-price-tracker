@@ -1,7 +1,7 @@
-const decrypt = require('../api/decrypt');
+var dbPassword = process.env.dbPassword || require('../local-dev-creds').dbPassword;
 
 module.exports = {
-    url: 'mongodb://game-price-tracker-api:' +
-    decrypt('1874a2fd2cef806ad3c2c7634383ba') +
+    url: 'mongodb://game-price-tracker-user1:' +
+    dbPassword +
     '@ds157971.mlab.com:57971/game-price-tracker-db'
 };

@@ -1,4 +1,4 @@
 node_modules
 npm-debug.log
-api/encrypt.js
 dist
+local-dev-creds.js
