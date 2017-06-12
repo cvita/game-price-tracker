@@ -10,7 +10,6 @@
     "express": "4.13.3",
     "mongodb": "2.2.27",
     "node-horseman": "^3.3.0",
-    "node-schedule": "^1.2.3",
     "nodemailer": "^4.0.1",
     "phantomjs": "^2.1.7"
   },

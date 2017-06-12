@@ -6,7 +6,6 @@ const crudApi = require('./api/routes-db');
 const app = express();
 const MongoClient = MongoDB.MongoClient;
 
-const schedule = require('./api/schedule');
 const scrapeSony = require('./api/scrape');
 
 app.set('port', (process.env.PORT || 3001));
@@ -17,7 +16,6 @@ if (process.env.NODE_ENV === 'production') {
 
 app.use(BodyParser.json());
 // Arrow functions caused Promise to reject when deployed to Heroku using Node 7.9.0
-// (Doesn't seem to be an issue in other places.)
 app.post('/scrape', function (req, res) {
     console.log('POST request to scrape Sony PS store received...');
     scrapeSony(req.body.gameUrl).then(function (result) {
@@ -30,7 +28,7 @@ app.post('/scrape', function (req, res) {
 
 
 app.use(BodyParser.urlencoded({ extended: true }));
-MongoClient.connect(database.url, (err, db) => {
+MongoClient.connect(database.url, function (err, db) {
     if (err) {
         return console.error(err);
     }
@@ -39,6 +37,6 @@ MongoClient.connect(database.url, (err, db) => {
 });
 
 
-app.listen(app.get('port'), () => {
+app.listen(app.get('port'), function () {
     console.log(`Find the server at: http://localhost:${app.get('port')}/`); // eslint-disable-line no-console
 });
