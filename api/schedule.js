@@ -5,7 +5,7 @@ const sendEmail = require('./email');
 
 
 // Using the Heroku Scheduler add-on to call this function, daily at 15:30 UTC
-var checkPriceForEachGameInDatabase = function () {
+(function checkPriceForEachGameInDatabase() {
     console.log('schedule.js: beginning script');
     mongodb.MongoClient.connect(database.url, function (err, db) {
         if (err) console.error(err);
@@ -25,6 +25,8 @@ var checkPriceForEachGameInDatabase = function () {
                                 doc.game + ' is on sale',
                                 doc.game + ' is currently on sale for ' + result.price + '.'
                             );
+                        } else {
+                            console.log('schedule.js: ' + doc.game + ' is not on sale. No message sent');
                         }
                     });
                 } else {
@@ -40,4 +42,4 @@ var checkPriceForEachGameInDatabase = function () {
             });
         });
     });
-};
+})();
