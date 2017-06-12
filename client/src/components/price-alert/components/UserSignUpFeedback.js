@@ -1,9 +1,9 @@
 import React from 'react';
-import { Alert, Button, Progress } from 'reactstrap';
+import { Alert, Progress } from 'reactstrap';
 
 
 function ProgressBarAndMessage(props) {
-    var message = props.value < 50 ?
+    var message = props.value < 35 ?
         'Connecting to the Sony PlayStation store' :
         'Getting price info';
 
@@ -25,17 +25,12 @@ function ProgressBarAndMessage(props) {
 function UserSignUpComplete(props) {
     return (
         <div>
-            <Alert color='success'>
+            <Alert
+                color='success'
+                toggle={props.handleToggle}
+            >
                 <strong>You're all set!</strong> Make sure you allow messages from <strong>nodeuser123@gmail.com</strong> or you might miss a sale.
             </Alert>
-            <Button
-                className='successComponentClearButton'
-                onClick={props.handleClick}
-                color='danger'
-                outline
-            >
-                Clear
-            </Button>
         </div>
     );
 }

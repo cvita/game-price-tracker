@@ -1,11 +1,23 @@
-.gamePreviewButton{
-    margin: 0.5em;
+.openSonyStoreButton{
+    margin-top: 0.5em;
 }
 
-.successComponentClearButton{
+.gamePreviewButton{
     margin: 0.5em;
 }
 
 .progressBarAndMessage{
     margin: 1em;
+}
+
+.devModeDemoButton {
+    position: fixed;
+    top: 0;
+    left: 0;
+    background: pink;
+    opacity: 0.1;
+}
+
+.devModeDemoButton:hover {
+    opacity: 0.6;
 }

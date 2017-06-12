@@ -2,6 +2,9 @@
   "name": "game-price-tracker",
   "version": "0.0.1",
   "private": true,
+  "engines": {
+    "node": "7.9.0"
+  },
   "dependencies": {
     "body-parser": "1.17.2",
     "express": "4.13.3",
@@ -9,16 +12,14 @@
     "node-horseman": "^3.3.0",
     "node-schedule": "^1.2.3",
     "nodemailer": "^4.0.1",
-    "phantomjs": "^2.1.1"
+    "phantomjs": "^2.1.7"
   },
   "scripts": {
-    "start": "concurrently \"npm run server\" \"npm run client\"",
-    "server": "node server.js",
+    "start": "concurrently \"npm run dev\" \"npm run client\"",
+    "dev": "nodemon server.js",
     "client": "cd client && npm start",
-    "dev": "echo \"This command has been deprecated. Use 'npm start'\" && exit 1",
-    "lint": "eslint .",
-    "scrape": "node api/scrape.js",
-    "schedule": "node api/schedule.js"
+    "server": "node server.js",
+    "lint": "eslint ."
   },
   "devDependencies": {
     "babel-cli": "^6.24.1",

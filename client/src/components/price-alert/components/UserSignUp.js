@@ -1,5 +1,5 @@
-import React, {Component} from 'react';
-import {Button, Input, InputGroup, InputGroupButton} from 'reactstrap';
+import React, { Component } from 'react';
+import { Button, Input, InputGroup, InputGroupButton } from 'reactstrap';
 
 
 class UserSignUp extends Component {
@@ -12,6 +12,7 @@ class UserSignUp extends Component {
         this.changeGameUrl = this.changeGameUrl.bind(this);
         this.changeUserEmail = this.changeUserEmail.bind(this);
         this.handleClick = this.handleClick.bind(this);
+        this.openSonyStore = this.openSonyStore.bind(this);
     }
     changeGameUrl(event) {
         this.setState({
@@ -25,6 +26,9 @@ class UserSignUp extends Component {
     }
     handleClick() {
         this.props.handleClick(this.state.gameUrl, this.state.userEmail);
+    }
+    openSonyStore() {
+        window.open('https://store.playstation.com/#!/en-us/home/games');
     }
     render() {
         // Todo: Add more secure email validation to server side
@@ -57,6 +61,18 @@ class UserSignUp extends Component {
                         {submitButton}
                     </InputGroupButton>
                 </InputGroup>
+
+                {!this.state.gameUrl &&
+                <Button
+                    className='openSonyStoreButton'
+                    onClick={this.openSonyStore}
+                    color='info'
+                    outline
+                    size='sm'
+                >
+                    Open Sony PS store
+                </Button>}
+
             </div>
         );
     }

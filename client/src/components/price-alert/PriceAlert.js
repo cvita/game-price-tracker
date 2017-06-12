@@ -19,6 +19,7 @@ class PriceAlert extends Component {
         this.resetCurrentPriceAlert = this.resetCurrentPriceAlert.bind(this);
         this.activateProgressBar = this.activateProgressBar.bind(this);
         this.savePriceAlertToDB = this.savePriceAlertToDB.bind(this);
+        this.devModeDemo = this.devModeDemo.bind(this);
     }
     submitPriceAlertRequest(gameUrl, userEmail) {
         this.activateProgressBar();
@@ -30,9 +31,10 @@ class PriceAlert extends Component {
                 gameImage: result.image,
                 price: result.price,
                 priceInt: result.priceInt,
+                onSale: result.onSale,
                 expiration: new Date(expirationInt).toDateString(),
                 expirationInt: expirationInt,
-                email: userEmail
+                userEmail: userEmail
             });
         });
     }
@@ -44,9 +46,10 @@ class PriceAlert extends Component {
             gameImage: null,
             price: null,
             priceInt: null,
+            onSale: null,
             expiration: null,
             expirationInt: null,
-            email: null
+            userEmail: null
         });
     }
     activateProgressBar() {
@@ -72,15 +75,20 @@ class PriceAlert extends Component {
             priceInt: this.state.priceInt,
             expiration: this.state.expiration,
             expirationInt: this.state.expirationInt,
-            email: this.state.userEmail,
+            userEmail: this.state.userEmail,
             dateAdded: new Date().getTime()
         };
         Client.createDBEntry(priceAlertInfo).then(result => {
             this.setState({ priceAlertSubmitted: true });
         });
     }
+    devModeDemo() {
+        console.log('Starting devModeDemo()...');
+        var testGameUrl = 'https://store.playstation.com/#!/en-us/games/god-of-war-iii-remastered/cid=UP9000-CUSA01623_00-0000GODOFWAR3PS4';
+        var testEmail = 'chris.vita1@gmail.com';
+        this.submitPriceAlertRequest(testGameUrl, testEmail);
+    }
     render() {
-        
         return (
             <div>
                 {!this.state.game &&
@@ -103,8 +111,10 @@ class PriceAlert extends Component {
                 {this.state.priceAlertSubmitted &&
                     <div>
                         <hr className='my-2' />
-                        <UserSignUpComplete handleClick={this.resetCurrentPriceAlert} />
+                        <UserSignUpComplete handleToggle={this.resetCurrentPriceAlert} />
                     </div>}
+
+                <button className='devModeDemoButton' onClick={this.devModeDemo}>Dev mode demo</button>
             </div>
         );
     }
