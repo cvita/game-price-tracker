@@ -3,7 +3,7 @@
 *The PlayStation store has weekly sales with some surprisingly deep discounts on their games. The problem: I don't care enough to check their sales regularly. The solution: some fancy pants automation!*  
 
 
-### A working build can be viewed [here](https://game-price-tracker-test7.herokuapp.com/) for demonstration purposes.  
+### A working build can be viewed [here](https://game-price-tracker.herokuapp.com/) for demonstration purposes.  
 Note that it takes a moment for Heroku's services to initially activate.
 
 ---
