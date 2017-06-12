@@ -10,7 +10,8 @@ module.exports = function scrapeSony(gameUrl) {
         }
 
         var horseman = new Horseman({
-            injectJquery: true
+            injectJquery: true,
+            timeout: 10000
         });
 
         horseman
@@ -35,7 +36,6 @@ module.exports = function scrapeSony(gameUrl) {
                 }
             })
             .then(function (result) {
-                console.log(result.onSale.originalPrice);
                 horseman.close();
                 resolve(result);
             })
