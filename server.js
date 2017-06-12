@@ -27,13 +27,11 @@ app.post('/scrape', function (req, res) {
 });
 
 
-app.use(BodyParser.urlencoded({ extended: true }));
 MongoClient.connect(database.url, function (err, db) {
     if (err) {
         return console.error(err);
     }
     crudApi(app, db);
-    console.log('Ready... ' + new Date().getMinutes());
 });
 
 
