@@ -85,7 +85,7 @@ class PriceAlert extends Component {
     devModeDemo() {
         console.log('Starting devModeDemo()...');
         var testGameUrl = 'https://store.playstation.com/#!/en-us/games/god-of-war-iii-remastered/cid=UP9000-CUSA01623_00-0000GODOFWAR3PS4';
-        var testEmail = 'chris.vita1@gmail.com';
+        var testEmail = 'chris.vita@gmail.com';
         this.submitPriceAlertRequest(testGameUrl, testEmail);
     }
     render() {
