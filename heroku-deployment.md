@@ -20,6 +20,9 @@ Create a new heroku app
 Push project up to heroku
 ````git push heroku master````
 
+Push a branch up to heroku
+````git push heroku yourbranch:master````
+
 
 #### Remove or edit Heroku remote
 
