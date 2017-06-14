@@ -13,7 +13,7 @@ module.exports = function (app, db) {
                 res.send({ 'error': 'An error has occurred' });
             } else {
                 var infoSaved = result.ops[0];
-                sendConfirmationEmail(infoSaved);
+                sendConfirmationEmail(infoSaved, req.get('host'));
                 res.send(infoSaved);
             }
         });
@@ -61,15 +61,21 @@ module.exports = function (app, db) {
 };
 
 
-function sendConfirmationEmail(mongoDoc) {
+function sendConfirmationEmail(mongoDoc, uri) {
+    const unsubscribeUrl = 'https://' + uri + '/unsubscribe?id=' + mongoDoc._id;
+    console.log('Unsubscribe', unsubscribeUrl);
+
+    var subject = mongoDoc.game + ' is now being tracked';
     var message = (
-        'Game price tracker is now tracking the price of ' + mongoDoc.game + '. ' +
+        'Game Price Tracker is now tracking the price of <i>' + mongoDoc.game + '</i>. ' +
         'If it drops below ' + mongoDoc.price + ' before ' + mongoDoc.expiration + ', ' +
-        'you will be messaged at this email address.'
+        'you will be messaged again at this email address.<br><br>' +
+        'All done? <a href=' + unsubscribeUrl + '>Unsubscribe</a>'
     );
+
     sendEmail(
         mongoDoc.userEmail,
-        mongoDoc.game + ' is now being tracked',
+        subject,
         message
     );
 }
