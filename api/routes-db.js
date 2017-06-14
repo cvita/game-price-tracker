@@ -62,7 +62,7 @@ module.exports = function (app, db) {
 
 
 function sendConfirmationEmail(mongoDoc, uri) {
-    const unsubscribeUrl = 'https://' + uri + '/unsubscribe?id=' + mongoDoc._id;
+    const unsubscribeUrl = 'https://' + uri + '/#/unsubscribe?id=' + mongoDoc._id;
     console.log('Unsubscribe', unsubscribeUrl);
 
     var subject = mongoDoc.game + ' is now being tracked';
