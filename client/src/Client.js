@@ -3,76 +3,82 @@ function requestScrape(gameUrl) {
         var request = new Request('/scrape', {
             headers: new Headers({ 'Content-Type': 'application/json' })
         });
-
         fetch(request, {
             method: 'POST',
             body: JSON.stringify({ "gameUrl": gameUrl })
         }).then(response => {
-            if (response.ok) {
-                resolve(response.json());
-            } else {
+            if (!response.ok) {
                 reject('Unable to get info from store');
             }
+            resolve(response.json());
         });
     });
 }
 
-function createDBEntry(gameInfo) {
+function createPriceAlert(gameInfo) {
     return new Promise((resolve, reject) => {
         var request = new Request('/games', {
             headers: new Headers({ 'Content-Type': 'application/json' })
         });
-
         fetch(request, {
             method: 'POST',
             body: JSON.stringify(gameInfo)
         }).then(response => {
-            if (response.ok) {
-                response.json().then(response => {
-                    if (!response.error) {
-                        resolve(response);
-                    } else {
-                        reject(response.error);
-                    }
-                });
-            } else {
+            if (!response.ok) {
                 reject('Unable to add to DB');
             }
+            response.json().then(response => {
+                resolve(response);
+            });
         });
     });
 }
 
-function deleteDBEntry(documentId) {
-    return new Promise((resolve, reject) => {
-        var request = new Request('/games/id:', {
-            headers: new Headers({ 'Content-Type': 'application/json' })
-        });
-
-        fetch(request, {
-            method: 'DELETE',
-            body: JSON.stringify({ "id": documentId })
-        }).then(response => {
-            if (response.ok) {
-                resolve('Successfully deleted from DB!');
-            } else {
-                reject('Unable to delete from DB');
-            }
-        });
-    });
-}
-
-function confirmDBEntryExists(documentId) {
+function checkIfPriceAlertExists(documentId) {
     return new Promise((resolve, reject) => {
         fetch(`/games/:?q=${documentId}`, {
             method: 'GET'
         }).then(response => {
-            if (response.ok) {
-                response.json().then(response => {
-                    resolve(response);
-                });
-            } else {
+            if (!response.ok) {
+                reject('Unable to confirm if price alert exists');
+            }
+            response.json().then(response => {
+                resolve(response);
+            });
+        });
+    });
+}
+
+function checkIfUserIsOnBlacklist(userEmail) {
+    return new Promise((resolve, reject) => {
+        fetch(`/blacklist/:?q=${userEmail}`, {
+            method: 'GET'
+        }).then(response => {
+            if (!response.ok) {
                 reject('Unable to confirm if DB entry exists');
             }
+            response.json().then(response => {
+                resolve(response);
+            });
+        });
+    });
+}
+
+function deletePriceAlert(documentId) {
+    return new Promise((resolve, reject) => {
+        var request = new Request('/games/id:', {
+            headers: new Headers({ 'Content-Type': 'application/json' })
+        });
+        fetch(request, {
+            method: 'DELETE',
+            body: JSON.stringify({ "id": documentId })
+        }).then(response => {
+            if (!response.ok) {
+                reject('Unable to delete from DB');
+            }
+            response.json().then(response => {
+                resolve(response);
+            });
         });
     });
 }
@@ -82,37 +88,20 @@ function addUserToBlacklist(userEmail) {
         var request = new Request('/blacklist/:id', {
             headers: new Headers({ 'Content-Type': 'application/json' })
         });
-
         fetch(request, {
             method: 'PUT',
             body: JSON.stringify({ "userEmail": userEmail })
         }).then(response => {
-            if (response.ok) {
-                resolve('Successfully added to email blacklist!');
-            } else {
+            if (!response.ok) {
                 reject('Unable to add to email blacklist');
             }
-        });
-    });
-}
-
-function confirmUserIsOnBlacklist(userEmail) {
-    return new Promise((resolve, reject) => {
-        fetch(`/blacklist/:?q=${userEmail}`, {
-            method: 'GET'
-        }).then(response => {
-            if (response.ok) {
-                response.json().then(response => {
-                    resolve(response);
-                });
-            } else {
-                reject('Unable to confirm if DB entry exists');
-            }
+            response.json().then(response => {
+                resolve(response);
+            });
         });
     });
 }
 
 
-
-const Client = { requestScrape, createDBEntry, deleteDBEntry, confirmDBEntryExists, addUserToBlacklist, confirmUserIsOnBlacklist };
+const Client = { requestScrape, createPriceAlert, deletePriceAlert, checkIfPriceAlertExists, addUserToBlacklist, checkIfUserIsOnBlacklist };
 export default Client;

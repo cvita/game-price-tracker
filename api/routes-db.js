@@ -7,110 +7,85 @@ const encryption = require('./encrypt');
 module.exports = function (app, db) {
     app.use(bodyParser.json());
 
-    // Create Mongo document
+    // createPriceAlert() from Client.js
     app.post('/games', (req, res) => {
-        db.collection('blacklist').find().toArray(function (err, docs) {
-            if (err) console.err(err);
-            var emailBlacklist = docs[0].users;
-            if (emailBlacklist.indexOf(req.body.userEmail) === -1) {
-                db.collection('games').insert(req.body, (err, result) => {
-                    if (err) {
-                        res.send({ 'error': 'An error has occurred' });
-                    } else {
-                        var mongoDoc = result.ops[0];
-                        email.sendConfirmationEmail(mongoDoc, req.get('host'));
-                        res.send(mongoDoc);
-                    }
-                });
-            } else {
-                res.send({ 'error': 'Cannot make price alert. User is on email blacklist' });
+        checkBlacklist(db, req.body.userEmail).then(result => {
+            if (result.onBlacklist) {
+                return res.send({ "priceAlertSubmitted": false });
             }
+            db.collection('games').insert(req.body, (err, priceAlert) => {
+                if (err) {
+                    return console.error(err);
+                }
+                email.sendConfirmationEmail(priceAlert.ops[0], req.get('host'));
+                res.send({ "priceAlertSubmitted": priceAlert.ops[0] !== null });
+            });
         });
     });
 
-    // Read Mongo document
+    // checkIfPriceAlertExists() from Client.js
     app.get('/games/:id', (req, res) => {
         const id = req.query.q;
         const details = { '_id': new ObjectID(id) };
-        db.collection('games').findOne(details, (err, item) => {
+        db.collection('games').findOne(details, (err, priceAlert) => {
             if (err) {
-                res.send({ 'error': 'An error has occurred' });
-            } else {
-                if (!item) {
-                    res.send({ "priceAlertRemoved": true });
-                }
+                return console.error(err);
             }
+            res.send({ "priceAlertRemoved": priceAlert === null });
         });
     });
 
-    // Update Mongo document
-    app.put('/games/:id', (req, res) => {
-        const id = req.params.id;
-        const details = { '_id': new ObjectID(id) };
-
-        db.collection('games').update(details, req.body, (err, result) => {
-            if (err) {
-                res.send({ 'error': 'An error has occured' });
-            } else {
-                res.send(req.body);
-            }
-        });
-    });
-
-    // Delete Mongo document
+    // deletePriceAlert() from Client.js
     app.delete('/games/:id', (req, res) => {
         const id = req.body.id;
         const details = { '_id': new ObjectID(id) };
-        db.collection('games').remove(details, (err, item) => {
+        db.collection('games').remove(details, (err, priceAlert) => {
             if (err) {
-                res.send({ 'error': 'An error has occured' });
-            } else {
-                res.send('Note ' + id + ' deleted!');
+                return console.error(err);
             }
+            res.send({ "priceAlertRemoved": true });
         });
     });
 
-    // Read Mongo document
+    // checkIfUserIsOnBlacklist() from Client.js
     app.get('/blacklist/:id', (req, res) => {
-        const id = '5941b16c734d1d72c8381d22';
-        const details = { '_id': new ObjectID(id) };
         const userEmail = encryption.decrypt(req.query.q);
-        db.collection('blacklist').findOne(details, (err, item) => {
-            if (err) {
-                res.send({ 'error': 'An error has occurred' });
-            } else {
-                if (item.users.indexOf(userEmail) === -1) {
-                    res.send({ "userAddedToBlacklist": false });
-                } else {
-                    res.send({ "userAddedToBlacklist": true });
-                }
-            }
+        checkBlacklist(db, userEmail).then(result => {
+            res.send({ "userOnBlacklist": result.onBlacklist });
         });
     });
 
-    // Add userEmail to email blacklist
+    // addUserToBlacklist() from Client.js
     app.put('/blacklist/:id', (req, res) => {
         const id = '5941b16c734d1d72c8381d22';
         const details = { '_id': new ObjectID(id) };
-        db.collection('blacklist').findOne(details, (err, item) => {
+        const userEmail = encryption.decrypt(req.body.userEmail);
+        db.collection('blacklist').findOne(details, (err, blacklist) => {
             if (err) {
-                res.send({ 'error': 'An error has occurred' });
-            } else {
-                var blacklist = { "users": item.users };
-                var newlyBlacklistedUser = encryption.decrypt(req.body.userEmail);
-                if (blacklist.users.indexOf(newlyBlacklistedUser) === -1) {
-                    blacklist.users.push(newlyBlacklistedUser);
-                    db.collection('blacklist').update(details, blacklist, (err, result) => {
-                        if (err) {
-                            res.send({ 'error': 'An error has occured' });
-                        } else {
-                            res.send(req.body);
-                        }
-                    });
-                } else {
-                    res.send({ 'message': newlyBlacklistedUser + ' is already on the blacklist' });
-                }
+                return console.error(err);
             }
+            var updatedBlacklist = { "users": blacklist.users.concat(userEmail) };
+            db.collection('blacklist').update(details, updatedBlacklist, (err, result) => {
+                if (err) {
+                    return console.error(err);
+                }
+                res.send({ "userOnBlacklist": true });
+            });
         });
     });
 };
+
+
+function checkBlacklist(db, userEmail) {
+    return new Promise((resolve, reject) => {
+        db.collection('blacklist').find().toArray((err, docs) => {
+            if (err) {
+                console.error(err);
+                reject(err);
+            }
+            resolve({
+                'onBlacklist': docs[0].users.indexOf(userEmail) !== -1
+            });
+        });
+    });
+}
