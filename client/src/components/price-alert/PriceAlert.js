@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Alert } from 'reactstrap';
 import './PriceAlert.css';
 
 import Client from '../../Client';
@@ -8,7 +9,7 @@ import UserSignUpFeedback from './components/UserSignUpFeedback';
 const UserSignUpComplete = UserSignUpFeedback.UserSignUpComplete;
 const ProgressBarAndMessage = UserSignUpFeedback.ProgressBarAndMessage;
 
-
+// Todo: change priceAlertSubmitted to priceAlertCreated
 class PriceAlert extends Component {
     constructor(props) {
         super(props);
@@ -49,7 +50,8 @@ class PriceAlert extends Component {
             onSale: null,
             expiration: null,
             expirationInt: null,
-            userEmail: null
+            userEmail: null,
+            error: false
         });
     }
     activateProgressBar() {
@@ -78,14 +80,19 @@ class PriceAlert extends Component {
             userEmail: this.state.userEmail,
             dateAdded: new Date().getTime()
         };
-        Client.createDBEntry(priceAlertInfo).then(result => {
-            this.setState({ priceAlertSubmitted: true });
+        Client.createPriceAlert(priceAlertInfo).then(result => {
+            if (result.priceAlertSubmitted) {
+                this.setState(result);
+            } else {
+                // Feedback to user that price alert could not be created
+                this.setState({ error: true })
+            }
         });
     }
     devModeDemo() {
         console.log('Starting devModeDemo()...');
         var testGameUrl = 'https://store.playstation.com/#!/en-us/games/god-of-war-iii-remastered/cid=UP9000-CUSA01623_00-0000GODOFWAR3PS4';
-        var testEmail = 'chris.vita1@gmail.com';
+        var testEmail = 'chris.vita@gmail.com';
         this.submitPriceAlertRequest(testGameUrl, testEmail);
     }
     render() {
@@ -107,6 +114,18 @@ class PriceAlert extends Component {
                             priceAlertSubmitted={this.state.priceAlertSubmitted}
                         />
                     </div>}
+
+                {this.state.error &&
+                    <div>
+                        <Alert color='danger'>
+                            <p>
+                                <strong>Unable to create your price alert. </strong>
+                                Your email is on our "do not send" list. 
+                                Contact game.price.tracker@gmail.com if you feel this is in error.
+                            </p>
+                        </Alert>
+                    </div>
+                }
 
                 {this.state.priceAlertSubmitted &&
                     <div>

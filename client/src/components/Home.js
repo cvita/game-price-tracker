@@ -3,7 +3,7 @@ import PriceAlert from './price-alert/PriceAlert';
 import ViewSource from './ViewSource';
 import { Container, Row, Col, Jumbotron} from 'reactstrap';
 
-class App extends Component {
+class Home extends Component {
   render() {
     return (
       <div>
@@ -26,4 +26,4 @@ class App extends Component {
   }
 }
 
-export default App;
+export default Home;

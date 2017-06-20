@@ -1,75 +1,91 @@
 const ObjectID = require('mongodb').ObjectID;
 const bodyParser = require('body-parser');
-const sendEmail = require('./email');
+const email = require('./email');
+const encryption = require('./encrypt');
+
 
 module.exports = function (app, db) {
     app.use(bodyParser.json());
 
-    // Create Mongo document
+    // createPriceAlert() from Client.js
     app.post('/games', (req, res) => {
-        console.log('POST request being sent to DB');
-        db.collection('games').insert(req.body, (err, result) => {
-            if (err) {
-                res.send({ 'error': 'An error has occurred' });
-            } else {
-                var infoSaved = result.ops[0];
-                sendConfirmationEmail(infoSaved);
-                res.send(infoSaved);
+        checkBlacklist(db, req.body.userEmail).then(result => {
+            if (result.onBlacklist) {
+                return res.send({ "priceAlertSubmitted": false });
             }
+            db.collection('games').insert(req.body, (err, priceAlert) => {
+                if (err) {
+                    return console.error(err);
+                }
+                email.sendConfirmationEmail(priceAlert.ops[0], req.get('host'));
+                res.send({ "priceAlertSubmitted": priceAlert.ops[0] !== null });
+            });
         });
     });
 
-    // Read Mongo document
+    // checkIfPriceAlertExists() from Client.js
     app.get('/games/:id', (req, res) => {
-        const id = req.params.id;
+        const id = req.query.q;
         const details = { '_id': new ObjectID(id) };
-        db.collection('games').findOne(details, (err, item) => {
+        db.collection('games').findOne(details, (err, priceAlert) => {
             if (err) {
-                res.send({ 'error': 'An error has occurred' });
-            } else {
-                res.send(item);
+                return console.error(err);
             }
+            res.send({ "priceAlertRemoved": priceAlert === null });
         });
     });
 
-    // Update Mongo document
-    app.put('/games/:id', (req, res) => {
-        const id = req.params.id;
-        const details = { '_id': new ObjectID(id) };
-
-        db.collection('games').update(details, req.body, (err, result) => {
-            if (err) {
-                res.send({ 'error': 'An error has occured' });
-            } else {
-                res.send(req.body);
-            }
-        });
-    });
-
-    // Delete Mongo document
+    // deletePriceAlert() from Client.js
     app.delete('/games/:id', (req, res) => {
-        const id = req.params.id;
+        const id = req.body.id;
         const details = { '_id': new ObjectID(id) };
-        db.collection('games').remove(details, (err, item) => {
+        db.collection('games').remove(details, (err, priceAlert) => {
             if (err) {
-                res.send({ 'error': 'An error has occured' });
-            } else {
-                res.send('Note ' + id + ' deleted!');
+                return console.error(err);
             }
+            res.send({ "priceAlertRemoved": true });
+        });
+    });
+
+    // checkIfUserIsOnBlacklist() from Client.js
+    app.get('/blacklist/:id', (req, res) => {
+        const userEmail = encryption.decrypt(req.query.q);
+        checkBlacklist(db, userEmail).then(result => {
+            res.send({ "userOnBlacklist": result.onBlacklist });
+        });
+    });
+
+    // addUserToBlacklist() from Client.js
+    app.put('/blacklist/:id', (req, res) => {
+        const id = '5941b16c734d1d72c8381d22';
+        const details = { '_id': new ObjectID(id) };
+        const userEmail = encryption.decrypt(req.body.userEmail);
+        db.collection('blacklist').findOne(details, (err, blacklist) => {
+            if (err) {
+                return console.error(err);
+            }
+            var updatedBlacklist = { "users": blacklist.users.concat(userEmail) };
+            db.collection('blacklist').update(details, updatedBlacklist, (err, result) => {
+                if (err) {
+                    return console.error(err);
+                }
+                res.send({ "userOnBlacklist": true });
+            });
         });
     });
 };
 
 
-function sendConfirmationEmail(mongoDoc) {
-    var message = (
-        'Game price tracker is now tracking the price of ' + mongoDoc.game + '. ' +
-        'If it drops below ' + mongoDoc.price + ' before ' + mongoDoc.expiration + ', ' +
-        'you will be messaged at this email address.'
-    );
-    sendEmail(
-        mongoDoc.userEmail,
-        mongoDoc.game + ' is now being tracked',
-        message
-    );
+function checkBlacklist(db, userEmail) {
+    return new Promise((resolve, reject) => {
+        db.collection('blacklist').find().toArray((err, docs) => {
+            if (err) {
+                console.error(err);
+                reject(err);
+            }
+            resolve({
+                'onBlacklist': docs[0].users.indexOf(userEmail) !== -1
+            });
+        });
+    });
 }

@@ -1,0 +1,18 @@
+.unsubscribeComponent{
+    display: flex;
+    flex-direction: column;
+}
+
+.homeHeader {
+    color: black;
+}
+
+.homeHeader:hover {
+    text-decoration: none;
+    color: black;
+}
+
+.button {
+    max-width: 25%;
+    margin: 1em;
+}
