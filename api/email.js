@@ -31,11 +31,10 @@ function sendEmail(to, subject, message) {
 function sendConfirmationEmail(mongoDoc, uri) {
     var unsubscribeUrl = 'https://' + uri + '/#/unsubscribe?id=' + mongoDoc._id;
     unsubscribeUrl += '&user=' + encryption.encrypt(mongoDoc.userEmail);
-
     var userEmail = mongoDoc.userEmail;
     var subject = mongoDoc.game + ' is now being tracked';
     var message = (
-        'Game Price Tracker is now tracking the price of <i>' + mongoDoc.game + '</i>. ' +
+        'Game Price Tracker is now tracking the price of <strong>' + mongoDoc.game + '</strong>. ' +
         'If it drops below ' + mongoDoc.price + ' before ' + mongoDoc.expiration + ', ' +
         'you will be messaged again at this email address.<br><br>' +
         'All done? <a href=' + unsubscribeUrl + '>Unsubscribe</a>'
@@ -53,6 +52,7 @@ function sendSalePriceEmail(mongoDoc, newScrape) {
     sendEmail(userEmail, subject, message);
 }
 
+// Todo: Add link to Game Price Tracker (once the app has a dedicated url)
 function sendRemovingPriceAlertEmail(mongoDoc) {
     var userEmail = mongoDoc.userEmail;
     var subject = 'Removing Game Price Tracker alert for ' + mongoDoc.game;
