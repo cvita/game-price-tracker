@@ -12,7 +12,7 @@ class Unsubscribe extends Component {
         var url = window.location.toString();
         var q = url.slice(url.indexOf('?') + 1);
         this.state = {
-            alertRemoved: false,
+            priceAlertRemoved: false,
             addedToBlacklist: false,
             id: new URLSearchParams(q).get('id'),
             userEmail: new URLSearchParams(q).get('user')
@@ -28,25 +28,29 @@ class Unsubscribe extends Component {
         this.checkUserStatus();
     }
     checkUserStatus() {
-        if (!this.state.alertRemoved) {
-            Client.confirmDBEntryExists(this.state.id).then(result => {
-                this.setState({ alertRemoved: result.priceAlertRemoved });
+        if (!this.state.priceAlertRemoved) {
+            Client.checkIfPriceAlertExists(this.state.id).then(result => {
+                this.setState({ priceAlertRemoved: result.priceAlertRemoved });
             });
         }
         if (!this.state.addedToBlacklist) {
-            Client.confirmUserIsOnBlacklist(this.state.userEmail).then(result => {
-                this.setState({ addedToBlacklist: result.userAddedToBlacklist });
+            Client.checkIfUserIsOnBlacklist(this.state.userEmail).then(result => {
+                this.setState({ addedToBlacklist: result.userOnBlacklist });
             });
         }
     }
     removeAlert() {
-        Client.deleteDBEntry(this.state.id).then(() => this.checkUserStatus());
+        Client.deletePriceAlert(this.state.id).then(result => {
+            this.setState({ priceAlertRemoved: result.priceAlertRemoved })
+        });
     }
     addUserToBlacklist() {
-        if (!this.state.alertRemoved) {
-            Client.deleteDBEntry(this.state.id);
+        if (!this.state.priceAlertRemoved) {
+            Client.deletePriceAlert(this.state.id);
         }
-        Client.addUserToBlacklist(this.state.userEmail).then(() => this.checkUserStatus());
+        Client.addUserToBlacklist(this.state.userEmail).then(result => {
+            this.setState({ addedToBlacklist: result.userOnBlacklist });
+        });
     }
     render() {
         return (
@@ -55,7 +59,7 @@ class Unsubscribe extends Component {
                     <h1>Game Price Tracker</h1>
                 </Link>
 
-                {!this.state.alertRemoved ?
+                {!this.state.priceAlertRemoved ?
                     <Alert color='info'>
                         <Button
                             className='removeAlertButton button'
