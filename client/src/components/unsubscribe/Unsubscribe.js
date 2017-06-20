@@ -9,56 +9,44 @@ import Client from '../../Client';
 class Unsubscribe extends Component {
     constructor(props) {
         super(props);
+        var url = window.location.toString();
+        var q = url.slice(url.indexOf('?') + 1);
         this.state = {
             alertRemoved: false,
             addedToBlacklist: false,
-            id: null,
-            userEmail: null
+            id: new URLSearchParams(q).get('id'),
+            userEmail: new URLSearchParams(q).get('user')
         };
         this.checkUserStatus = this.checkUserStatus.bind(this);
         this.removeAlert = this.removeAlert.bind(this);
         this.addUserToBlacklist = this.addUserToBlacklist.bind(this);
     }
     componentDidMount() {
-        var url = window.location.toString();
-        var q = url.slice(url.indexOf('?') + 1);
-        var userEmail = new URLSearchParams(q).get('user');
-        var id = new URLSearchParams(q).get('id');
-        if (!id) {
+        if (!this.state.id) {
             return <Redirect to='/' />
         }
-        if (!this.state.alertRemoved || !this.state.addedToBlacklist) {
-            this.checkUserStatus(id, userEmail);
+        this.checkUserStatus();
+    }
+    checkUserStatus() {
+        if (!this.state.alertRemoved) {
+            Client.confirmDBEntryExists(this.state.id).then(result => {
+                this.setState({ alertRemoved: result.priceAlertRemoved });
+            });
+        }
+        if (!this.state.addedToBlacklist) {
+            Client.confirmUserIsOnBlacklist(this.state.userEmail).then(result => {
+                this.setState({ addedToBlacklist: result.userAddedToBlacklist });
+            });
         }
     }
-    checkUserStatus(id, userEmail) {
-        Promise.all([
-            Client.confirmDBEntryExists(id),
-            Client.confirmUserIsOnBlacklist(userEmail)
-        ]).then(results => {
-            this.setState({
-                alertRemoved: results[0].priceAlertRemoved,
-                addedToBlacklist: results[1].userAddedToBlacklist,
-                id: id,
-                userEmail: userEmail
-            });
-        });
-    }
     removeAlert() {
-        Client.deleteDBEntry(this.state.id).then(result => {
-            this.setState({
-                alertRemoved: true
-            });
-        });
+        Client.deleteDBEntry(this.state.id).then(() => this.checkUserStatus());
     }
     addUserToBlacklist() {
-        Client.deleteDBEntry(this.state.id);
-        Client.addUserToBlacklist(this.state.userEmail).then(result => {
-            this.setState({
-                alertRemoved: true,
-                addedToBlacklist: true
-            });
-        });
+        if (!this.state.alertRemoved) {
+            Client.deleteDBEntry(this.state.id);
+        }
+        Client.addUserToBlacklist(this.state.userEmail).then(() => this.checkUserStatus());
     }
     render() {
         return (
@@ -81,7 +69,6 @@ class Unsubscribe extends Component {
                     <Alert color='success'>
                         This price alert has been removed.
                     </Alert>}
-
 
                 {!this.state.addedToBlacklist ?
                     <Alert color='danger'>
