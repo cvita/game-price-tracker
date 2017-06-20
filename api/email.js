@@ -1,5 +1,6 @@
 const nodemailer = require('nodemailer');
-const crypt = require('encrypt');
+const encryption = require('./encrypt');
+
 
 const transport = nodemailer.createTransport({
     service: 'Gmail',
@@ -28,8 +29,8 @@ function sendEmail(to, subject, message) {
 
 // Todo: Consider encrypting the mongoDoc._id
 function sendConfirmationEmail(mongoDoc, uri) {
-    var unsubscribeUrl = 'https://' + uri + '/#/unsubscribe?id=' + crypt.encrypt(mongoDoc._id);
-    unsubscribeUrl += '/?user=' + crypt.encrypt(mongoDoc.userEmail);
+    var unsubscribeUrl = 'https://' + uri + '/#/unsubscribe?id=' + mongoDoc._id;
+    unsubscribeUrl += '&user=' + encryption.encrypt(mongoDoc.userEmail);
 
     var userEmail = mongoDoc.userEmail;
     var subject = mongoDoc.game + ' is now being tracked';

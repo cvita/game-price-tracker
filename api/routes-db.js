@@ -1,35 +1,28 @@
 const ObjectID = require('mongodb').ObjectID;
 const bodyParser = require('body-parser');
-const sendEmail = require('./email');
+const email = require('./email');
+const encryption = require('./encrypt');
+
 
 module.exports = function (app, db) {
     app.use(bodyParser.json());
 
     // Create Mongo document
-    // If userEmail is not on blacklist...
     app.post('/games', (req, res) => {
-
-        var emailBlacklist;
         db.collection('blacklist').find().toArray(function (err, docs) {
             if (err) console.err(err);
-            emailBlacklist = docs[0].users;
-            console.log('----SEE-----');
-            console.log('emailBlacklist', emailBlacklist);
-            console.log('userEmail', req.body.userEmail);
-
+            var emailBlacklist = docs[0].users;
             if (emailBlacklist.indexOf(req.body.userEmail) === -1) {
-                console.log('POST request being sent to DB');
                 db.collection('games').insert(req.body, (err, result) => {
                     if (err) {
                         res.send({ 'error': 'An error has occurred' });
                     } else {
-                        var infoSaved = result.ops[0];
-                        sendConfirmationEmail(infoSaved, req.get('host'));
-                        res.send(infoSaved);
+                        var mongoDoc = result.ops[0];
+                        email.sendConfirmationEmail(mongoDoc, req.get('host'));
+                        res.send(mongoDoc);
                     }
                 });
             } else {
-                // User is on blacklist. Don't add to DB.
                 res.send({ 'error': 'Cannot make price alert. User is on email blacklist' });
             }
         });
@@ -43,38 +36,12 @@ module.exports = function (app, db) {
             if (err) {
                 res.send({ 'error': 'An error has occurred' });
             } else {
-                res.send(item);
-            }
-        });
-    });
-
-    // Append userEmail to existing email blacklist
-    app.put('/blacklist/:id', (req, res) => {
-        const id = '5941b16c734d1d72c8381d22';
-        const details = { '_id': new ObjectID(id) };
-
-        db.collection('blacklist').findOne(details, (err, item) => {
-            if (err) {
-                res.send({ 'error': 'An error has occurred' });
-            } else {
-                var blacklist = { "users": item.users };
-                var newlyBlacklistedUser = req.body.userEmail;
-                if (blacklist.users.indexOf(newlyBlacklistedUser) === -1) {
-                    blacklist.users.push(newlyBlacklistedUser);
-                    db.collection('blacklist').update(details, blacklist, (err, result) => {
-                        if (err) {
-                            res.send({ 'error': 'An error has occured' });
-                        } else {
-                            res.send(req.body);
-                        }
-                    });
-                } else {
-                    res.send({ 'message': newlyBlacklistedUser + ' is already on the blacklist' });
+                if (!item) {
+                    res.send({ "priceAlertRemoved": true });
                 }
             }
         });
     });
-
 
     // Update Mongo document
     app.put('/games/:id', (req, res) => {
@@ -102,24 +69,48 @@ module.exports = function (app, db) {
             }
         });
     });
+
+    // Read Mongo document
+    app.get('/blacklist/:id', (req, res) => {
+        const id = '5941b16c734d1d72c8381d22';
+        const details = { '_id': new ObjectID(id) };
+        const userEmail = encryption.decrypt(req.query.q);
+        db.collection('blacklist').findOne(details, (err, item) => {
+            if (err) {
+                res.send({ 'error': 'An error has occurred' });
+            } else {
+                if (item.users.indexOf(userEmail) === -1) {
+                    res.send({ "userAddedToBlacklist": false });
+                } else {
+                    res.send({ "userAddedToBlacklist": true });
+                }
+            }
+        });
+    });
+
+    // Add userEmail to email blacklist
+    app.put('/blacklist/:id', (req, res) => {
+        const id = '5941b16c734d1d72c8381d22';
+        const details = { '_id': new ObjectID(id) };
+        db.collection('blacklist').findOne(details, (err, item) => {
+            if (err) {
+                res.send({ 'error': 'An error has occurred' });
+            } else {
+                var blacklist = { "users": item.users };
+                var newlyBlacklistedUser = encryption.decrypt(req.body.userEmail);
+                if (blacklist.users.indexOf(newlyBlacklistedUser) === -1) {
+                    blacklist.users.push(newlyBlacklistedUser);
+                    db.collection('blacklist').update(details, blacklist, (err, result) => {
+                        if (err) {
+                            res.send({ 'error': 'An error has occured' });
+                        } else {
+                            res.send(req.body);
+                        }
+                    });
+                } else {
+                    res.send({ 'message': newlyBlacklistedUser + ' is already on the blacklist' });
+                }
+            }
+        });
+    });
 };
-
-
-function sendConfirmationEmail(mongoDoc, uri) {
-    const unsubscribeUrl = 'https://' + uri + '/#/unsubscribe?id=' + mongoDoc._id;
-    console.log('Unsubscribe', unsubscribeUrl);
-
-    var subject = mongoDoc.game + ' is now being tracked';
-    var message = (
-        'Game Price Tracker is now tracking the price of <i>' + mongoDoc.game + '</i>. ' +
-        'If it drops below ' + mongoDoc.price + ' before ' + mongoDoc.expiration + ', ' +
-        'you will be messaged again at this email address.<br><br>' +
-        'All done? <a href=' + unsubscribeUrl + '>Unsubscribe</a>'
-    );
-
-    sendEmail(
-        mongoDoc.userEmail,
-        subject,
-        message
-    );
-}

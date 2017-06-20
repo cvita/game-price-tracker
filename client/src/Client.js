@@ -61,19 +61,17 @@ function deleteDBEntry(documentId) {
     });
 }
 
-
-// Read ID, get userEmail
-function getUserEmailFromId(documentId) {
+function confirmDBEntryExists(documentId) {
     return new Promise((resolve, reject) => {
         fetch(`/games/:?q=${documentId}`, {
             method: 'GET'
         }).then(response => {
             if (response.ok) {
                 response.json().then(response => {
-                    resolve(response.userEmail);
+                    resolve(response);
                 });
             } else {
-                reject('Unable to delete from DB');
+                reject('Unable to confirm if DB entry exists');
             }
         });
     });
@@ -98,7 +96,23 @@ function addUserToBlacklist(userEmail) {
     });
 }
 
+function confirmUserIsOnBlacklist(userEmail) {
+    return new Promise((resolve, reject) => {
+        fetch(`/blacklist/:?q=${userEmail}`, {
+            method: 'GET'
+        }).then(response => {
+            if (response.ok) {
+                response.json().then(response => {
+                    resolve(response);
+                });
+            } else {
+                reject('Unable to confirm if DB entry exists');
+            }
+        });
+    });
+}
 
 
-const Client = { requestScrape, createDBEntry, deleteDBEntry, getUserEmailFromId, addUserToBlacklist };
+
+const Client = { requestScrape, createDBEntry, deleteDBEntry, confirmDBEntryExists, addUserToBlacklist, confirmUserIsOnBlacklist };
 export default Client;
