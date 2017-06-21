@@ -34,47 +34,17 @@ function createPriceAlert(gameInfo) {
     });
 }
 
-function checkIfPriceAlertExists(documentId) {
+function checkForCurrentPriceAlerts(userInfo) {
     return new Promise((resolve, reject) => {
-        fetch(`/games/:?q=${documentId}`, {
-            method: 'GET'
-        }).then(response => {
-            if (!response.ok) {
-                reject('Unable to confirm if price alert exists');
-            }
-            response.json().then(response => {
-                resolve(response);
-            });
-        });
-    });
-}
-
-function checkIfUserIsOnBlacklist(userEmail) {
-    return new Promise((resolve, reject) => {
-        fetch(`/blacklist/:?q=${userEmail}`, {
-            method: 'GET'
-        }).then(response => {
-            if (!response.ok) {
-                reject('Unable to confirm if DB entry exists');
-            }
-            response.json().then(response => {
-                resolve(response);
-            });
-        });
-    });
-}
-
-function deletePriceAlert(documentId) {
-    return new Promise((resolve, reject) => {
-        var request = new Request('/games/id:', {
+        var request = new Request('/games/user/status', {
             headers: new Headers({ 'Content-Type': 'application/json' })
         });
         fetch(request, {
-            method: 'DELETE',
-            body: JSON.stringify({ "id": documentId })
+            method: 'POST',
+            body: JSON.stringify(userInfo)
         }).then(response => {
             if (!response.ok) {
-                reject('Unable to delete from DB');
+                reject('Unable to check price alert and blacklist status');
             }
             response.json().then(response => {
                 resolve(response);
@@ -102,6 +72,25 @@ function addUserToBlacklist(userEmail) {
     });
 }
 
+function deletePriceAlert(alertInfo) {
+    return new Promise((resolve, reject) => {
+        var request = new Request('/games/user/delete', {
+            headers: new Headers({ 'Content-Type': 'application/json' })
+        });
+        fetch(request, {
+            method: 'DELETE',
+            body: JSON.stringify(alertInfo)
+        }).then(response => {
+            if (!response.ok) {
+                reject('Unable to delete from DB');
+            }
+            response.json().then(response => {
+                resolve(response);
+            });
+        });
+    });
+}
 
-const Client = { requestScrape, createPriceAlert, deletePriceAlert, checkIfPriceAlertExists, addUserToBlacklist, checkIfUserIsOnBlacklist };
+
+const Client = { requestScrape, createPriceAlert, deletePriceAlert, checkForCurrentPriceAlerts, addUserToBlacklist };
 export default Client;

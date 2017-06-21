@@ -7,52 +7,38 @@ const encryption = require('./encrypt');
 module.exports = function (app, db) {
     app.use(bodyParser.json());
 
-    // createPriceAlert() from Client.js
+    // Create or add to price alert, if user is not on email blacklist
     app.post('/games', (req, res) => {
-        checkBlacklist(db, req.body.userEmail).then(result => {
+        const gameInfo = req.body;
+        const userInfo = req.body.alerts[0];
+        checkIfUserIsOnBlacklist(db, userInfo.userEmail).then(result => {
             if (result.onBlacklist) {
-                return res.send({ "priceAlertSubmitted": false });
+                res.send({ "priceAlertSubmitted": false });
+            } else {
+                db.collection('games').update(
+                    {
+                        game: gameInfo.game,
+                        gameUrl: gameInfo.gameUrl,
+                        gameImage: gameInfo.gameImage
+                    },
+                    { $addToSet: { alerts: userInfo } },
+                    { upsert: true }
+                    , (err, doc) => {
+                        if (err) {
+                            console.error(err);
+                        }
+                        res.send({ "priceAlertSubmitted": doc !== null });
+                        email.sendConfirmationEmail(req.body, req.get('host'));
+                    });
             }
-            db.collection('games').insert(req.body, (err, priceAlert) => {
-                if (err) {
-                    return console.error(err);
-                }
-                email.sendConfirmationEmail(priceAlert.ops[0], req.get('host'));
-                res.send({ "priceAlertSubmitted": priceAlert.ops[0] !== null });
-            });
         });
     });
 
-    // checkIfPriceAlertExists() from Client.js
-    app.get('/games/:id', (req, res) => {
-        const id = req.query.q;
-        const details = { '_id': new ObjectID(id) };
-        db.collection('games').findOne(details, (err, priceAlert) => {
-            if (err) {
-                return console.error(err);
-            }
-            res.send({ "priceAlertRemoved": priceAlert === null });
-        });
-    });
-
-    // deletePriceAlert() from Client.js
-    app.delete('/games/:id', (req, res) => {
-        const id = req.body.id;
-        const details = { '_id': new ObjectID(id) };
-        db.collection('games').remove(details, (err, priceAlert) => {
-            if (err) {
-                return console.error(err);
-            }
-            res.send({ "priceAlertRemoved": true });
-        });
-    });
-
-    // checkIfUserIsOnBlacklist() from Client.js
-    app.get('/blacklist/:id', (req, res) => {
-        const userEmail = encryption.decrypt(req.query.q);
-        checkBlacklist(db, userEmail).then(result => {
-            res.send({ "userOnBlacklist": result.onBlacklist });
-        });
+    // checkPriceAlertStatus
+    app.post('/games/user/status', (req, res) => {
+        var userEmail = encryption.decrypt(req.body.userEmail);
+        // check for active price alerts... see all price alerts for this email
+        searchByUserEmailForActivePriceAlerts(db, userEmail).then(result => res.send(result));
     });
 
     // addUserToBlacklist() from Client.js
@@ -73,19 +59,69 @@ module.exports = function (app, db) {
             });
         });
     });
+
+    // db.collection.findOneAndUpdate() could be useful
+    // deletePriceAlert() from Client.js
+    app.delete('/games/user/delete', (req, res) => {
+        const userEmail = encryption.decrypt(req.body.userEmail);
+        const game = req.body.game;
+        const dateAdded = req.body.dateAdded;
+        var details = {
+            game: game,
+            alerts: { $elemMatch: { userEmail: userEmail, dateAdded: dateAdded } }
+        };
+        db.collection('games').findOne(details, (err, doc) => {
+            if (err) {
+                return console.error(err);
+            }
+            if (!doc) {
+                return res.send({ "priceAlertRemoved": false });
+            }
+            db.collection('games').update(
+                { _id: doc._id },
+                { $pull: { alerts: { userEmail: userEmail } } }
+            );
+            res.send({ "priceAlertRemoved": true });
+        });
+    });
 };
 
 
-function checkBlacklist(db, userEmail) {
+function checkIfUserIsOnBlacklist(db, userEmail) {
     return new Promise((resolve, reject) => {
-        db.collection('blacklist').find().toArray((err, docs) => {
+        db.collection('blacklist').findOne({ users: userEmail }, (err, blacklist) => {
             if (err) {
                 console.error(err);
                 reject(err);
             }
-            resolve({
-                'onBlacklist': docs[0].users.indexOf(userEmail) !== -1
+            resolve({ "onBlacklist": blacklist !== null });
+        });
+    });
+}
+
+function searchByUserEmailForActivePriceAlerts(db, userEmail) {
+    return new Promise((resolve, reject) => {
+        var details = { alerts: { $elemMatch: { userEmail: userEmail } } };
+        db.collection('games').find(details).toArray((err, docs) => {
+            if (err) {
+                console.error(err);
+                reject(err);
+            }
+            var activePriceAlertsForUser = [];
+            docs.forEach((doc, docIndex) => {
+                activePriceAlertsForUser.push({
+                    [doc.game]: {
+                        gameImage: doc.gameImage,
+                        alerts: []
+                    }
+                });
+                doc.alerts.forEach(priceAlert => {
+                    if (priceAlert.userEmail === userEmail) {
+                        activePriceAlertsForUser[docIndex][doc.game].alerts.push(priceAlert);
+                    }
+                });
             });
+            resolve({ "activePriceAlerts": activePriceAlertsForUser });
         });
     });
 }
