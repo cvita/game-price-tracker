@@ -24,8 +24,12 @@ class PriceAlert extends Component {
     }
     submitPriceAlertRequest(gameUrl, userEmail) {
         this.activateProgressBar();
+        // Query our DB first, or Promises.Race
+        // If we have the info, use that--much faster
+
         Client.requestScrape(gameUrl).then(result => {
             var expirationInt = new Date().getTime() + 10886400000; // 18 weeks from now
+            console.log('ONSALE:', result.onSale);
             this.setState({
                 game: result.title,
                 gameUrl: gameUrl,
@@ -69,10 +73,13 @@ class PriceAlert extends Component {
         }, 40);
     }
     savePriceAlertToDB() {
+        console.log()
         var priceAlertInfo = {
             game: this.state.game,
             gameUrl: this.state.gameUrl,
             gameImage: this.state.gameImage,
+            gamePriceToday: this.state.priceInt,
+            onSale: this.state.onSale.status,
             alerts: [{
                 userEmail: this.state.userEmail,
                 dateAdded: new Date().getTime(),

@@ -10,53 +10,44 @@ import Client from '../../Client';
 class Unsubscribe extends Component {
     constructor(props) {
         super(props);
-        var url = window.location.toString();
-        var q = url.slice(url.indexOf('?') + 1);
+        const url = window.location.toString();
+        const q = url.slice(url.indexOf('?') + 1);
         this.state = {
-            priceAlertRemoved: false,
-            addedToBlacklist: false,
             userEmail: new URLSearchParams(q).get('user'),
+            addedToBlacklist: false,
             activePriceAlerts: null
         };
         this.checkUserStatus = this.checkUserStatus.bind(this);
-        this.removeAlert = this.removeAlert.bind(this);
+        this.deleteAlert = this.deleteAlert.bind(this);
         this.addUserToBlacklist = this.addUserToBlacklist.bind(this);
     }
     componentDidMount() {
         if (!this.state.userEmail) {
             return <Redirect to='/' />
         }
-        this.checkUserStatus();
     }
     checkUserStatus() {
-        var userInfo = { "userEmail": this.state.userEmail };
-        Client.checkForCurrentPriceAlerts(userInfo).then(result => {
+        Client.checkForCurrentPriceAlerts(this.state.userEmail).then(result => {
             if (result.activePriceAlerts.length > 0) {
                 this.setState({ activePriceAlerts: result.activePriceAlerts });
             } else {
                 this.setState({ activePriceAlerts: null });
             }
         });
-
-    }
-    removeAlert(info) {
-        var title = Object.keys(info)[0];
-        var alertInfo = {
-            game: title,
-            userEmail: this.state.userEmail,
-            dateAdded: info[title].alerts[0].dateAdded
-        };
-        Client.deletePriceAlert(alertInfo).then(result => {
-            this.checkUserStatus();
-        });
-    }
-    addUserToBlacklist() {
-        if (!this.state.priceAlertRemoved) {
-            Client.deletePriceAlert(this.state.id);
-        }
-        Client.addUserToBlacklist(this.state.userEmail).then(result => {
+        Client.checkBlacklistForUserEmail(this.state.userEmail).then(result => {
             this.setState({ addedToBlacklist: result.userOnBlacklist });
         });
+    }
+    deleteAlert(info) {
+        const alertInfo = {
+            game: Object.keys(info)[0],
+            userEmail: this.state.userEmail,
+            dateAdded: info[Object.keys(info)[0]].alerts[0].dateAdded
+        };
+        Client.deletePriceAlert(alertInfo).then(this.checkUserStatus());
+    }
+    addUserToBlacklist() {
+        Client.addUserToBlacklist(this.state.userEmail).then(this.checkUserStatus());
     }
     render() {
         var priceAlerts;
@@ -70,7 +61,7 @@ class Unsubscribe extends Component {
                                 <ActivePriceAlerts
                                     alertInfo={val}
                                     key={Object.keys(val)[0]}
-                                    handleClick={this.removeAlert}
+                                    handleClick={this.deleteAlert}
                                 />
                             );
                         })}
@@ -92,21 +83,6 @@ class Unsubscribe extends Component {
                     <Alert color='info'>
                         You do not have any active price alerts.
                     </Alert>}
-
-                {/*{!this.state.priceAlertRemoved ?
-                    <Alert color='info'>
-                        <Button
-                            className='removeAlertButton button'
-                            onClick={this.removeAlert}
-                            color='info'
-                        >
-                            Remove alert
-                        </Button>
-                        Cancel this price alert.
-                        </Alert> :
-                    <Alert color='success'>
-                        This price alert has been removed.
-                    </Alert>}*/}
 
                 {!this.state.addedToBlacklist ?
                     <Alert color='danger'>
