@@ -24,8 +24,12 @@ class PriceAlert extends Component {
     }
     submitPriceAlertRequest(gameUrl, userEmail) {
         this.activateProgressBar();
+        // Query our DB first, or Promises.Race
+        // If we have the info, use that--much faster
+
         Client.requestScrape(gameUrl).then(result => {
             var expirationInt = new Date().getTime() + 10886400000; // 18 weeks from now
+            console.log('ONSALE:', result.onSale);
             this.setState({
                 game: result.title,
                 gameUrl: gameUrl,
@@ -69,22 +73,26 @@ class PriceAlert extends Component {
         }, 40);
     }
     savePriceAlertToDB() {
+        console.log()
         var priceAlertInfo = {
             game: this.state.game,
             gameUrl: this.state.gameUrl,
             gameImage: this.state.gameImage,
-            price: this.state.price,
-            priceInt: this.state.priceInt,
-            expiration: this.state.expiration,
-            expirationInt: this.state.expirationInt,
-            userEmail: this.state.userEmail,
-            dateAdded: new Date().getTime()
+            gamePriceToday: this.state.priceInt,
+            onSale: this.state.onSale.status,
+            alerts: [{
+                userEmail: this.state.userEmail,
+                dateAdded: new Date().getTime(),
+                expiration: this.state.expiration,
+                expirationInt: this.state.expirationInt,
+                price: this.state.price,
+                priceInt: this.state.priceInt
+            }]
         };
         Client.createPriceAlert(priceAlertInfo).then(result => {
             if (result.priceAlertSubmitted) {
-                this.setState(result);
+                this.setState({ priceAlertSubmitted: result.priceAlertSubmitted });
             } else {
-                // Feedback to user that price alert could not be created
                 this.setState({ error: true })
             }
         });
@@ -120,7 +128,7 @@ class PriceAlert extends Component {
                         <Alert color='danger'>
                             <p>
                                 <strong>Unable to create your price alert. </strong>
-                                Your email is on our "do not send" list. 
+                                Your email is on our "do not send" list.
                                 Contact game.price.tracker@gmail.com if you feel this is in error.
                             </p>
                         </Alert>

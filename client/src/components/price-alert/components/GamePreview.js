@@ -38,7 +38,6 @@ function GamePreview(props) {
 
     var previewMessage = <RegularPrice priceAlertInfo={props.priceAlertInfo} />;
     if (props.priceAlertInfo.onSale.status) {
-        console.log('got here!');
         previewMessage = <SalePrice priceAlertInfo={props.priceAlertInfo} />;
     }
 

@@ -1,6 +1,6 @@
 function requestScrape(gameUrl) {
     return new Promise((resolve, reject) => {
-        var request = new Request('/scrape', {
+        var request = new Request('/games/find', {
             headers: new Headers({ 'Content-Type': 'application/json' })
         });
         fetch(request, {
@@ -17,7 +17,7 @@ function requestScrape(gameUrl) {
 
 function createPriceAlert(gameInfo) {
     return new Promise((resolve, reject) => {
-        var request = new Request('/games', {
+        var request = new Request('/games/create', {
             headers: new Headers({ 'Content-Type': 'application/json' })
         });
         fetch(request, {
@@ -25,7 +25,7 @@ function createPriceAlert(gameInfo) {
             body: JSON.stringify(gameInfo)
         }).then(response => {
             if (!response.ok) {
-                reject('Unable to add to DB');
+                reject('Unable to add price alert to db');
             }
             response.json().then(response => {
                 resolve(response);
@@ -34,13 +34,17 @@ function createPriceAlert(gameInfo) {
     });
 }
 
-function checkIfPriceAlertExists(documentId) {
+function checkForCurrentPriceAlerts(userEmail) {
     return new Promise((resolve, reject) => {
-        fetch(`/games/:?q=${documentId}`, {
-            method: 'GET'
+        var request = new Request('/games/check', {
+            headers: new Headers({ 'Content-Type': 'application/json' })
+        });
+        fetch(request, {
+            method: 'POST',
+            body: JSON.stringify({ "userEmail": userEmail })
         }).then(response => {
             if (!response.ok) {
-                reject('Unable to confirm if price alert exists');
+                reject('Unable to check for active price alerts for userEmail');
             }
             response.json().then(response => {
                 resolve(response);
@@ -49,29 +53,14 @@ function checkIfPriceAlertExists(documentId) {
     });
 }
 
-function checkIfUserIsOnBlacklist(userEmail) {
+function deletePriceAlert(alertInfo) {
     return new Promise((resolve, reject) => {
-        fetch(`/blacklist/:?q=${userEmail}`, {
-            method: 'GET'
-        }).then(response => {
-            if (!response.ok) {
-                reject('Unable to confirm if DB entry exists');
-            }
-            response.json().then(response => {
-                resolve(response);
-            });
-        });
-    });
-}
-
-function deletePriceAlert(documentId) {
-    return new Promise((resolve, reject) => {
-        var request = new Request('/games/id:', {
+        var request = new Request('/games/delete', {
             headers: new Headers({ 'Content-Type': 'application/json' })
         });
         fetch(request, {
             method: 'DELETE',
-            body: JSON.stringify({ "id": documentId })
+            body: JSON.stringify(alertInfo)
         }).then(response => {
             if (!response.ok) {
                 reject('Unable to delete from DB');
@@ -83,9 +72,28 @@ function deletePriceAlert(documentId) {
     });
 }
 
+function checkBlacklistForUserEmail(userEmail) {
+    return new Promise((resolve, reject) => {
+        var request = new Request('/blacklist/check', {
+            headers: new Headers({ 'Content-Type': 'application/json' })
+        });
+        fetch(request, {
+            method: 'POST',
+            body: JSON.stringify({ "userEmail": userEmail })
+        }).then(response => {
+            if (!response.ok) {
+                reject('Unable to check blacklist for userEmail');
+            }
+            response.json().then(response => {
+                resolve(response);
+            });
+        });
+    });
+}
+
 function addUserToBlacklist(userEmail) {
     return new Promise((resolve, reject) => {
-        var request = new Request('/blacklist/:id', {
+        var request = new Request('/blacklist/add', {
             headers: new Headers({ 'Content-Type': 'application/json' })
         });
         fetch(request, {
@@ -103,5 +111,5 @@ function addUserToBlacklist(userEmail) {
 }
 
 
-const Client = { requestScrape, createPriceAlert, deletePriceAlert, checkIfPriceAlertExists, addUserToBlacklist, checkIfUserIsOnBlacklist };
+const Client = { requestScrape, createPriceAlert, checkForCurrentPriceAlerts, deletePriceAlert, checkBlacklistForUserEmail, addUserToBlacklist };
 export default Client;

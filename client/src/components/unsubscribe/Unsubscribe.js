@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Link, Redirect } from 'react-router-dom';
 import { Alert, Button } from 'reactstrap';
+import ActivePriceAlerts from './components/ActivePriceAlerts';
 import './Unsubscribe.css';
 
 import Client from '../../Client';
@@ -9,69 +10,79 @@ import Client from '../../Client';
 class Unsubscribe extends Component {
     constructor(props) {
         super(props);
-        var url = window.location.toString();
-        var q = url.slice(url.indexOf('?') + 1);
+        const url = window.location.toString();
+        const q = url.slice(url.indexOf('?') + 1);
         this.state = {
-            priceAlertRemoved: false,
+            userEmail: new URLSearchParams(q).get('user'),
             addedToBlacklist: false,
-            id: new URLSearchParams(q).get('id'),
-            userEmail: new URLSearchParams(q).get('user')
+            activePriceAlerts: null
         };
         this.checkUserStatus = this.checkUserStatus.bind(this);
-        this.removeAlert = this.removeAlert.bind(this);
+        this.deleteAlert = this.deleteAlert.bind(this);
         this.addUserToBlacklist = this.addUserToBlacklist.bind(this);
     }
     componentDidMount() {
-        if (!this.state.id) {
+        if (!this.state.userEmail) {
             return <Redirect to='/' />
         }
         this.checkUserStatus();
     }
     checkUserStatus() {
-        if (!this.state.priceAlertRemoved) {
-            Client.checkIfPriceAlertExists(this.state.id).then(result => {
-                this.setState({ priceAlertRemoved: result.priceAlertRemoved });
-            });
-        }
-        if (!this.state.addedToBlacklist) {
-            Client.checkIfUserIsOnBlacklist(this.state.userEmail).then(result => {
-                this.setState({ addedToBlacklist: result.userOnBlacklist });
-            });
-        }
-    }
-    removeAlert() {
-        Client.deletePriceAlert(this.state.id).then(result => {
-            this.setState({ priceAlertRemoved: result.priceAlertRemoved })
+        Client.checkForCurrentPriceAlerts(this.state.userEmail).then(result => {
+            if (result.activePriceAlerts.length > 0) {
+                this.setState({ activePriceAlerts: result.activePriceAlerts });
+            } else {
+                this.setState({ activePriceAlerts: null });
+            }
         });
-    }
-    addUserToBlacklist() {
-        if (!this.state.priceAlertRemoved) {
-            Client.deletePriceAlert(this.state.id);
-        }
-        Client.addUserToBlacklist(this.state.userEmail).then(result => {
+        Client.checkBlacklistForUserEmail(this.state.userEmail).then(result => {
             this.setState({ addedToBlacklist: result.userOnBlacklist });
         });
     }
+    deleteAlert(info) {
+        const alertInfo = {
+            game: Object.keys(info)[0],
+            userEmail: this.state.userEmail,
+            dateAdded: info[Object.keys(info)[0]].alerts[0].dateAdded
+        };
+        Client.deletePriceAlert(alertInfo).then(this.checkUserStatus());
+    }
+    addUserToBlacklist() {
+        Client.addUserToBlacklist(this.state.userEmail).then(this.checkUserStatus());
+    }
     render() {
+        var priceAlerts;
+        if (this.state.activePriceAlerts) {
+            priceAlerts = (
+                <div>
+                    <h4>Active price alerts</h4>
+                    <ul className='activePriceAlerts'>
+                        {this.state.activePriceAlerts.map(val => {
+                            return (
+                                <ActivePriceAlerts
+                                    alertInfo={val}
+                                    key={Object.keys(val)[0]}
+                                    handleClick={this.deleteAlert}
+                                />
+                            );
+                        })}
+                    </ul>
+                </div>
+            );
+        }
+
         return (
             <div className='unsubscribeComponent'>
                 <Link className='homeHeader' to='/'>
                     <h1>Game Price Tracker</h1>
                 </Link>
 
-                {!this.state.priceAlertRemoved ?
+                {this.state.activePriceAlerts ?
+                    <div>
+                        {priceAlerts}
+                    </div> :
                     <Alert color='info'>
-                        <Button
-                            className='removeAlertButton button'
-                            onClick={this.removeAlert}
-                            color='info'
-                        >
-                            Remove alert
-                        </Button>
-                        Cancel this price alert.
-                        </Alert> :
-                    <Alert color='success'>
-                        This price alert has been removed.
+                        You do not have any active price alerts.
                     </Alert>}
 
                 {!this.state.addedToBlacklist ?

@@ -4,45 +4,76 @@ const scrapeSony = require('./scrape');
 const email = require('./email');
 
 
-// Using the Heroku Scheduler add-on to call this function, daily at 15:30 UTC
 (function checkPriceForEachGameInDatabase() {
     console.log('schedule.js: beginning script');
-    mongodb.MongoClient.connect(database.url, function (err, db) {
-        if (err) console.error(err);
+    mongodb.MongoClient.connect(database.url, (err, db) => {
+        if (err) {
+            return console.error(err);
+        }
+        const today = new Date().getTime();
 
-        var emailBlacklist;
-        db.collection('blacklist').find().toArray(function (err, docs) {
-            if (err) console.err(err);
-            emailBlacklist = docs[0].users;
-        });
-
-        var games = db.collection('games');
-        games.find().toArray(function (err, docs) {
-            if (err) console.error(err);
-            var today = new Date().getTime();
-
-            docs.forEach(function (doc, index) {
-                if (emailBlacklist.indexOf(doc.userEmail) !== -1) {
-                    console.log('schedule.js: deleting a price alert as userEmail is on blacklist');
-                    games.deleteOne({ "_id": doc._id });
-                } else {
-                    if (today < doc.expirationInt) {
-                        console.log('schedule.js: running scrapeSony() for ' + doc.game);
-                        scrapeSony(doc.gameUrl).then(function (result) {
-                            if (result.priceInt < doc.priceInt) {
-                                console.log('schedule.js: alerting ' + doc.userEmail + ' to sale');
-                                email.sendSalePriceEmail(doc, result);
-                            } else {
-                                console.log('schedule.js: ' + doc.game + ' is not on sale. No message sent');
-                            }
-                        });
-                    } else {
-                        console.log('schedule.js: deleting', doc._id);
-                        games.deleteOne({ "_id": doc._id });
-                        email.sendRemovingPriceAlertEmail(doc);
-                    }
-                }
-            });
+        updateGamePriceToday(db, today).then(result => {
+            console.log(result);
+            emailSaleNotificationToActivePriceAlerts(db, today);
+            deleteExpiredPriceAlerts(db, today); // Not currently notifying users
         });
     });
 })();
+
+
+function updateGamePriceToday(db, date) {
+    return new Promise((resolve, reject) => {
+        db.collection('games').find().toArray((err, allPriceAlerts) => {
+            var counter = 0;
+            allPriceAlerts.forEach((priceAlert, index) => {
+                const previouslyRecordedPrice = priceAlert.gamePriceToday;
+                scrapeSony(priceAlert.gameUrl).then(result => {
+                    const newPrice = result.priceInt;
+                    const onSale = newPrice < previouslyRecordedPrice;
+                    db.collection('games').update(
+                        { _id: priceAlert._id, gameUrl: priceAlert.gameUrl },
+                        { $set: { gamePriceToday: newPrice, onSale: onSale } }, (err, doc) => {
+                            if (err) {
+                                console.error(err);
+                                reject(err);
+                            }
+                            if (doc !== null) {
+                                counter++;
+                                if (counter === allPriceAlerts.length) {
+                                    resolve("All gamePriceToday fields updated as of " + date);
+                                }
+                            }
+                        });
+                });
+            });
+        });
+    });
+
+}
+
+function emailSaleNotificationToActivePriceAlerts(db, date) {
+    db.collection('games').find({ onSale: true, alerts: { $elemMatch: { expirationInt: { $gte: date } } } })
+        .toArray((err, docs) => {
+            if (err) {
+                console.error(err);
+            }
+            docs.forEach(doc => {
+                var gameInfo = doc;
+                gameInfo.alerts.forEach(priceAlert => {
+                    console.log('schedule.js: alerting ' + priceAlert.userEmail + ' to sale');
+                    email.sendSalePriceEmail(gameInfo, priceAlert.userEmail);
+                });
+            });
+        });
+}
+
+function deleteExpiredPriceAlerts(db, date) {
+    db.collection('games').update(
+        { alerts: { $elemMatch: { expirationInt: { $lte: date } } } },
+        { $pull: { alerts: { expirationInt: { $lte: date } } } }, (err, doc) => {
+            if (err) {
+                console.error(err);
+            }
+            console.log('schedule.js: deleted expired price alerts:', doc !== null); // Not an indication if anything was deleted
+        });
+}
