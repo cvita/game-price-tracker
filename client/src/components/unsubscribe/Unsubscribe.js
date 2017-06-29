@@ -25,6 +25,7 @@ class Unsubscribe extends Component {
         if (!this.state.userEmail) {
             return <Redirect to='/' />
         }
+        this.checkUserStatus();
     }
     checkUserStatus() {
         Client.checkForCurrentPriceAlerts(this.state.userEmail).then(result => {

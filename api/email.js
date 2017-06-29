@@ -10,6 +10,7 @@ const transport = nodemailer.createTransport({
     }
 });
 
+// Todo: check blacklist here as a failsafe
 function sendEmail(to, subject, message) {
     const mailOptions = {
         from: 'game.price.tracker@gmail.com',
@@ -27,7 +28,6 @@ function sendEmail(to, subject, message) {
     });
 }
 
-// Todo: Consider encrypting the mongoDoc._id
 function sendConfirmationEmail(mongoDoc, uri) {
     var userInfo = mongoDoc.alerts[0];
     var userEmail = userInfo.userEmail;
@@ -42,10 +42,10 @@ function sendConfirmationEmail(mongoDoc, uri) {
     sendEmail(userEmail, subject, message);
 }
 
-function sendSalePriceEmail(mongoDoc, userEmail, newScrape) {
+function sendSalePriceEmail(mongoDoc, userEmail) {
     var subject = mongoDoc.game + ' is on sale';
     var message = (
-        mongoDoc.game + ' is currently on sale for ' + newScrape.price + '.' +
+        mongoDoc.game + ' is currently on sale for $' + mongoDoc.gamePriceToday + '.' +
         ' Check it out <a href=' + mongoDoc.gameUrl + '>here</a>'
     );
     sendEmail(userEmail, subject, message);

@@ -7,7 +7,6 @@ const scrapeSony = require('./scrape');
 module.exports = function (app, db) {
     app.use(bodyParser.json());
 
-
     app.post('/games/find', function (req, res) {
         findInGamePriceTrackerDb(db, req.body.gameUrl).then(result => {
             if (result !== null) {
@@ -81,7 +80,7 @@ module.exports = function (app, db) {
     });
 };
 
-
+// These methods could be model.js
 function checkIfUserIsOnBlacklist(db, userEmail) {
     return new Promise((resolve, reject) => {
         db.collection('blacklist').findOne({ users: userEmail }, (err, doc) => {
