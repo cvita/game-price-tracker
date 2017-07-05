@@ -1,13 +1,14 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
+import { Badge } from 'reactstrap';
 
 function NotFound(props) {
     return (
         <div>
-            <h2>Not Found</h2>
-            <p>
-                Maybe you should just go <Link to='/'>home</Link>
-            </p>
+            <h1>
+                <Badge>Hmm, couldn't find that url</Badge>
+            </h1>
+            <p>Let's go back <Link to='/'>home</Link> and try again!</p>
         </div>
     );
 }

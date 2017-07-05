@@ -1,28 +1,37 @@
-function requestScrape(gameUrl) {
+function findGame(gameUrl, userEmail) {
+    console.log('requestScrape() called!', gameUrl);
     return new Promise((resolve, reject) => {
         var request = new Request('/games/find', {
             headers: new Headers({ 'Content-Type': 'application/json' })
         });
         fetch(request, {
             method: 'POST',
-            body: JSON.stringify({ "gameUrl": gameUrl })
+            body: JSON.stringify({ gameUrl })
         }).then(response => {
             if (!response.ok) {
                 reject('Unable to get info from store');
             }
-            resolve(response.json());
+            response.json().then(response => {
+                response.userEmail = userEmail;
+                response.lastUpdated = new Date().toDateString();
+                response.expirationInt = new Date().getTime() + 10886400000; // 18 weeks from now
+                response.expiration = new Date(response.expirationInt).toDateString();
+                resolve(response);
+            });
         });
     });
 }
 
-function createPriceAlert(gameInfo) {
+function createPriceAlert(priceAlertInfo) {
+    console.log(priceAlertInfo);
     return new Promise((resolve, reject) => {
+        
         var request = new Request('/games/create', {
             headers: new Headers({ 'Content-Type': 'application/json' })
         });
         fetch(request, {
             method: 'POST',
-            body: JSON.stringify(gameInfo)
+            body: JSON.stringify(priceAlertInfo)
         }).then(response => {
             if (!response.ok) {
                 reject('Unable to add price alert to db');
@@ -110,6 +119,26 @@ function addUserToBlacklist(userEmail) {
     });
 }
 
+// Refactor to be a GET method, without any body, etc...
+function findAllGamesInDb() {
+    return new Promise((resolve, reject) => {
+        var request = new Request('/games/check/all', {
+            headers: new Headers({ 'Content-Type': 'application/json' })
+        });
+        fetch(request, {
+            method: 'POST',
+            body: JSON.stringify({ "userEmail": null })
+        }).then(response => {
+            if (!response.ok) {
+                reject('Unable to check for active price alerts for userEmail');
+            }
+            response.json().then(response => {
+                resolve(response);
+            });
+        });
+    });
+}
 
-const Client = { requestScrape, createPriceAlert, checkForCurrentPriceAlerts, deletePriceAlert, checkBlacklistForUserEmail, addUserToBlacklist };
+
+const Client = { findGame, createPriceAlert, checkForCurrentPriceAlerts, deletePriceAlert, checkBlacklistForUserEmail, addUserToBlacklist, findAllGamesInDb };
 export default Client;

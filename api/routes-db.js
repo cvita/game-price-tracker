@@ -10,9 +10,11 @@ module.exports = function (app, db) {
     app.post('/games/find', function (req, res) {
         findInGamePriceTrackerDb(db, req.body.gameUrl).then(result => {
             if (result !== null) {
+                console.log(result);
                 res.send(result);
             } else {
                 scrapeSony(req.body.gameUrl).then(result => {
+                    result = Object.assign(result, req.body, {});
                     res.send(result);
                 });
             }
@@ -40,6 +42,13 @@ module.exports = function (app, db) {
         const userEmail = encryption.decrypt(req.body.userEmail);
         searchByUserEmailForActivePriceAlerts(db, userEmail).then(result => {
             res.send({ "activePriceAlerts": result.activePriceAlerts });
+        });
+    });
+
+    // See all games in DB
+    app.post('/games/check/all', (req, res) => {
+        fetchAllGamesInDb(db).then(result => {
+            res.send({ "gamesInDb": result });
         });
     });
 
@@ -100,8 +109,11 @@ function createOrAppendToExistingPriceAlert(db, gameInfo, userInfo) {
                 game: gameInfo.game,
                 gameUrl: gameInfo.gameUrl,
                 gameImage: gameInfo.gameImage,
-                gamePriceToday: gameInfo.gamePriceToday,
-                onSale: gameInfo.onSale
+                price: gameInfo.price,
+                priceInt: gameInfo.priceInt,
+                strikePrice: gameInfo.strikePrice,
+                onSale: gameInfo.onSale,
+                lastUpdated: gameInfo.lastUpdated
             },
             { $addToSet: { alerts: userInfo } },
             { upsert: true }, (err, doc) => {
@@ -142,6 +154,21 @@ function searchByUserEmailForActivePriceAlerts(db, userEmail) {
     });
 }
 
+function fetchAllGamesInDb(db) {
+    return new Promise((resolve, reject) => {
+        db.collection('games').find().toArray((err, gamesInDb) => {
+            if (err) {
+                console.error(err);
+                reject(err);
+            }
+            console.log(gamesInDb);
+            resolve(gamesInDb);
+        });
+    });
+}
+
+
+
 function deleteAllPriceAlertsForUserEmail(db, userEmail) {
     return new Promise((resolve, reject) => {
         db.collection('games').findOneAndUpdate(
@@ -152,7 +179,6 @@ function deleteAllPriceAlertsForUserEmail(db, userEmail) {
                     console.error(err);
                     reject(err);
                 }
-                console.log(doc);
                 resolve({ "allPriceAlertsRemoved": doc !== null })
             });
     });
@@ -172,7 +198,8 @@ function findInGamePriceTrackerDb(db, gameUrl) {
                     price: '$' + (doc.gamePriceToday - 0.01),
                     title: doc.game,
                     image: doc.gameImage,
-                    onSale: { status: doc.onSale }
+                    onSale: { status: doc.onSale },
+                    gameUrl: doc.gameUrl
                 };
             }
             resolve(gameInfo);

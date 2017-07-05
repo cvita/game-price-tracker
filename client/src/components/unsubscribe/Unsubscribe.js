@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Link, Redirect } from 'react-router-dom';
+import { Redirect } from 'react-router';
 import { Alert, Button } from 'reactstrap';
 import ActivePriceAlerts from './components/ActivePriceAlerts';
 import './Unsubscribe.css';
@@ -73,9 +73,6 @@ class Unsubscribe extends Component {
 
         return (
             <div className='unsubscribeComponent'>
-                <Link className='homeHeader' to='/'>
-                    <h1>Game Price Tracker</h1>
-                </Link>
 
                 {this.state.activePriceAlerts ?
                     <div>

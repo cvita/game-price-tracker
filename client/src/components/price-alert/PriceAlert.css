@@ -10,14 +10,3 @@
     margin: 1em;
 }
 
-.devModeDemoButton {
-    position: fixed;
-    top: 0;
-    left: 0;
-    background: pink;
-    opacity: 0.1;
-}
-
-.devModeDemoButton:hover {
-    opacity: 0.6;
-}

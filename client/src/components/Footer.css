@@ -1,0 +1,17 @@
+
+
+.footer {
+    width:100%;
+    margin-top: 2em;
+    padding: 1em;
+    position: relative;
+    left:0px;
+    bottom:0px;
+    background: white;
+    display: flex;
+    justify-content: center;
+}
+
+.unsubscribeLink{
+    margin-top: 8px;
+}

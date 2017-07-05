@@ -1,25 +1,23 @@
-import React, { Component } from 'react';
-import { Route, HashRouter, Switch } from 'react-router-dom';
-
-import Home from './components/Home';
-import Unsubscribe from './components/unsubscribe/Unsubscribe';
-import NotFound from './components/NotFound';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+import * as actionCreators from './redux/actions/actionCreators';
+import Main from './components/Main';
 
 
-class App extends Component {
-  render() {
-    return (
-      <div>
-        <HashRouter>
-          <Switch>
-            <Route path='/' exact component={Home} />
-            <Route path='/unsubscribe' component={Unsubscribe} />
-            <Route component={NotFound} />
-          </Switch>
-        </HashRouter>
-      </div>
-    );
-  }
+function mapStateToProps(state) {
+    return {
+        gamesInDb: state.gamesInDb,
+        activeGame: state.activeGame,
+        errors: state.errors,
+        loadingBar: state.loadingBarReducer,
+        activePriceAlert: state.activePriceAlert
+    };
 }
+
+function mapDispatchToProps(dispatch) {
+    return bindActionCreators(actionCreators, dispatch);
+}
+
+const App = connect(mapStateToProps, mapDispatchToProps)(Main);
 
 export default App;

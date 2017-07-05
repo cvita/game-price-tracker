@@ -1,0 +1,15 @@
+.gamesGridContainer {
+    padding: 1em;
+}
+
+.gamesGrid{
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.game {
+    max-width: 250px;
+    margin: 1em;
+    flex-grow: 1;
+}

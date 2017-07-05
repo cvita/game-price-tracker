@@ -9,7 +9,7 @@ module.exports = function scrapeSony(gameUrl) {
             return;
         }
 
-        var horseman = new Horseman({
+        const horseman = new Horseman({
             injectJquery: true,
             timeout: 10000
         });
@@ -19,19 +19,15 @@ module.exports = function scrapeSony(gameUrl) {
             .open(gameUrl)
             .waitForSelector('.buyPrice')
             .evaluate(function () {
-                
-                var onSale = { "status": false };
-                var strikePrice = $('.strikePrice:not(li) .price').text();
-                if (strikePrice !== '') {
-                    onSale.status = true;
-                    onSale.originalPrice = strikePrice;
-                }
+                const strikePrice = $('.strikePrice:not(li) .price').text();
+                const onSale = strikePrice === "" ? false : true;
 
                 return {
-                    "priceInt": Math.ceil($('.buyPrice .price').text().slice(1)),
+                    "game": $('.productTitle').text(),
+                    "gameImage": $('.productThumbImg img').attr('src'),
                     "price": $('.buyPrice .price').text(),
-                    "title": $('.productTitle').text(),
-                    "image": $('.productThumbImg img').attr('src'),
+                    "priceInt": Math.ceil($('.buyPrice .price').text().slice(1)),
+                    "strikePrice": strikePrice,
                     "onSale": onSale
                 }
             })
