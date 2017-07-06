@@ -15,21 +15,43 @@ function gamesInDb(state = [], action) {
 function activeGame(state = {}, action) {
     switch (action.type) {
         case 'MAKE_ACTIVE_GAME_SUCCEEDED':
-            return action.activeGame; // a single object
+            return action.activeGame;
         case 'MAKE_ACTIVE_GAME_REQUESTED':
             return 'fetching game';
         case 'RESET_ACTIVE_GAME':
-            return null;
+            return action.payload; // null
         default:
             return state;
     }
 }
 
 function activePriceAlert(state = {}, action) {
-    switch(action.type) {
-        case 'CREATE_PRICE_ALERT_SUCCEEDED':
-             console.log(action.priceAlert);
+    switch (action.type) {
+        case 'SUBMIT_PRICE_ALERT_SUCCEEDED':
             return action.priceAlert;
+        case 'RESET_ACTIVE_GAME': // revisit this idea...
+            return null;
+        default:
+            return state;
+    }
+}
+
+function userInfo(state = {}, action) {
+    switch (action.type) {
+        case 'PREPARE_PRICE_ALERT':
+            return { userEmail: action.payload.userEmail };
+        case 'MAKE_ACTIVE_GAME_SUCCEEDED':
+            const dateAdded = new Date().toDateString();
+            const expiration = new Date(dateAdded).getTime() + 10886400000; // 18 weeks
+            return {
+                ...state,
+                game_id: action.activeGame._id,
+                price: action.activeGame.price,
+                dateAdded: dateAdded,
+                expiration: new Date(expiration).toDateString()
+            };
+        case 'RESET_ACTIVE_GAME':
+            return {};
         default:
             return state;
     }
@@ -45,9 +67,10 @@ function errors(state = [], action) {
 }
 
 const rootReducer = combineReducers({
+    gamesInDb,
     activeGame,
     activePriceAlert,
-    gamesInDb,
+    userInfo,
     errors,
     loadingBar: loadingBarReducer,
     routing: routerReducer

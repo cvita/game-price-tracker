@@ -10,6 +10,7 @@ const defaultState = {
     gamesInDb: [],
     activeGame: null,
     activePriceAlert: null,
+    userInfo: {},
     errors: []
 };
 

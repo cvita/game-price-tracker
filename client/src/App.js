@@ -8,9 +8,10 @@ function mapStateToProps(state) {
     return {
         gamesInDb: state.gamesInDb,
         activeGame: state.activeGame,
+        activePriceAlert: state.activePriceAlert,
+        userInfo: state.userInfo,
         errors: state.errors,
-        loadingBar: state.loadingBarReducer,
-        activePriceAlert: state.activePriceAlert
+        loadingBar: state.loadingBarReducer
     };
 }
 
