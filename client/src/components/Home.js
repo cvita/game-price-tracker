@@ -13,9 +13,6 @@ class Home extends Component {
           </Container>
         </Jumbotron>
 
-
-
-
         <GamesGrid {...this.props} />
       </div>
     );

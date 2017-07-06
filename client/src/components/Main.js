@@ -14,7 +14,7 @@ class Main extends Component {
                 <Row>
                     <Col md='12'>
 
-                        <Link className='siteHeaderContainer' to='/'>
+                        <Link className='siteHeaderContainer' to='/' onClick={this.props.resetActiveGame}>
                             <h1 className='siteHeader'>Game Price Tracker</h1>
                             <img className='gamepad' src={gamepad} alt='gamepad' />
                         </Link>

@@ -13,7 +13,6 @@ class UserSignUp extends Component {
     handleChange(event) {
         const value = event.target.value;
         if (event.target.id.indexOf('gameInput') !== -1) {
-            console.log(value);
             this.setState({ gameInputValue: value, emailInputValue: this.state.emailInputValue });
         } else {
             this.setState({ gameInputValue: this.state.gameInputValue, emailInputValue: value });
@@ -21,29 +20,29 @@ class UserSignUp extends Component {
     }
     handleSubmit(event) {
         event.preventDefault();
-        //this.props.handleSubmit(this.state.gameInputValue, this.state.emailInputValue);
-        this.props.makeActiveGame(this.state.gameInputValue, this.state.emailInputValue);
+        this.props.makeActiveGame(this.state.gameInputValue);
+        this.props.preparePriceAlert(this.state.emailInputValue);
     }
     openSonyStore() {
         window.open('https://store.playstation.com/#!/en-us/home/games');
     }
     render() {
-        const emailPattern = /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
-        const emailIsValid = emailPattern.test(this.state.emailInputValue);
+        const emailRegExp = /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+        const emailIsValid = emailRegExp.test(this.state.emailInputValue);
         const gameUrlIsValid = this.state.gameInputValue.indexOf('store.playstation.com') !== -1;
 
         const submitButton = emailIsValid && gameUrlIsValid ?
-            <Button onClick={this.handleClick} color='success' >Submit</Button> :
-            <Button disabled type='submit'>Submit</Button>;
+            <Button type='submit' onClick={this.handleSubmit} color='success'>Submit</Button> :
+            <Button type='submit' disabled>Submit</Button>;
 
         return (
             <div>
-
+                <p className='lead'>Get an email when your game goes on sale.</p>
                 <form onSubmit={this.handleSubmit}>
                     <InputGroup>
                         <Input
                             id='gameInput'
-                            placeholder='Paste in a PlayStation store url, or select from below'
+                            placeholder='Paste in a PlayStation store url'
                             onChange={this.handleChange}
                             type='text'
                             value={this.state.gameInputValue}
@@ -70,7 +69,6 @@ class UserSignUp extends Component {
                 >
                     Open Sony PS store
                 </Button>
-
             </div>
         );
     }
