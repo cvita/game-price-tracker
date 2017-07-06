@@ -1,37 +1,34 @@
 const bodyParser = require('body-parser');
 const encryption = require('./encrypt');
-const email = require('./email');
 const scrapeSony = require('./scrape');
+const email = require('./email');
 
 
 module.exports = function (app, db) {
     app.use(bodyParser.json());
 
     app.post('/games/find', function (req, res) {
-        findInGamePriceTrackerDb(db, req.body.gameUrl).then(result => {
-            if (result !== null) {
-                console.log(result);
+        findGameInDb(db, req.body.gameUrl).then(result => {
+            if (result && result.lastUpdated === new Date().toDateString()) {
                 res.send(result);
             } else {
                 scrapeSony(req.body.gameUrl).then(result => {
-                    result = Object.assign(result, req.body, {});
+                    createOrUpdateGame(db, result);
                     res.send(result);
                 });
             }
         });
     });
 
-    // If user is not on email blacklist, create/add to price alert
-    app.post('/games/create', (req, res) => {
-        const gameInfo = req.body;
-        const userInfo = req.body.alerts[0];
-        checkIfUserIsOnBlacklist(db, userInfo.userEmail).then(result => {
-            if (result.userOnBlacklist) {
-                res.send({ "priceAlertSubmitted": false });
+    app.post('/price-alerts/create', (req, res) => {
+        const priceAlertInfo = req.body;
+        checkIfUserIsOnBlacklist(db, priceAlertInfo.userEmail).then(result => {
+            if (!result) {
+                res.send({ "priceAlertCreated": false });
             } else {
-                createOrAppendToExistingPriceAlert(db, gameInfo, userInfo).then(result => {
-                    res.send({ "priceAlertSubmitted": result.priceAlertSubmitted });
-                    email.sendConfirmationEmail(gameInfo, req.get('host'));
+                createOrUpdatePriceAlert(db, priceAlertInfo).then(result => {
+                    res.send({ "priceAlertCreated": result });
+                    email.sendConfirmationEmail(priceAlertInfo, req.get('host'));
                 });
             }
         });
@@ -45,7 +42,7 @@ module.exports = function (app, db) {
         });
     });
 
-    // See all games in DB
+    //  See all games in DB
     app.post('/games/check/all', (req, res) => {
         fetchAllGamesInDb(db).then(result => {
             res.send({ "gamesInDb": result });
@@ -77,10 +74,9 @@ module.exports = function (app, db) {
     app.put('/blacklist/add', (req, res) => {
         const userEmail = encryption.decrypt(req.body.userEmail);
         deleteAllPriceAlertsForUserEmail(db, userEmail);
-        db.collection('blacklist').update(
-            { _id: "5941b16c734d1d72c8381d22" },
-            { $addToSet: { users: userEmail } },
-            { upsert: true }, (err, doc) => {
+        db.collection('blacklist').insertOne(
+            { _id: userEmail, dateAdded: new Date().toDateString() },
+            (err, doc) => {
                 if (err) {
                     console.error(err);
                 }
@@ -90,42 +86,65 @@ module.exports = function (app, db) {
 };
 
 // These methods could be model.js
-function checkIfUserIsOnBlacklist(db, userEmail) {
+function findGameInDb(db, gameUrl) {
     return new Promise((resolve, reject) => {
-        db.collection('blacklist').findOne({ users: userEmail }, (err, doc) => {
+        db.collection('games').findOne({ url: gameUrl }, (err, doc) => {
             if (err) {
                 console.error(err);
                 reject(err);
             }
-            resolve({ "userOnBlacklist": doc !== null });
-        });
+            resolve(doc);
+        })
     });
 }
 
-function createOrAppendToExistingPriceAlert(db, gameInfo, userInfo) {
+function createOrUpdateGame(db, gameInfo) {
     return new Promise((resolve, reject) => {
+        console.log(gameInfo);
         db.collection('games').update(
-            {
-                game: gameInfo.game,
-                gameUrl: gameInfo.gameUrl,
-                gameImage: gameInfo.gameImage,
-                price: gameInfo.price,
-                priceInt: gameInfo.priceInt,
-                strikePrice: gameInfo.strikePrice,
-                onSale: gameInfo.onSale,
-                lastUpdated: gameInfo.lastUpdated
-            },
-            { $addToSet: { alerts: userInfo } },
+            { _id: gameInfo._id },
+            gameInfo,
+            { upsert: true },
+            (err, doc) => {
+                if (err) {
+                    console.error(err);
+                    reject(err);
+                }
+                resolve(doc !== null);
+            });
+    });
+}
+
+function checkIfUserIsOnBlacklist(db, userEmail) {
+    return new Promise((resolve, reject) => {
+        console.log('CHECKING BLACKLIST FOR:', userEmail);
+        db.collection('blacklist').findOne(
+            { _id: userEmail },
+            (err, doc) => {
+                if (err) {
+                    console.error(err);
+                    reject(err);
+                }
+                resolve(doc !== null);
+            });
+    });
+}
+
+
+function createOrUpdatePriceAlert(db, priceAlertInfo) {
+    return new Promise((resolve, reject) => {
+        db.collection('priceAlerts').update(
+            { game_id: priceAlertInfo.game_id, userEmail: priceAlertInfo.userEmail },
+            priceAlertInfo,
             { upsert: true }, (err, doc) => {
                 if (err) {
                     console.error(err);
                     reject(err);
                 }
-                resolve({ "priceAlertSubmitted": doc !== null });
+                resolve(doc !== null);
             });
     });
 }
-
 
 function searchByUserEmailForActivePriceAlerts(db, userEmail) {
     return new Promise((resolve, reject) => {
@@ -167,8 +186,6 @@ function fetchAllGamesInDb(db) {
     });
 }
 
-
-
 function deleteAllPriceAlertsForUserEmail(db, userEmail) {
     return new Promise((resolve, reject) => {
         db.collection('games').findOneAndUpdate(
@@ -181,28 +198,5 @@ function deleteAllPriceAlertsForUserEmail(db, userEmail) {
                 }
                 resolve({ "allPriceAlertsRemoved": doc !== null })
             });
-    });
-}
-
-function findInGamePriceTrackerDb(db, gameUrl) {
-    return new Promise((resolve, reject) => {
-        db.collection('games').findOne({ gameUrl: gameUrl }, (err, doc) => {
-            if (err) {
-                console.error(err);
-                reject(err);
-            }
-            var gameInfo = null;
-            if (doc !== null) {
-                gameInfo = {
-                    priceInt: doc.gamePriceToday,
-                    price: '$' + (doc.gamePriceToday - 0.01),
-                    title: doc.game,
-                    image: doc.gameImage,
-                    onSale: { status: doc.onSale },
-                    gameUrl: doc.gameUrl
-                };
-            }
-            resolve(gameInfo);
-        })
     });
 }

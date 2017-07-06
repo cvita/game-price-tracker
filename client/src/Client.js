@@ -1,5 +1,4 @@
-function findGame(gameUrl, userEmail) {
-    console.log('requestScrape() called!', gameUrl);
+function findGame(gameUrl) {
     return new Promise((resolve, reject) => {
         var request = new Request('/games/find', {
             headers: new Headers({ 'Content-Type': 'application/json' })
@@ -12,10 +11,6 @@ function findGame(gameUrl, userEmail) {
                 reject('Unable to get info from store');
             }
             response.json().then(response => {
-                response.userEmail = userEmail;
-                response.lastUpdated = new Date().toDateString();
-                response.expirationInt = new Date().getTime() + 10886400000; // 18 weeks from now
-                response.expiration = new Date(response.expirationInt).toDateString();
                 resolve(response);
             });
         });
@@ -25,8 +20,7 @@ function findGame(gameUrl, userEmail) {
 function createPriceAlert(priceAlertInfo) {
     console.log(priceAlertInfo);
     return new Promise((resolve, reject) => {
-        
-        var request = new Request('/games/create', {
+        var request = new Request('/price-alerts/create', {
             headers: new Headers({ 'Content-Type': 'application/json' })
         });
         fetch(request, {
