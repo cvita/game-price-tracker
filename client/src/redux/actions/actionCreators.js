@@ -1,14 +1,14 @@
-export function scrapeUrl(url) {
+export function fetchAllGamesInDb() {
     return {
-        type: 'SCRAPE_URL',
-        url
-    }
+        type: 'FETCH_ALL_GAMES_IN_DB_REQUESTED',
+        payload: {}
+    };
 }
 
-export function makeActiveGame(gameUrl) {
+export function makeActiveGame(url) {
     return {
         type: 'MAKE_ACTIVE_GAME_REQUESTED',
-        payload: { gameUrl }
+        payload: { url }
     };
 }
 
@@ -33,9 +33,23 @@ export function createPriceAlert(priceAlertInfo) {
     };
 }
 
-export function fetchGamesInDb() {
+export function fetchPriceAlert(_id) {
     return {
-        type: 'FETCH_GAMES_IN_DB_REQUESTED',
-        payload: null
+        type: 'FETCH_PRICE_ALERT_REQUESTED',
+        payload: { _id }
+    };
+}
+
+export function checkBlacklist(userEmail) {
+    return {
+        type: 'CHECK_BLACKLIST_REQUESTED',
+        payload: { userEmail }
+    };
+}
+
+export function addToBlacklist(userEmail) {
+    return {
+        type: 'ADD_TO_BLACKLIST_REQUESTED',
+        payload: { userEmail }
     };
 }

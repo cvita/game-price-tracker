@@ -1,6 +1,6 @@
 function findAllGames() {
     return new Promise((resolve, reject) => {
-        const request = new Request(`/games/find/all`);
+        const request = new Request('/games/find/all');
         fetch(request, {
             method: 'GET'
         }).then(response => handleResponse(response, resolve, reject));
@@ -9,30 +9,9 @@ function findAllGames() {
 
 function findOneGame(url) {
     return new Promise((resolve, reject) => {
-        const request = new Request(`/games/find/one/?url=${encodeURIComponent(url)}`);
+        const request = new Request(`/games/find/one/?url=${url}`);
         fetch(request, {
             method: 'GET'
-        }).then(response => handleResponse(response, resolve, reject));
-    });
-}
-
-function sendLinkToManagePriceAlertsToUser(userEmail) {
-    return new Promise((resolve, reject) => {
-        const request = new Request(`/priceAlerts/find/all/?userEmail=${userEmail}`);
-        fetch(request, {
-            method: 'GET'
-        }).then(response => handleResponse(response, resolve, reject));
-    });
-}
-
-function findAllPriceAlertsForUser(userEmail, id) {
-    return new Promise((resolve, reject) => {
-        const request = new Request('/priceAlerts/find/all', {
-            headers: new Headers({ 'Content-Type': 'application/json' })
-        });
-        fetch(request, {
-            method: 'POST',
-            body: JSON.stringify({ userEmail, id })
         }).then(response => handleResponse(response, resolve, reject));
     });
 }
@@ -49,21 +28,34 @@ function createPriceAlert(priceAlertInfo) {
     });
 }
 
-function deletePriceAlert(alertInfo) {
+function findOnePriceAlert(id) {
+    return new Promise((resolve, reject) => {
+        console.log(id);
+        const request = new Request('/priceAlerts/find/one', {
+            headers: new Headers({ 'Content-Type': 'application/json' })
+        });
+        fetch(request, {
+            method: 'POST',
+            body: JSON.stringify({ id: id })
+        }).then(response => handleResponse(response, resolve, reject));
+    });
+}
+
+function deletePriceAlert(priceAlertInfo) {
     return new Promise((resolve, reject) => {
         const request = new Request('/priceAlerts/delete', {
             headers: new Headers({ 'Content-Type': 'application/json' })
         });
         fetch(request, {
             method: 'DELETE',
-            body: JSON.stringify(alertInfo)
+            body: JSON.stringify(priceAlertInfo)
         }).then(response => handleResponse(response, resolve, reject));
     });
 }
 
-function checkBlacklistForUserEmail(userEmail) {
+function checkBlacklist(userEmail) {
     return new Promise((resolve, reject) => {
-        const request = new Request('/blacklist/find', {
+        const request = new Request('/blacklist/find/one', {
             headers: new Headers({ 'Content-Type': 'application/json' })
         });
         fetch(request, {
@@ -73,7 +65,7 @@ function checkBlacklistForUserEmail(userEmail) {
     });
 }
 
-function addUserToBlacklist(userEmail) {
+function addToBlacklist(userEmail) {
     return new Promise((resolve, reject) => {
         const request = new Request('/blacklist/add', {
             headers: new Headers({ 'Content-Type': 'application/json' })
@@ -88,11 +80,23 @@ function addUserToBlacklist(userEmail) {
 
 function handleResponse(response, resolve, reject) {
     if (!response.ok) {
-        reject({ PROBLEM_WITH_RESPONSE: response });
+        console.error(new Error(response));
+        reject(response);
     }
-    response.json().then(response => resolve(response));
+    response.json().then(response => {
+        console.log(response.api);
+        resolve(response.api);
+    });
 }
 
 
-const Client = { findOneGame, createPriceAlert, findAllPriceAlertsForUser, deletePriceAlert, checkBlacklistForUserEmail, addUserToBlacklist, findAllGames, sendLinkToManagePriceAlertsToUser };
+const Client = {
+    findAllGames,
+    findOneGame,
+    createPriceAlert,
+    findOnePriceAlert,
+    deletePriceAlert,
+    checkBlacklist,
+    addToBlacklist
+}
 export default Client;

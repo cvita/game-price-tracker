@@ -3,15 +3,12 @@ import Client from '../Client';
 import { showLoading, hideLoading } from 'react-redux-loading-bar';
 
 
-function* fetchGamesInDb(action) {
+function* fetchAllGamesInDb(action) {
     try {
-        yield put(showLoading());
-        const games = yield call(Client.findAllGames);
-        yield put({ type: "FETCH_GAMES_IN_DB_SUCCEEDED", games });
+        const allGames = yield call(Client.findAllGames);
+        yield put({ type: 'FETCH_ALL_GAMES_IN_DB_SUCCEEDED', allGames });
     } catch (e) {
-        yield put({ type: "FETCH_GAMES_IN_DB_FAILED", message: e.message });
-    } finally {
-        yield put(hideLoading());
+        yield put({ type: 'FETCH_ALL_GAMES_IN_DB_FAILED', message: e.message });
     }
 }
 
@@ -19,9 +16,9 @@ function* makeActiveGame(action) {
     try {
         yield put(showLoading());
         const activeGame = yield call(Client.findOneGame, action.payload.url);
-        yield put({ type: "MAKE_ACTIVE_GAME_SUCCEEDED", activeGame });
+        yield put({ type: 'MAKE_ACTIVE_GAME_SUCCEEDED', activeGame });
     } catch (e) {
-        yield put({ type: "MAKE_ACTIVE_GAME_FAILED", message: e.message });
+        yield put({ type: 'MAKE_ACTIVE_GAME_FAILED', message: e.message });
     } finally {
         yield put(hideLoading());
     }
@@ -29,34 +26,49 @@ function* makeActiveGame(action) {
 
 function* submitPriceAlert(action) {
     try {
-        yield put(showLoading());
         const priceAlert = yield call(Client.createPriceAlert, action.payload.priceAlertInfo);
-        yield put({ type: "SUBMIT_PRICE_ALERT_SUCCEEDED", priceAlert });
+        yield put({ type: 'SUBMIT_PRICE_ALERT_SUCCEEDED', priceAlert });
     } catch (e) {
-        yield put({ type: "SUBMIT_PRICE_ALERT_FAILED", message: e.message });
-    } finally {
-        yield put(hideLoading());
+        yield put({ type: 'SUBMIT_PRICE_ALERT_FAILED', message: e.message });
     }
 }
 
-function* findPriceAlerts(action) {
+function* fetchPriceAlert(action) {
     try {
-        yield put(showLoading());
-        const allPriceAlerts = yield call(Client.findAllPriceAlertsForUser, action.payload.userEmail, action.payload.id);
-        yield put({ type: "FIND_ALL_PRICE_ALERTS_SUCCEEDED", allPriceAlerts });
+        const priceAlert = yield call(Client.findOnePriceAlert, action.payload._id);
+        yield put({ type: 'FETCH_PRICE_ALERT_SUCCEEDED', priceAlert });
     } catch (e) {
-        yield put({ type: "FIND_ALL_PRICE_ALERTS_FAILED", message: e.message });
-    } finally {
-        yield put(hideLoading());
+        yield put({ type: 'FETCH_PRICE_ALERT_FAILED', message: e.message });
     }
 }
+
+function* checkBlacklist(action) {
+    try {
+        const blacklistInfo = yield call(Client.checkBlacklist, action.payload.userEmail);
+        yield put({ type: 'CHECK_BLACKLIST_SUCCEEDED', blacklistInfo });
+    } catch (e) {
+        yield put({ type: 'CHECK_BLACKLIST_FAILED', message: e.message });
+    }
+}
+
+function* addToBlacklist(action) {
+    try {
+        const blacklistInfo = yield call(Client.addToBlacklist, action.payload.userEmail);
+        yield put({ type: 'ADD_TO_BLACKLIST_SUCCEEDED', blacklistInfo });
+    } catch (e) {
+        yield put({ type: 'ADD_TO_BLACKLIST_FAILED', message: e.message });
+    }
+}
+
 
 function* gamePriceTrackerSagas() {
     yield all([
-        takeLatest('FETCH_GAMES_IN_DB_REQUESTED', fetchGamesInDb),
+        takeLatest('FETCH_ALL_GAMES_IN_DB_REQUESTED', fetchAllGamesInDb),
         takeLatest('MAKE_ACTIVE_GAME_REQUESTED', makeActiveGame),
         takeLatest('SUBMIT_PRICE_ALERT_REQUESTED', submitPriceAlert),
-        takeLatest('FIND_ALL_PRICE_ALERTS', findPriceAlerts)
+        takeLatest('CHECK_BLACKLIST_REQUESTED', checkBlacklist),
+        takeLatest('ADD_TO_BLACKLIST_REQUESTED', addToBlacklist),
+        takeLatest('FETCH_PRICE_ALERT_REQUESTED', fetchPriceAlert)
     ]);
 }
 

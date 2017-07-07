@@ -5,8 +5,8 @@ import { loadingBarReducer } from 'react-redux-loading-bar'
 
 function allGames(state = [], action) {
     switch (action.type) {
-        case 'FETCH_GAMES_IN_DB_SUCCEEDED':
-            return action.games.allGames;
+        case 'FETCH_ALL_GAMES_IN_DB_SUCCEEDED':
+            return action.allGames;
         default:
             return state;
     }
@@ -14,10 +14,10 @@ function allGames(state = [], action) {
 
 function activeGame(state = {}, action) {
     switch (action.type) {
-        case 'MAKE_ACTIVE_GAME_SUCCEEDED':
-            return action.activeGame;
         case 'MAKE_ACTIVE_GAME_REQUESTED':
             return 'fetching game';
+        case 'MAKE_ACTIVE_GAME_SUCCEEDED':
+            return action.activeGame;
         case 'RESET_ACTIVE_GAME':
             return action.payload; // null
         default:
@@ -28,9 +28,10 @@ function activeGame(state = {}, action) {
 function activePriceAlert(state = {}, action) {
     switch (action.type) {
         case 'SUBMIT_PRICE_ALERT_SUCCEEDED':
+        case 'FETCH_PRICE_ALERT_SUCCEEDED':
             return action.priceAlert;
         case 'RESET_ACTIVE_GAME': // revisit this idea...
-            return null;
+            return {};
         default:
             return state;
     }
@@ -52,17 +53,14 @@ function userInfo(state = {}, action) {
                 dateAdded: dateAdded,
                 expiration: dateAdded + 10886400000 // 18 weeks
             };
+        case 'CHECK_BLACKLIST_SUCCEEDED':
+        case 'ADD_TO_BLACKLIST_SUCCEEDED':
+            return {
+                onBlacklist: action.blacklistInfo.onBlacklist,
+                userEmail: action.blacklistInfo.userEmail
+            };
         case 'RESET_ACTIVE_GAME':
             return {};
-        default:
-            return state;
-    }
-}
-
-function allPriceAlerts(state = [], action) {
-    switch (action.type) {
-        case 'FIND_ALL_PRICE_ALERTS_SUCCEEDED':
-            return action.allPriceAlerts.activePriceAlerts;
         default:
             return state;
     }
@@ -80,7 +78,6 @@ function errors(state = [], action) {
 const rootReducer = combineReducers({
     allGames,
     activeGame,
-    allPriceAlerts,
     activePriceAlert,
     userInfo,
     errors,
