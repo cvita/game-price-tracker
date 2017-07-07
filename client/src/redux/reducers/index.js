@@ -3,10 +3,10 @@ import { routerReducer } from 'react-router-redux';
 import { loadingBarReducer } from 'react-redux-loading-bar'
 
 
-function gamesInDb(state = [], action) {
+function allGames(state = [], action) {
     switch (action.type) {
         case 'FETCH_GAMES_IN_DB_SUCCEEDED':
-            return action.gamesInDb.gamesInDb;
+            return action.games.allGames;
         default:
             return state;
     }
@@ -39,19 +39,30 @@ function activePriceAlert(state = {}, action) {
 function userInfo(state = {}, action) {
     switch (action.type) {
         case 'PREPARE_PRICE_ALERT':
-            return { userEmail: action.payload.userEmail };
+            return {
+                ...state,
+                userEmail: action.payload.userEmail
+            };
         case 'MAKE_ACTIVE_GAME_SUCCEEDED':
-            const dateAdded = new Date().toDateString();
-            const expiration = new Date(dateAdded).getTime() + 10886400000; // 18 weeks
+            const dateAdded = new Date(new Date().toDateString()).getTime();
             return {
                 ...state,
                 game_id: action.activeGame._id,
                 price: action.activeGame.price,
                 dateAdded: dateAdded,
-                expiration: new Date(expiration).toDateString()
+                expiration: dateAdded + 10886400000 // 18 weeks
             };
         case 'RESET_ACTIVE_GAME':
             return {};
+        default:
+            return state;
+    }
+}
+
+function allPriceAlerts(state = [], action) {
+    switch (action.type) {
+        case 'FIND_ALL_PRICE_ALERTS_SUCCEEDED':
+            return action.allPriceAlerts.activePriceAlerts;
         default:
             return state;
     }
@@ -67,8 +78,9 @@ function errors(state = [], action) {
 }
 
 const rootReducer = combineReducers({
-    gamesInDb,
+    allGames,
     activeGame,
+    allPriceAlerts,
     activePriceAlert,
     userInfo,
     errors,

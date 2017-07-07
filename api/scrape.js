@@ -28,11 +28,11 @@ module.exports = function scrapeSony(url) {
                 }
 
                 return {
-                    _id: $('.productTitle').text(),
+                    _id: $('.productTitle').text().replace(/’/g, "\'"),
                     price: parseFloat($('.buyPrice .price').text().slice(1)),
                     onSale: onSale,
                     strikePrice: strikePrice,
-                    lastUpdated: new Date().toDateString(),
+                    lastUpdated: new Date(new Date().toDateString()).getTime(),
                     image: $('.productThumbImg img').attr('src'),
                 };
             })

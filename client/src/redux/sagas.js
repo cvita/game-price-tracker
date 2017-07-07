@@ -6,8 +6,8 @@ import { showLoading, hideLoading } from 'react-redux-loading-bar';
 function* fetchGamesInDb(action) {
     try {
         yield put(showLoading());
-        const gamesInDb = yield call(Client.findAllGamesInDb);
-        yield put({ type: "FETCH_GAMES_IN_DB_SUCCEEDED", gamesInDb });
+        const games = yield call(Client.findAllGames);
+        yield put({ type: "FETCH_GAMES_IN_DB_SUCCEEDED", games });
     } catch (e) {
         yield put({ type: "FETCH_GAMES_IN_DB_FAILED", message: e.message });
     } finally {
@@ -18,7 +18,7 @@ function* fetchGamesInDb(action) {
 function* makeActiveGame(action) {
     try {
         yield put(showLoading());
-        const activeGame = yield call(Client.findGame, action.payload.gameUrl);
+        const activeGame = yield call(Client.findOneGame, action.payload.url);
         yield put({ type: "MAKE_ACTIVE_GAME_SUCCEEDED", activeGame });
     } catch (e) {
         yield put({ type: "MAKE_ACTIVE_GAME_FAILED", message: e.message });
@@ -39,12 +39,24 @@ function* submitPriceAlert(action) {
     }
 }
 
+function* findPriceAlerts(action) {
+    try {
+        yield put(showLoading());
+        const allPriceAlerts = yield call(Client.findAllPriceAlertsForUser, action.payload.userEmail, action.payload.id);
+        yield put({ type: "FIND_ALL_PRICE_ALERTS_SUCCEEDED", allPriceAlerts });
+    } catch (e) {
+        yield put({ type: "FIND_ALL_PRICE_ALERTS_FAILED", message: e.message });
+    } finally {
+        yield put(hideLoading());
+    }
+}
 
 function* gamePriceTrackerSagas() {
     yield all([
         takeLatest('FETCH_GAMES_IN_DB_REQUESTED', fetchGamesInDb),
         takeLatest('MAKE_ACTIVE_GAME_REQUESTED', makeActiveGame),
-        takeLatest('SUBMIT_PRICE_ALERT_REQUESTED', submitPriceAlert)
+        takeLatest('SUBMIT_PRICE_ALERT_REQUESTED', submitPriceAlert),
+        takeLatest('FIND_ALL_PRICE_ALERTS', findPriceAlerts)
     ]);
 }
 
