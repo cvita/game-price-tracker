@@ -9,7 +9,7 @@ function findAllGames() {
 
 function findOneGame(url) {
     return new Promise((resolve, reject) => {
-        const request = new Request(`/games/find/one/?url=${url}`);
+        const request = new Request(`/games/find/one/?url=${encodeURIComponent(url)}`);
         fetch(request, {
             method: 'GET'
         }).then(response => handleResponse(response, resolve, reject));
@@ -41,14 +41,14 @@ function findOnePriceAlert(id) {
     });
 }
 
-function deletePriceAlert(priceAlertInfo) {
+function deletePriceAlert(userInfo) {
     return new Promise((resolve, reject) => {
         const request = new Request('/priceAlerts/delete', {
             headers: new Headers({ 'Content-Type': 'application/json' })
         });
         fetch(request, {
             method: 'DELETE',
-            body: JSON.stringify(priceAlertInfo)
+            body: JSON.stringify(userInfo)
         }).then(response => handleResponse(response, resolve, reject));
     });
 }
