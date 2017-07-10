@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import { Alert, Button } from 'reactstrap';
 import './PriceAlert.css';
 
-import UserSignUp from './components/UserSignUp';
-import PriceAlertPreview from './components/PriceAlertPreview';
+import UserSignUp from './UserSignUp';
+import PriceAlertPreview from './PriceAlertPreview';
 
 
 class PriceAlert extends Component {

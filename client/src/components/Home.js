@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import PriceAlert from './price-alert/PriceAlert';
+import PriceAlert from './PriceAlert';
 import GamesGrid from './GamesGrid';
 import { Jumbotron, Container } from 'reactstrap';
 

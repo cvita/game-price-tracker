@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Redirect } from 'react-router';
-import GamePreview from '../GamePreview';
+import GamePreview from './GamePreview';
 import { Alert, Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import './Unsubscribe.css';
 

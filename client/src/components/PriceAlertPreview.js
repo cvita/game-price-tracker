@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import GamePreview from '../../GamePreview';
+import GamePreview from './GamePreview';
 import { Alert } from 'reactstrap';
-import SubmitForm from '../../SubmitForm';
+import SubmitForm from './SubmitForm';
 
 class PriceAlertPreview extends Component {
     render() {

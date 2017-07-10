@@ -7,9 +7,9 @@ import { Provider } from 'react-redux';
 import store, { history } from './redux/store';
 
 // Components
-import App from './App';
+import App from './redux/App';
 import Home from './components/Home';
-import Unsubscribe from './components/unsubscribe/Unsubscribe';
+import Unsubscribe from './components/Unsubscribe';
 import NotFound from './components/NotFound';
 
 // Service worker disabled for development...
@@ -19,7 +19,6 @@ import 'bootstrap/dist/css/bootstrap.css';
 import './index.css';
 
 
-// Todo: Add NotFound route
 function GamePriceTracker(props) {
     return (
         <Provider store={store}>

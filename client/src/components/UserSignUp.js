@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Button, Tooltip } from 'reactstrap';
-import SubmitForm from '../../SubmitForm';
+import SubmitForm from './SubmitForm';
 import './UserSignUp.css';
 
 
