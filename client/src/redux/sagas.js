@@ -35,10 +35,20 @@ function* submitPriceAlert(action) {
 
 function* fetchPriceAlert(action) {
     try {
-        const priceAlert = yield call(Client.findOnePriceAlert, action.payload._id);
-        yield put({ type: 'FETCH_PRICE_ALERT_SUCCEEDED', priceAlert });
+        const gameAndUserInfo = yield call(Client.findOnePriceAlert, action.payload._id);
+        console.log(gameAndUserInfo);
+        yield put({ type: 'FETCH_PRICE_ALERT_SUCCEEDED', gameAndUserInfo });
     } catch (e) {
         yield put({ type: 'FETCH_PRICE_ALERT_FAILED', message: e.message });
+    }
+}
+
+function* deletePriceAlert(action) {
+    try {
+        const priceAlert = yield call(Client.deletePriceAlert, action.payload.userInfo);
+        yield put({ type: 'DELETE_PRICE_ALERT_SUCCEEDED', priceAlert });
+    } catch (e) {
+        yield put({ type: 'DELETE_PRICE_ALERT_FAILED', message: e.message });
     }
 }
 
@@ -68,7 +78,8 @@ function* gamePriceTrackerSagas() {
         takeLatest('SUBMIT_PRICE_ALERT_REQUESTED', submitPriceAlert),
         takeLatest('CHECK_BLACKLIST_REQUESTED', checkBlacklist),
         takeLatest('ADD_TO_BLACKLIST_REQUESTED', addToBlacklist),
-        takeLatest('FETCH_PRICE_ALERT_REQUESTED', fetchPriceAlert)
+        takeLatest('FETCH_PRICE_ALERT_REQUESTED', fetchPriceAlert),
+        takeLatest('DELETE_PRICE_ALERT_REQUESTED', deletePriceAlert)
     ]);
 }
 

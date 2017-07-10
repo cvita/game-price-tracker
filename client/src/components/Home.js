@@ -12,8 +12,8 @@ class Home extends Component {
             <PriceAlert {...this.props} />
           </Container>
         </Jumbotron>
-
-        <GamesGrid {...this.props} />
+        {!this.props.activeGame &&
+          <GamesGrid allGames={this.props.allGames} makeActiveGame={this.props.makeActiveGame}/>}
       </div>
     );
   }

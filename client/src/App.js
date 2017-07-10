@@ -6,9 +6,9 @@ import Main from './components/Main';
 
 function mapStateToProps(state) {
     return {
-        gamesInDb: state.gamesInDb,
+        allGames: state.allGames,
         activeGame: state.activeGame,
-        activePriceAlert: state.activePriceAlert,
+        priceAlertCreated: state.priceAlertCreated,
         userInfo: state.userInfo,
         errors: state.errors,
         loadingBar: state.loadingBarReducer

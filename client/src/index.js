@@ -25,8 +25,8 @@ function GamePriceTracker(props) {
         <Provider store={store}>
             <Router history={history}>
                 <Route path='/' component={App}>
-                    <IndexRoute component={Home}></IndexRoute>
-                    <Route path='/unsubscribe' component={Unsubscribe} />
+                    <IndexRoute component={Home} />
+                    <Route path='/unsubscribe*' component={Unsubscribe} />
                     <Route path='*' component={NotFound} />
                 </Route>
             </Router>

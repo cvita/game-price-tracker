@@ -19,19 +19,23 @@ function activeGame(state = {}, action) {
         case 'MAKE_ACTIVE_GAME_SUCCEEDED':
             return action.activeGame;
         case 'RESET_ACTIVE_GAME':
-            return action.payload; // null
+        case 'DELETE_PRICE_ALERT_SUCCEEDED':
+            return null;
+        case 'FETCH_PRICE_ALERT_SUCCEEDED':
+            console.log('HERE')
+            return action.gameAndUserInfo.activeGame;
         default:
             return state;
     }
 }
 
-function activePriceAlert(state = {}, action) {
+function priceAlertCreated(state = false, action) {
     switch (action.type) {
         case 'SUBMIT_PRICE_ALERT_SUCCEEDED':
-        case 'FETCH_PRICE_ALERT_SUCCEEDED':
-            return action.priceAlert;
+            return action.priceAlert.ok === 1;
         case 'RESET_ACTIVE_GAME': // revisit this idea...
-            return {};
+        case 'DELETE_PRICE_ALERT_SUCCEEDED':
+            return false;
         default:
             return state;
     }
@@ -45,20 +49,29 @@ function userInfo(state = {}, action) {
                 userEmail: action.payload.userEmail
             };
         case 'MAKE_ACTIVE_GAME_SUCCEEDED':
-            const dateAdded = new Date(new Date().toDateString()).getTime();
             return {
                 ...state,
                 game_id: action.activeGame._id,
-                price: action.activeGame.price,
-                dateAdded: dateAdded,
-                expiration: dateAdded + 10886400000 // 18 weeks
+                price: action.activeGame.price
             };
         case 'CHECK_BLACKLIST_SUCCEEDED':
         case 'ADD_TO_BLACKLIST_SUCCEEDED':
             return {
+                ...state,
                 onBlacklist: action.blacklistInfo.onBlacklist,
                 userEmail: action.blacklistInfo.userEmail
             };
+        case 'FETCH_PRICE_ALERT_SUCCEEDED':
+            delete action.gameAndUserInfo.userInfo._id;
+            delete action.gameAndUserInfo.userInfo.onBlacklist;
+            return {
+                ...state,
+                ...action.gameAndUserInfo.userInfo
+            };
+        case 'SUBMIT_PRICE_ALERT_REQUESTED':
+            return state;
+        case 'SUBMIT_PRICE_ALERT_SUCCEEDED':
+            return state;
         case 'RESET_ACTIVE_GAME':
             return {};
         default:
@@ -78,7 +91,7 @@ function errors(state = [], action) {
 const rootReducer = combineReducers({
     allGames,
     activeGame,
-    activePriceAlert,
+    priceAlertCreated,
     userInfo,
     errors,
     loadingBar: loadingBarReducer,
