@@ -6,3 +6,7 @@ body {
   background: whitesmoke;
   font-family: sans-serif;
 }
+
+.gamePriceTrackerButton{
+    margin: 0.5em;
+}
