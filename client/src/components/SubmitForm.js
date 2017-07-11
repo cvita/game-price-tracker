@@ -31,31 +31,23 @@ class SubmitForm extends Component {
         }
     }
     render() {
-        var children = this.props.children;
-        if (!Array.isArray(children)) {
-            children = [children];
-        }
-
         const emailRegExp = /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
         const emailIsValid = emailRegExp.test(this.state.emailInput);
-
-        var gameUrlIsValid = true;
-        if (children.length > 1) {
-            gameUrlIsValid = this.state.gameInput.indexOf('store.playstation.com') !== -1;
-        }
-
-        const submitButton = emailIsValid && gameUrlIsValid ?
-            <Button type='submit' onClick={this.handleSubmit} color='success'>Submit</Button> :
-            <Button type='submit' disabled>Submit</Button>;
+        const gameUrlIsValid = this.state.gameInput.indexOf('store.playstation.com') !== -1;
+        const color = emailIsValid && gameUrlIsValid ?
+            'success' :
+            'secondary';
 
         return (
             <form onSubmit={this.props.handleSubmit}>
                 <InputGroup>
-                    {children.map((child, i) => {
-                        return <Input {...child.props} key={i} onChange={this.handleChange} value={this.state[child.props.id]} />
-                    })}
+                    {this.props.context === 'UserSignUp.js' &&
+                        <Input id='gameInput' type='text' placeholder='Paste in a PlayStation store url' onChange={this.handleChange} value={this.state.gameInput} />}
+
+                    <Input id='emailInput' type='email' placeholder='Email for price alert' onChange={this.handleChange} value={this.state.emailInput} />
+
                     <InputGroupButton>
-                        {submitButton}
+                        <Button type='submit' onClick={this.handleSubmit} disabled={!gameUrlIsValid} color={color}>Submit</Button>
                     </InputGroupButton>
                 </InputGroup>
             </form>

@@ -17,16 +17,10 @@ class PriceAlertPreview extends Component {
                     </Alert>}
 
                 {this.props.userInfo.userEmail ?
-                    <p className='gamePreviewMessage'>
-                        You will receive a message at <strong>{userEmail}</strong> if {_id}'s price drops below ${price} before {expiration}.
-                    </p> :
+                    <p>You will receive a message at <strong>{userEmail}</strong> if {_id}'s price drops below ${price} before {expiration}.</p> :
                     <div>
-                        <p className='gamePreviewMessage'>
-                            Enter an email address to receive a message if {_id}'s price drops below ${price} before {expiration}.
-                                </p>
-                        <SubmitForm {...this.props}>
-                            <div id='emailInput' type='email' placeholder='Email for price alert' />
-                        </SubmitForm>
+                        <p>Enter an email address to receive a message if {_id}'s price drops below ${price} before {expiration}.</p>
+                        <SubmitForm {...this.props} context={'PriceAlertPreview.js'} />
                     </div>}
 
                 {this.props.children}

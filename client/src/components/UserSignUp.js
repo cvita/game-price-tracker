@@ -20,10 +20,7 @@ class UserSignUp extends Component {
         return (
             <div>
                 <p className='lead'>Get an email when your game goes on sale.</p>
-                <SubmitForm {...this.props}>
-                    <div id='gameInput' type='text' placeholder='Paste in a PlayStation store url' />
-                    <div id='emailInput' type='email' placeholder='Email for price alert' />
-                </SubmitForm>
+                <SubmitForm {...this.props} context={'UserSignUp.js'} />
 
                 <Tooltip placement='right' isOpen={this.state.tooltipOpen} target='gameInput' toggle={this.toggle}>
                     Or, select from below
