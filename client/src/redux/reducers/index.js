@@ -18,11 +18,13 @@ function activeGame(state = {}, action) {
             return 'fetching game';
         case 'MAKE_ACTIVE_GAME_SUCCEEDED':
             return action.activeGame;
+        case 'UPDATE_ACTIVE_GAME_REQUESTED':
+            console.log('UPDATING', state);
+            return { ...state, updating: true };
         case 'RESET_ACTIVE_GAME':
         case 'DELETE_PRICE_ALERT_SUCCEEDED':
             return null;
         case 'FETCH_PRICE_ALERT_SUCCEEDED':
-            console.log('HERE')
             return action.gameAndUserInfo.activeGame;
         default:
             return state;

@@ -16,6 +16,15 @@ function findOneGame(url) {
     });
 }
 
+function updateGameInfo(url) {
+    return new Promise((resolve, reject) => {
+        const request = new Request(`/games/update/?url=${encodeURIComponent(url)}`);
+        fetch(request, {
+            method: 'GET'
+        }).then(response => handleResponse(response, resolve, reject));
+    });
+}
+
 function createPriceAlert(priceAlertInfo) {
     return new Promise((resolve, reject) => {
         const request = new Request('/priceAlerts/add', {
@@ -77,7 +86,6 @@ function addToBlacklist(userEmail) {
     });
 }
 
-
 function handleResponse(response, resolve, reject) {
     if (!response.ok) {
         console.error(new Error(response));
@@ -93,10 +101,11 @@ function handleResponse(response, resolve, reject) {
 const Client = {
     findAllGames,
     findOneGame,
+    updateGameInfo,
     createPriceAlert,
     findOnePriceAlert,
     deletePriceAlert,
     checkBlacklist,
     addToBlacklist
-}
+};
 export default Client;

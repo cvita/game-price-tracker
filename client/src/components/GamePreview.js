@@ -1,9 +1,21 @@
 import React, { Component } from 'react';
-import { Badge, Container, Row, Col } from 'reactstrap';
+import { Alert, Badge, Container, Row, Col } from 'reactstrap';
+import './GamePreview.css';
+
+
+function Price(props) {
+    return (
+        <div className='price'>
+            <h3><Badge>${props.price}</Badge></h3>
+            {props.hasOwnProperty('updating') &&
+                <Alert className='priceMessage' color='info'>Updating info from Sony PS store</Alert>}
+        </div>
+    );
+}
 
 class GamePreview extends Component {
     render() {
-        const { _id, image, price, strikePrice, onSale } = this.props;
+        const { _id, image, strikePrice, onSale } = this.props;
 
         return (
             <Container>
@@ -14,9 +26,13 @@ class GamePreview extends Component {
 
                     <Col md='6'>
                         {!onSale ?
-                            <h3>{_id} is currently <Badge>${price}</Badge></h3> :
                             <div>
-                                <h3><i>Nice!</i> {_id} is on sale for <Badge>${price}</Badge></h3>
+                                <h3>{_id} is currently </h3>
+                                <Price {...this.props} />
+                            </div> :
+                            <div>
+                                <h3><i>Nice!</i> {_id} is on sale for </h3>
+                                <Price {...this.props} />
                                 <strong>Regular price: ${strikePrice}</strong>
                             </div>}
 
