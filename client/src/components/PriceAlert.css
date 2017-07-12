@@ -9,3 +9,8 @@
 .confirmationMessages {
     margin-top: 2em;
 }
+
+.priceAlert {
+    padding: 3%;
+    background: #eceeef;
+}

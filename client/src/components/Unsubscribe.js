@@ -32,7 +32,7 @@ class Unsubscribe extends Component {
     }
     componentDidMount() {
         const url = window.location.toString();
-        const manageId = url.slice(url.indexOf('unsubscribe/') + 12) || null;
+        const manageId = url.slice(url.indexOf('manage/') + 7) || null;
         if (manageId) {
             this.props.fetchPriceAlert(manageId);
             this.props.checkBlacklist(manageId);

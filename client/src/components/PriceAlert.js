@@ -1,17 +1,18 @@
 import React, { Component } from 'react';
+import { Link, browserHistory } from 'react-router';
+import PriceAlertPreview from './PriceAlertPreview';
 import { Alert, Button } from 'reactstrap';
 import './PriceAlert.css';
-
-import UserSignUp from './UserSignUp';
-import PriceAlertPreview from './PriceAlertPreview';
 
 
 class PriceAlert extends Component {
     componentDidMount() {
-        this.props.fetchAllGamesInDb();
+        const url = window.location.toString();
+        const sonyStoreUrl = 'https://store.playstation.com/#!/en-us' + url.slice(url.indexOf('/games/'));
+        this.props.makeActiveGame(sonyStoreUrl);
     }
     render() {
-        const { activeGame, priceAlertCreated, userInfo, resetActiveGame, createPriceAlert } = this.props;
+        const { activeGame, priceAlertCreated, userInfo, createPriceAlert } = this.props;
         const validUserEmail = userInfo.userEmail !== null;
 
         const priceAlertComplete = priceAlertCreated;
@@ -26,21 +27,21 @@ class PriceAlert extends Component {
                 >
                     Sounds good
                 </Button>
-                <Button
-                    className='gamePriceTrackerButton'
-                    color='danger'
-                    outline
-                    onClick={resetActiveGame}
-                >
-                    Nevermind
+                <Link to='/'>
+                    <Button
+                        className='gamePriceTrackerButton'
+                        color='danger'
+                        outline
+                    >
+                        Nevermind
                 </Button>
+                </Link>
             </div>
         );
 
         return (
-            <div>
-                {!activeGame ?
-                    <UserSignUp {...this.props} /> :
+            <div className='priceAlert'>
+                {activeGame &&
                     <div>
                         {activeGame === 'fetching game' ?
                             <Alert color='info'>Connecting to the Sony PlayStation store</Alert> :
@@ -51,13 +52,13 @@ class PriceAlert extends Component {
                     </div>}
 
                 {priceAlertComplete &&
-                    <Alert className='confirmationMessages' color='success' toggle={resetActiveGame} isOpen={priceAlertComplete}>
+                    <Alert className='confirmationMessages' color='success' toggle={() => browserHistory.push('/')} isOpen={priceAlertComplete}>
                         <strong>You're all set! </strong>
                         Make sure you allow messages from <strong>game.price.tracker@gmail.com</strong> or you might miss a sale.
                     </Alert>}
 
                 {userOnBlacklist &&
-                    <Alert className='confirmationMessages' color='danger' toggle={resetActiveGame} isOpen={userOnBlacklist}>
+                    <Alert className='confirmationMessages' color='danger' toggle={() => browserHistory.push('/')} isOpen={userOnBlacklist}>
                         <strong>Unable to create your price alert. </strong>
                         Your email is on our "do not send" list. Contact game.price.tracker@gmail.com if you feel this is in error.
                     </Alert>}

@@ -1,19 +1,22 @@
 import React, { Component } from 'react';
-import PriceAlert from './PriceAlert';
+import UserSignUp from './UserSignUp';
 import GamesGrid from './GamesGrid';
 import { Jumbotron, Container } from 'reactstrap';
 
 class Home extends Component {
+  componentDidMount() {
+    this.props.resetActiveGame();
+    this.props.fetchAllGamesInDb();
+  }
   render() {
     return (
       <div>
         <Jumbotron fluid>
           <Container fluid>
-            <PriceAlert {...this.props} />
+            <UserSignUp {...this.props} />
           </Container>
         </Jumbotron>
-        {!this.props.activeGame &&
-          <GamesGrid allGames={this.props.allGames} makeActiveGame={this.props.makeActiveGame}/>}
+        <GamesGrid allGames={this.props.allGames} />
       </div>
     );
   }

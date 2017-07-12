@@ -1,21 +1,24 @@
 import React from 'react';
-import { Card, CardImg, CardBlock, Button } from 'reactstrap';
+import { Link } from 'react-router';
+import { Badge, Card, CardImg, CardBlock } from 'reactstrap';
+import './Game.css';
 
 function Game(props) {
-    const { _id, image, url } = props;
-    
+    const { _id, image, url, price } = props;
+
     return (
         <Card className='game'>
-            <a href={url}><CardImg top width="100%" src={image} alt={_id + ' cover image'} /></a>
+            <Link to={`${url.slice(url.indexOf('/games/'))}`}>
+                <CardImg
+                    top
+                    width="100%"
+                    src={image}
+                    alt={_id + ' cover image'}
+                />
+            </Link>
             <CardBlock>
-                <Button
-                    onClick={() => props.makeActiveGame(url)}
-                    block
-                    color='secondary'
-                    outline
-                >
-                    Select
-                    </Button>
+                <Badge>PS4</Badge>{' '}
+                ${price}
             </CardBlock>
         </Card>
     );

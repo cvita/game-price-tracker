@@ -1,0 +1,9 @@
+.game {
+    transition: 0.2s; 
+}
+
+.game:hover {
+    cursor: pointer;
+    transform: scale(1.05);
+    transition: 0.2s;
+}

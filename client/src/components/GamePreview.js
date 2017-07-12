@@ -16,12 +16,13 @@ function Price(props) {
 class GamePreview extends Component {
     render() {
         const { _id, image, strikePrice, onSale } = this.props;
+        const imageMedium = image.slice(0, image.indexOf('&w=')) + '&w=400&h=400';
 
         return (
             <Container>
                 <Row>
-                    <Col md='6'>
-                        <img className='gameImage' src={image} alt='game thumbnail' />
+                    <Col xs='6'>
+                        <img className='img-fluid' src={imageMedium} alt={_id} />
                     </Col>
 
                     <Col md='6'>
