@@ -11,7 +11,9 @@
     "mongodb": "2.2.27",
     "node-horseman": "^3.3.0",
     "nodemailer": "^4.0.1",
-    "phantomjs": "^2.1.7"
+    "phantomjs": "^2.1.7",
+    "request": "^2.81.0",
+    "request-promise": "^4.2.1"
   },
   "scripts": {
     "start": "concurrently \"npm run dev\" \"npm run client\"",
