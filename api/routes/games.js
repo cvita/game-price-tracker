@@ -10,27 +10,13 @@ module.exports = function (app, games) {
     });
 
     app.get('/games/find/one', (req, res) => {
-        const url = req.query.url;
-        const gameCode = url.slice(url.indexOf('cid=') + 4);
-        findOneGame(games, url).then(result => {
-            if (result) {
-                res.send({ api: result });
-            } else {
-                querySony(gameCode).then(result => {
-                    createOrUpdateGame(games, result);
-                    res.send({ api: result });
-                });
-                // scrapeSony(url).then(result => {
-                //     createOrUpdateGame(games, result);
-                //     res.send({ api: result });
-                // });
-            }
+        findOneGame(games, req.query.url).then(result => {
+            res.send({ api: result });
         });
     });
 
-    app.get('/games/update', (req, res) => {
-        scrapeSony(req.query.url).then(result => {
-            createOrUpdateGame(games, result);
+    app.post('/games/add', (req, res) => {
+        createOrUpdateGame(games, req.body).then(result => {
             res.send({ api: result });
         });
     });

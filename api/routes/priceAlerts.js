@@ -29,10 +29,8 @@ module.exports = function (app, priceAlerts, games) {
                 priceAlertInfo._id = result.value ?
                     result.value._id :
                     result.lastErrorObject.upserted;
-                // result.value.dateAdded = priceAlertInfo.dateAdded; // Mongo not returning the new/updated doc
-                // result.value.expiration = priceAlertInfo.expiration;
                 res.send({ api: result });
-                email.sendConfirmation(priceAlertInfo, req.get('host'));
+                email.sendConfirmation(priceAlertInfo);
             });
         }
     });

@@ -1,3 +1,6 @@
+import processResponseFromSony from './processResponse';
+
+
 function findAllGames() {
     return new Promise((resolve, reject) => {
         const request = new Request('/games/find/all');
@@ -16,11 +19,39 @@ function findOneGame(url) {
     });
 }
 
-function updateGameInfo(url) {
+function findGameFromSony(url) {
     return new Promise((resolve, reject) => {
-        const request = new Request(`/games/update/?url=${encodeURIComponent(url)}`);
+        const gameCode = url.slice(url.indexOf('cid=') + 4);
+        const uri = 'https://store.playstation.com/store/api/chihiro/00_09_000/container/US/en/19/' + gameCode;
+        const request = new Request(uri);
         fetch(request, {
             method: 'GET'
+        }).then(response => {
+            if (!response.ok) {
+                console.error(new Error(response));
+                reject(response);
+            }
+            response.json()
+                .then(response => {
+                    response.uri = uri;
+                    processResponseFromSony(response)
+                        .then(response => {
+                            addOrUpdateGame(response);
+                            resolve(response)
+                        });
+                });
+        });
+    });
+}
+
+function addOrUpdateGame(gameInfo) {
+    return new Promise((resolve, reject) => {
+        const request = new Request('/games/add', {
+            headers: new Headers({ 'Content-Type': 'application/json' })
+        });
+        fetch(request, {
+            method: 'POST',
+            body: JSON.stringify(gameInfo)
         }).then(response => handleResponse(response, resolve, reject));
     });
 }
@@ -101,7 +132,7 @@ function handleResponse(response, resolve, reject) {
 const Client = {
     findAllGames,
     findOneGame,
-    updateGameInfo,
+    findGameFromSony,
     createPriceAlert,
     findOnePriceAlert,
     deletePriceAlert,
