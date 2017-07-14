@@ -1,0 +1,35 @@
+.gameDetailsContainer {
+    margin-bottom: 15%;
+}
+
+.descriptionAndDetails {
+    margin-bottom: 10%;
+}
+
+.gameDescription{
+    min-width: 300px;
+}
+
+.esrbRating {
+    max-width: 2.5em;
+}
+
+.videoPlayer {
+    max-width: 100%;
+    min-width: 300px;
+} 
+
+.screenshotsContainer {
+    max-width: 100%;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: center;
+    overflow: auto;
+}
+
+.screenshot {
+    max-width: 100%; 
+    margin-bottom: 1%;
+} 

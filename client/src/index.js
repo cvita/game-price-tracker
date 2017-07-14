@@ -9,6 +9,7 @@ import store, { history } from './redux/store';
 // Components
 import App from './redux/App';
 import Home from './components/Home';
+import PriceAlert from './components/PriceAlert';
 import Unsubscribe from './components/Unsubscribe';
 import NotFound from './components/NotFound';
 
@@ -25,7 +26,8 @@ function GamePriceTracker(props) {
             <Router history={history}>
                 <Route path='/' component={App}>
                     <IndexRoute component={Home} />
-                    <Route path='/unsubscribe*' component={Unsubscribe} />
+                    <Route path='/games/*' component={PriceAlert} />
+                    <Route path='/manage/*' component={Unsubscribe} />
                     <Route path='*' component={NotFound} />
                 </Route>
             </Router>

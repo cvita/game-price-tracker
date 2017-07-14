@@ -6,15 +6,15 @@ import './GamesGrid.css';
 class GamesGrid extends Component {
     render() {
         const { allGames } = this.props;
-        var gamesToDisplay = [];
-        for (var i = allGames.length - 1; i >= 0; i--) {
-            gamesToDisplay.push(<Game {...allGames[i]} key={i} />);
-        }
 
         return (
             <div className='gamesGridContainer'>
                 <div className='gamesGrid'>
-                    {gamesToDisplay}
+                    {allGames.map((game, i) => {
+                        return this.props.activeGame && game._id === this.props.activeGame._id ?
+                            <div key={game._id} /> :
+                            <Game {...game} key={game._id} makeActiveGame={this.props.makeActiveGame} />;
+                    })}
                 </div>
             </div>
         );

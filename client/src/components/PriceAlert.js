@@ -1,67 +1,69 @@
 import React, { Component } from 'react';
 import { Link, browserHistory } from 'react-router';
 import PriceAlertPreview from './PriceAlertPreview';
+import GameDetails from './GameDetails';
 import { Alert, Button } from 'reactstrap';
 import './PriceAlert.css';
 
 
+function ConfirmAndResetButtons(props) {
+    return (
+        <div>
+            <Button
+                className='gamePriceTrackerButton'
+                color='success'
+                disabled={!props.validUserEmail}
+                onClick={props.handleClick}
+            >
+                Sounds good
+                </Button>
+            <Link to='/'>
+                <Button
+                    className='gamePriceTrackerButton'
+                    color='danger'
+                    outline
+                >
+                    Nevermind
+                </Button>
+            </Link>
+        </div>
+    );
+}
+
 class PriceAlert extends Component {
     componentDidMount() {
-        const url = window.location.toString();
-        const sonyStoreUrl = 'https://store.playstation.com/#!/en-us' + url.slice(url.indexOf('/games/'));
-        this.props.makeActiveGame(sonyStoreUrl);
+        if (!this.props.activeGame) {
+            const url = window.location.toString();
+            const sonyStoreUrl = 'https://store.playstation.com/#!/en-us' + url.slice(url.indexOf('/games/'));
+            this.props.makeActiveGame(sonyStoreUrl);
+        }
     }
     render() {
         const { activeGame, priceAlertCreated, userInfo, createPriceAlert } = this.props;
         const validUserEmail = userInfo.userEmail !== null;
-
-        const priceAlertComplete = priceAlertCreated;
-        const userOnBlacklist = userInfo.onBlacklist;
-        const confirmAndResetButtons = (
-            <div>
-                <Button
-                    className='gamePriceTrackerButton'
-                    color='success'
-                    disabled={!validUserEmail}
-                    onClick={() => createPriceAlert(userInfo)}
-                >
-                    Sounds good
-                </Button>
-                <Link to='/'>
-                    <Button
-                        className='gamePriceTrackerButton'
-                        color='danger'
-                        outline
-                    >
-                        Nevermind
-                </Button>
-                </Link>
-            </div>
-        );
-
+        console.log(priceAlertCreated);
         return (
-            <div className='priceAlert'>
+            <div>
                 {activeGame &&
                     <div>
-                        {activeGame === 'fetching game' ?
-                            <Alert color='info'>Connecting to the Sony PlayStation store</Alert> :
-                            <PriceAlertPreview {...this.props}>
-                                {!priceAlertComplete && !userOnBlacklist &&
-                                    confirmAndResetButtons}
-                            </PriceAlertPreview>}
+                        <PriceAlertPreview {...this.props} >
+
+                            {!priceAlertCreated && !userInfo.onBlacklist ?
+                                <ConfirmAndResetButtons handleClick={() => createPriceAlert(userInfo)} validUserEmail={validUserEmail} /> :
+                                <Alert className='confirmationMessages' color='danger' toggle={() => browserHistory.push('/')} isOpen={userInfo.onBlacklist}>
+                                    <strong>Unable to create your price alert. </strong>
+                                    Your email is on our "do not send" list. Contact game.price.tracker@gmail.com if you feel this is in error.
+                                </Alert>}
+
+                            <Alert className='confirmationMessages' isOpen={priceAlertCreated} toggle={() => browserHistory.push('/')} color='success'>
+                                <strong>You're all set! </strong>
+                                Make sure you allow messages from <strong>game.price.tracker@gmail.com</strong> or you might miss a sale.
+                            </Alert>
+
+                        </PriceAlertPreview>
+
+                        <GameDetails {...this.props.activeGame} />
                     </div>}
-
-                {priceAlertComplete &&
-                    <Alert className='confirmationMessages' color='success' toggle={() => browserHistory.push('/')} isOpen={priceAlertComplete}>
-                        <strong>You're all set! </strong>
-                        Make sure you allow messages from <strong>game.price.tracker@gmail.com</strong> or you might miss a sale.
-                    </Alert>}
-
-                {userOnBlacklist &&
-                    <Alert className='confirmationMessages' color='danger' toggle={() => browserHistory.push('/')} isOpen={userOnBlacklist}>
-                        <strong>Unable to create your price alert. </strong>
-                        Your email is on our "do not send" list. Contact game.price.tracker@gmail.com if you feel this is in error.
-                    </Alert>}
             </div>
         );
     }

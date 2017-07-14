@@ -3,6 +3,6 @@
     flex-direction: row;
 }
 
-.priceMessage {
-    margin: 0em 1em 0em 1em;
+.lastUpdated {
+    margin-bottom: 1em;
 }

@@ -66,43 +66,48 @@ class Unsubscribe extends Component {
             <div>
 
                 {activeGame &&
-                    <GamePreview {...activeGame}>
-                        <p className='lead'>Manage your price alerts</p>
+                    <div className='manage'>
+                        <p className='lead'>Manage your price alert</p>
+                        <div className='priceAlertPreview'>
+                            <GamePreview  {...activeGame}>
+                                {activeGame.onSale &&
+                                    <p>Here's <a href={activeGame.url}>the link</a> to the Sony PlayStation store</p>}
 
-                        {activeGame.onSale &&
-                            <p>Here's <a href={activeGame.url}>the link</a> to the Sony PlayStation store</p>}
-
-                        <p>You're all signed up to receive a message at <strong>{userEmail}</strong> if {game_id}'s price drops below ${price} before {new Date(expiration).toDateString()}.</p>
-                        <GamePriceTrackerButton handleClick={() => this.props.createPriceAlert(this.props.userInfo)} message={'Renew price alert'} color={'success'} />
-                        <GamePriceTrackerButton handleClick={() => this.props.deletePriceAlert(this.props.userInfo)} message={'Delete'} />
-                    </GamePreview>}
-
-                {!onBlacklist && userEmail &&
-                    <div>
-                        <p className='lead'>Danger zone</p>
-                        <Alert color='danger'>
-                            <GamePriceTrackerButton handleClick={this.toggle} message={'No more'} />
-                            Never receive another email from Game Price Tracker.
-                        </Alert>
+                                <p>You're all signed up to receive a message at <strong>{userEmail}</strong> if {game_id}'s price drops below ${price} before {new Date(expiration).toDateString()}.</p>
+                                <GamePriceTrackerButton handleClick={() => this.props.createPriceAlert(this.props.userInfo)} message={'Renew price alert'} color={'success'} />
+                                <GamePriceTrackerButton handleClick={() => this.props.deletePriceAlert(this.props.userInfo)} message={'Delete'} />
+                            </GamePreview>
+                        </div>
                     </div>}
 
-                <Modal isOpen={this.state.modal} toggle={this.toggle} className={this.props.className}>
-                    <ModalHeader toggle={this.toggle}>Permanently unsubscribe?</ModalHeader>
-                    <ModalBody>
-                        By clicking 'confirm' you will add yourself to our 'Do not send list' and will <strong>delete</strong> any current price alerts.
+                <div className='unsubscribe'>
+                    {!onBlacklist && userEmail &&
+                        <div>
+                            <p className='lead'>Danger zone</p>
+                            <Alert color='danger'>
+                                <GamePriceTrackerButton handleClick={this.toggle} message={'No more'} />
+                                Never receive another email from Game Price Tracker.
+                        </Alert>
+                        </div>}
+
+                    <Modal isOpen={this.state.modal} toggle={this.toggle} className={this.props.className}>
+                        <ModalHeader toggle={this.toggle}>Permanently unsubscribe?</ModalHeader>
+                        <ModalBody>
+                            By clicking 'confirm' you will add yourself to our 'Do not send list' and will <strong>delete</strong> any current price alerts.
                     </ModalBody>
-                    <ModalFooter>
-                        <Button color="danger" onClick={this.confirmAddToBlacklist}>Confirm</Button>{' '}
-                        <Button color="secondary" onClick={this.toggle}>Cancel</Button>
-                    </ModalFooter>
-                </Modal>
+                        <ModalFooter>
+                            <Button color="danger" onClick={this.confirmAddToBlacklist}>Confirm</Button>{' '}
+                            <Button color="secondary" onClick={this.toggle}>Cancel</Button>
+                        </ModalFooter>
+                    </Modal>
 
-                {onBlacklist &&
-                    <Alert color='danger'>
-                        You are unsubscribed and will never receive another email from Game Price Tracker.
+                    {onBlacklist &&
+                        <Alert color='danger'>
+                            You are unsubscribed and will never receive another email from Game Price Tracker.
                     </Alert>}
-
-            </div >
+                </div>
+                <hr />
+            </div>
         );
     }
 }

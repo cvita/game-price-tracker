@@ -16,16 +16,15 @@ function Price(props) {
 class GamePreview extends Component {
     render() {
         const { _id, image, strikePrice, onSale } = this.props;
-        const imageMedium = image.slice(0, image.indexOf('&w=')) + '&w=400&h=400';
 
         return (
             <Container>
                 <Row>
                     <Col xs='6'>
-                        <img className='img-fluid' src={imageMedium} alt={_id} />
+                        <img className='img-fluid' src={image} alt={_id} />
                     </Col>
 
-                    <Col md='6'>
+                    <Col xl='6'>
                         {!onSale ?
                             <div>
                                 <h3>{_id} is currently </h3>
@@ -36,7 +35,9 @@ class GamePreview extends Component {
                                 <Price {...this.props} />
                                 <strong>Regular price: ${strikePrice}</strong>
                             </div>}
-
+                        <div className='lastUpdated'>
+                            <small className='text-muted'>Updated {new Date().toLocaleTimeString()}</small>
+                        </div>
                         {this.props.children}
                     </Col>
                 </Row>
@@ -46,3 +47,5 @@ class GamePreview extends Component {
 }
 
 export default GamePreview;
+
+
