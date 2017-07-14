@@ -7,7 +7,7 @@ export function fetchAllGamesInDb() {
 }
 
 export function makeActiveGame(url) {
-    console.log(`makeActiveGame(${url.slice(10)})`);
+    console.log(`makeActiveGame(${url.slice(0, 10)})`);
     return {
         type: 'MAKE_ACTIVE_GAME_REQUESTED',
         payload: { url }

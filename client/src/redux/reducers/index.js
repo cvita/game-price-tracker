@@ -14,8 +14,6 @@ function allGames(state = [], action) {
 
 function activeGame(state = {}, action) {
     switch (action.type) {
-        case 'MAKE_ACTIVE_GAME_REQUESTED':
-            return 'fetching game';
         case 'MAKE_ACTIVE_GAME_SUCCEEDED':
             return action.activeGame;
         case 'UPDATE_ACTIVE_GAME_REQUESTED':
@@ -75,7 +73,14 @@ function userInfo(state = {}, action) {
         case 'SUBMIT_PRICE_ALERT_SUCCEEDED':
             return state;
         case 'RESET_ACTIVE_GAME':
-            return {};
+            return {
+                userEmail: null,
+                onBlacklist: null,
+                game_id: null,
+                price: null,
+                dateAdded: null,
+                expiration: null
+            };
         default:
             return state;
     }

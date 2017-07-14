@@ -15,14 +15,8 @@ function* fetchAllGamesInDb(action) {
 function* makeActiveGame(action) {
     try {
         yield put(showLoading());
-        var activeGame = yield call(Client.findOneGame, action.payload.url);
+        var activeGame = yield call(Client.findGameFromSony, action.payload.url);
         yield put({ type: 'MAKE_ACTIVE_GAME_SUCCEEDED', activeGame });
-        // Offers fast results if game is in system, but also ensures a recent game info update
-        if (activeGame.lastUpdated < new Date(new Date().toDateString()).getTime()) {
-            yield put({ type: 'UPDATE_ACTIVE_GAME_REQUESTED', activeGame });
-            activeGame = yield call(Client.updateGameInfo, action.payload.url);
-            yield put({ type: 'MAKE_ACTIVE_GAME_SUCCEEDED', activeGame });
-        }
     } catch (e) {
         yield put({ type: 'MAKE_ACTIVE_GAME_FAILED', message: e.message });
     } finally {

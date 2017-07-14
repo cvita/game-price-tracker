@@ -6,6 +6,8 @@ import rootReducer from './reducers/index';
 import gamePriceTrackerSagas from './sagas';
 import { loadingBarMiddleware } from 'react-redux-loading-bar'
 
+//import {loadState, saveState} from './localStorage';
+
 const defaultState = {
     allGames: [],
     activeGame: null,
@@ -30,7 +32,13 @@ const enhancers = compose(
     window.devToolsExtension ? window.devToolsExtension() : f => f
 );
 
+//const persistedState = loadState();
+
 const store = createStore(rootReducer, defaultState, enhancers);
+
+// store.subscribe(() => {
+//     saveState(store.getState());
+// });
 
 sagaMiddleware.run(gamePriceTrackerSagas);
 
