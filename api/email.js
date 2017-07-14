@@ -26,7 +26,7 @@ function sendEmail(email, subject, message) {
         };
 
         transport.sendMail(mailOptions, (err, info) => {
-            if (error) {
+            if (err) {
                 return console.error(new Error(err));
             }
             console.log('Message sent to:', email);
@@ -35,6 +35,7 @@ function sendEmail(email, subject, message) {
 }
 
 function checkBlacklist(userEmail) {
+    console.log('checkBlacklist()');
     return new Promise((resolve, reject) => {
         MongoClient.connect(database, (err, db) => {
             if (err) {
@@ -53,40 +54,51 @@ function checkBlacklist(userEmail) {
     });
 }
 
-function sendConfirmation(info, uri) {
-    const { _id, game_id, userEmail, price, expiration } = info;
-    const manageId = encryption.encrypt('id:' + _id + 'user:' + userEmail);
-    const managePriceAlert = process.env.NODE_ENV === 'production' ?
-        'https://' + uri + '/unsubscribe/' + manageId :
-        'https://localhost:3000/unsubscribe/' + manageId;
+function sendConfirmation(info) {
+    console.log('sendConfirmation()');
+    const { game_id, userEmail, price, expiration } = info;
     const subject = game_id + ' is now being tracked';
     const message = (
         'Game Price Tracker is now tracking the price of <strong>' + game_id + '</strong>. ' +
         'If it drops below $' + price + ' before ' + new Date(expiration).toDateString() + ', ' +
         'you will be messaged again at this email address.<br><br>' +
-        'Use <a href=' + managePriceAlert + '>this link</a> to manage your price alert, or to unsubscribe completely.'
+        'Use ' + generateManagePriceAlertLink(info, 'this link') + ' to manage your price alert, or to unsubscribe completely.'
     );
     sendEmail(userEmail, subject, message);
 }
 
 function sendSalePrice(info) {
-    const { _id, userEmail, price, url } = info;
-    const subject = _id + ' is on sale';
+    console.log('sendSalePrice()');
+    const { game_id, userEmail, price, url } = info;
+    const subject = game_id + ' is on sale';
     const message = (
-        _id + ' is currently on sale for $' + price + '.' +
-        ' Check it out <a href=' + url + '>here</a>.'
+        game_id + ' is currently on sale for $' + price + ' on the Sony PlayStation store.' +
+        ' Check it out <a href=' + url + '>here</a>' +
+        '<br><br>' +
+        'No more? ' + generateManagePriceAlertLink(info, 'unsubscribe')
     );
     sendEmail(userEmail, subject, message);
 }
 
 function sendRemovingPriceAlert(info) {
-    const { _id, userEmail } = info;
-    var subject = 'Removing Game Price Tracker alert for ' + _id;
-    var message = (
-        _id + ' has not gone on sale for 18 weeks. We are removing this price alert. ' +
+    console.log('sendRemovingPriceAlert()');
+    const { game_id, userEmail } = info;
+    const subject = 'Removing Game Price Tracker alert for ' + _id;
+    const message = (
+        game_id + ' has not gone on sale for 18 weeks. We are removing this price alert. ' +
         'Feel free to visit Game Price Tracker to sign up for another 18 week period.'
     );
     sendEmail(userEmail, subject, message);
+}
+
+function generateManagePriceAlertLink(info, linkText) {
+    const { _id, userEmail } = info;
+    const userDetails = encryption.encrypt('id:' + _id + 'user:' + userEmail);
+    const managePriceAlertUrl = process.env.NODE_ENV === 'production' ?
+        'https://game-price-tracker.herokuapp.com/manage/' :
+        'https://localhost:3000/manage/';
+
+    return '<a href=' + managePriceAlertUrl + userDetails + '>' + linkText + '</a>';
 }
 
 
