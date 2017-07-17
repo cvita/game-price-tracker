@@ -1,66 +1,105 @@
 const nodemailer = require('nodemailer');
-const encryption = require('./encrypt');
+const encryption = require('./encrypt'); // may not need
+const MongoClient = require('mongodb').MongoClient;
+const database = require('../db/database').url;
 
 
-const transport = nodemailer.createTransport({
-    service: 'Gmail',
-    auth: {
-        user: 'game.price.tracker@gmail.com',
-        pass: process.env.emailPassword || require('../local-dev-creds').emailPassword
-    }
-});
-
-// Todo: check blacklist here as a failsafe
-function sendEmail(to, subject, message) {
-    const mailOptions = {
-        from: 'game.price.tracker@gmail.com',
-        to: to,
-        subject: subject,
-        html: message
-    };
-
-    transport.sendMail(mailOptions, (error, info) => {
-        if (error) {
-            console.error(error);
-        } else {
-            console.log('Message sent!');
+function sendEmail(email, subject, message) {
+    checkBlacklist(email).then(result => {
+        if (result) {
+            return console.log('Email not sent! ' + email + ' is on blacklist.');
         }
+
+        const transport = nodemailer.createTransport({
+            service: 'Gmail',
+            auth: {
+                user: 'game.price.tracker@gmail.com',
+                pass: process.env.emailPassword || require('../local-dev-creds').emailPassword
+            }
+        });
+
+        const mailOptions = {
+            from: 'game.price.tracker@gmail.com',
+            to: email,
+            subject: subject,
+            html: message
+        };
+
+        transport.sendMail(mailOptions, (err, info) => {
+            if (err) {
+                return console.error(new Error(err));
+            }
+            console.log('Message sent to:', email);
+        });
     });
 }
 
-function sendConfirmationEmail(mongoDoc, uri) {
-    var userInfo = mongoDoc.alerts[0];
-    var userEmail = userInfo.userEmail;
-    var unsubscribeUrl = 'https://' + uri + '/#/unsubscribe?user=' + encryption.encrypt(userEmail);
-    var subject = mongoDoc.game + ' is now being tracked';
-    var message = (
-        'Game Price Tracker is now tracking the price of <strong>' + mongoDoc.game + '</strong>. ' +
-        'If it drops below ' + userInfo.price + ' before ' + userInfo.expiration + ', ' +
+function checkBlacklist(userEmail) {
+    console.log('checkBlacklist()');
+    return new Promise((resolve, reject) => {
+        MongoClient.connect(database, (err, db) => {
+            if (err) {
+                console.error(new Error(err));
+                reject(err);
+            }
+            const details = { _id: userEmail };
+            db.collection('blacklist').findOne(details, (err, doc) => {
+                if (err) {
+                    console.error(new Error(err));
+                    reject(err);
+                }
+                resolve(doc !== null);
+            });
+        });
+    });
+}
+
+function sendConfirmation(info) {
+    console.log('sendConfirmation()');
+    const { game_id, userEmail, price, expiration } = info;
+    const subject = game_id + ' is now being tracked';
+    const message = (
+        'Game Price Tracker is now tracking the price of <strong>' + game_id + '</strong>. ' +
+        'If it drops below $' + price + ' before ' + new Date(expiration).toDateString() + ', ' +
         'you will be messaged again at this email address.<br><br>' +
-        'All done? <a href=' + unsubscribeUrl + '>Unsubscribe</a>'
+        'Use ' + generateManagePriceAlertLink(info, 'this link') + ' to manage your price alert, or to unsubscribe completely.'
     );
     sendEmail(userEmail, subject, message);
 }
 
-function sendSalePriceEmail(mongoDoc, userEmail) {
-    var subject = mongoDoc.game + ' is on sale';
-    var message = (
-        mongoDoc.game + ' is currently on sale for $' + mongoDoc.gamePriceToday + '.' +
-        ' Check it out <a href=' + mongoDoc.gameUrl + '>here</a>'
+function sendSalePrice(info) {
+    console.log('sendSalePrice()');
+    const { game_id, userEmail, price, url } = info;
+    const subject = game_id + ' is on sale';
+    const message = (
+        game_id + ' is currently on sale for $' + price + ' on the Sony PlayStation store.' +
+        ' Check it out <a href=' + url + '>here</a>' +
+        '<br><br>' +
+        'No more? ' + generateManagePriceAlertLink(info, 'unsubscribe')
     );
     sendEmail(userEmail, subject, message);
 }
 
-// Todo: Add link to Game Price Tracker (once the app has a dedicated url)
-function sendRemovingPriceAlertEmail(mongoDoc, userEmail) {
-    var subject = 'Removing Game Price Tracker alert for ' + mongoDoc.game;
-    var message = (
-        mongoDoc.game + ' has not gone on sale for 18 weeks. We are removing this price alert. ' +
+function sendRemovingPriceAlert(info) {
+    console.log('sendRemovingPriceAlert()');
+    const { game_id, userEmail } = info;
+    const subject = 'Removing Game Price Tracker alert for ' + _id;
+    const message = (
+        game_id + ' has not gone on sale for 18 weeks. We are removing this price alert. ' +
         'Feel free to visit Game Price Tracker to sign up for another 18 week period.'
     );
     sendEmail(userEmail, subject, message);
 }
 
+function generateManagePriceAlertLink(info, linkText) {
+    const { _id, userEmail } = info;
+    const userDetails = encryption.encrypt('id:' + _id + 'user:' + userEmail);
+    const managePriceAlertUrl = process.env.NODE_ENV === 'production' ?
+        'https://game-price-tracker.herokuapp.com/manage/' :
+        'https://localhost:3000/manage/';
 
-const email = { sendConfirmationEmail, sendSalePriceEmail, sendRemovingPriceAlertEmail };
-module.exports = email;
+    return '<a href=' + managePriceAlertUrl + userDetails + '>' + linkText + '</a>';
+}
+
+
+module.exports = { sendConfirmation, sendSalePrice, sendRemovingPriceAlert };

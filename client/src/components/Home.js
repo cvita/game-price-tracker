@@ -1,27 +1,18 @@
 import React, { Component } from 'react';
-import PriceAlert from './price-alert/PriceAlert';
-import ViewSource from './ViewSource';
-import { Container, Row, Col, Jumbotron} from 'reactstrap';
+import UserSignUp from './UserSignUp';
+import { Jumbotron, Container } from 'reactstrap';
 
 class Home extends Component {
+  componentDidMount() {
+    this.props.resetActiveGame();
+  }
   render() {
     return (
-      <div>
-        <Container>
-          <Row>
-            <Col md='12'>
-              <Jumbotron fluid>
-                <Container fluid>
-                  <h1 className='display-3'>Game Price Tracker</h1>
-                  <p className='lead'>A price alert app for the Sony PlayStation store</p>
-                  <PriceAlert />
-                </Container>
-              </Jumbotron>
-            </Col>
-          </Row>
-          <ViewSource />
-        </Container>
-      </div>
+        <Jumbotron fluid>
+          <Container fluid>
+            <UserSignUp {...this.props} />
+          </Container>
+        </Jumbotron>
     );
   }
 }

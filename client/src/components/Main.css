@@ -1,0 +1,52 @@
+.siteHeaderContainer {
+    text-decoration: none;
+    color: black;
+    text-align: center;
+    font-family: 'Playball', Arial, Helvetica, sans-serif;
+    display: flex;
+    justify-content: center;
+}
+
+
+.siteHeaderContainer:hover {
+    text-decoration: none;
+    color: black;
+}
+
+.siteHeaderContainer:visited {
+    text-decoration: none;
+    color: black;
+}
+
+.siteHeaderContainer:link {
+    text-decoration: none;
+    color: black;
+}
+
+.siteHeader {
+    font-size: 5em;
+}
+
+.gamepad {
+    width: 4em;
+    margin-left: 1em;
+    position: relative;
+    top: -1.25em;
+}
+
+@media (max-width: 767px) {
+    .siteHeaderContainer {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .gamepad {
+        position: static;
+
+    }
+}
+
+.loading {
+    height: 0.16em;
+    background: #67bacf;
+}

@@ -1,79 +1,88 @@
-const mongodb = require('mongodb');
-const database = require('../db/database');
-const scrapeSony = require('./scrape');
+const MongoClient = require('mongodb').MongoClient;
+const databaseUrl = require('../db/database').url;
+const querySony = require('./querySony');
 const email = require('./email');
+const { createOrUpdateGame } = require('./model');
 
 
-(function checkPriceForEachGameInDatabase() {
-    console.log('schedule.js: beginning script');
-    mongodb.MongoClient.connect(database.url, (err, db) => {
-        if (err) {
-            return console.error(err);
-        }
-        const today = new Date().getTime();
+(function () {
+    const today = new Date(new Date().toDateString()).getTime();
+    console.log('Running schedule.js at ' + new Date().getTime());
 
-        updateGamePriceToday(db, today).then(result => {
+    MongoClient.connect(databaseUrl, (err, db) => {
+        handleError(err);
+        const gamesCollection = db.collection('games');
+        const priceAlertsCollection = db.collection('priceAlerts');
+
+        updateGamesInfo(gamesCollection).then(result => {
             console.log(result);
-            emailSaleNotificationToActivePriceAlerts(db, today);
-            deleteExpiredPriceAlerts(db, today); // Not currently notifying users
+            determineSaleEvents(gamesCollection, priceAlertsCollection);
         });
+        removeExpiredPriceAlerts(priceAlertsCollection);
     });
-})();
 
-
-function updateGamePriceToday(db, date) {
-    return new Promise((resolve, reject) => {
-        db.collection('games').find().toArray((err, allPriceAlerts) => {
-            var counter = 0;
-            allPriceAlerts.forEach((priceAlert, index) => {
-                const previouslyRecordedPrice = priceAlert.gamePriceToday;
-                scrapeSony(priceAlert.gameUrl).then(result => {
-                    const newPrice = result.priceInt;
-                    const onSale = newPrice < previouslyRecordedPrice;
-                    db.collection('games').update(
-                        { _id: priceAlert._id, gameUrl: priceAlert.gameUrl },
-                        { $set: { gamePriceToday: newPrice, onSale: onSale } }, (err, doc) => {
-                            if (err) {
-                                console.error(err);
-                                reject(err);
-                            }
-                            if (doc !== null) {
+    function updateGamesInfo(gamesCollection) {
+        console.log('updateGamesInfo()');
+        return new Promise((resolve, reject) => {
+            const details = { lastUpdated: { $lt: today } };
+            gamesCollection.find(details).toArray((err, games) => {
+                handleError(err);
+                if (games.length === 0) {
+                    resolve('case1');
+                } else {
+                    var counter = 0;
+                    games.forEach((game, i) => {
+                        querySony(game.url.slice(game.url.indexOf('cid=') + 4)).then(result => {
+                            let finalResult = { game: game._id };
+                            createOrUpdateGame(gamesCollection, result).then(result => {
+                                finalResult.updated = result !== null;
                                 counter++;
-                                if (counter === allPriceAlerts.length) {
-                                    resolve("All gamePriceToday fields updated as of " + date);
+                                if (counter === games.length) {
+                                    resolve('case2');
                                 }
-                            }
+                            });
                         });
-                });
+                    });
+                }
             });
         });
-    });
+    }
 
-}
-
-function emailSaleNotificationToActivePriceAlerts(db, date) {
-    db.collection('games').find({ onSale: true, alerts: { $elemMatch: { expirationInt: { $gte: date } } } })
-        .toArray((err, docs) => {
-            if (err) {
-                console.error(err);
-            }
-            docs.forEach(doc => {
-                var gameInfo = doc;
-                gameInfo.alerts.forEach(priceAlert => {
-                    console.log('schedule.js: alerting ' + priceAlert.userEmail + ' to sale');
-                    email.sendSalePriceEmail(gameInfo, priceAlert.userEmail);
+    function determineSaleEvents(gamesCollection, priceAlertsCollection) {
+        console.log('determineSalesEvents');
+        const alertsDetails = { expiration: { $gt: today } };
+        priceAlertsCollection.find(alertsDetails).toArray((err, alerts) => {
+            handleError(err);
+            if (alerts.length > 0) {
+                alerts.forEach(alert => {
+                    const gamesDetails = [{ _id: alert.game_id }, { price: 1, url: 1 }];
+                    gamesCollection.findOne(...gamesDetails, (err, game) => {
+                        handleError(err);
+                        if (game.price < alert.price) {
+                            alert.url = game.url;
+                            email.sendSalePrice(alert);
+                        }
+                        console.log('All done with schedule.js at ' + new Date().getTime());
+                    });
                 });
+            }
+        });
+    }
+
+    function removeExpiredPriceAlerts(priceAlertsCollection, gamesCollection) {
+        console.log('removeExpiredPriceAlerts()');
+        const details = { expiration: { $lte: today } };
+        priceAlertsCollection.find(details).toArray((err, alerts) => {
+            handleError(err);
+            alerts.forEach(alert => {
+                email.sendRemovingPriceAlert(alert);
             });
         });
-}
+    }
 
-function deleteExpiredPriceAlerts(db, date) {
-    db.collection('games').update(
-        { alerts: { $elemMatch: { expirationInt: { $lte: date } } } },
-        { $pull: { alerts: { expirationInt: { $lte: date } } } }, (err, doc) => {
-            if (err) {
-                console.error(err);
-            }
-            console.log('schedule.js: deleted expired price alerts:', doc !== null); // Not an indication if anything was deleted
-        });
-}
+    function handleError(err) {
+        if (err) {
+            return console.error(new Error(err));
+        }
+    }
+})();

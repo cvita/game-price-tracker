@@ -1,7 +1,12 @@
+@import url('https://fonts.googleapis.com/css?family=Lora|Playball');
+
 body {
-  margin: 3%;
-  padding: 0;
+  margin: 2%;
   font-size: 16px;
   background: whitesmoke;
   font-family: sans-serif;
+}
+
+.gamePriceTrackerButton{
+    margin: 0.5em;
 }

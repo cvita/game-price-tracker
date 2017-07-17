@@ -1,0 +1,13 @@
+#gameInput:focus {
+    width: 60%;
+    background: #faffbd;
+    color: black;
+    transition: 0.3s;
+}
+
+#emailInput:focus {
+    width: 60%;
+    background: #faffbd;
+    color: black;
+    transition: 0.3s;
+}

@@ -1,115 +1,142 @@
-function requestScrape(gameUrl) {
+import processResponseFromSony from './processResponse';
+
+
+function findAllGames() {
     return new Promise((resolve, reject) => {
-        var request = new Request('/games/find', {
-            headers: new Headers({ 'Content-Type': 'application/json' })
-        });
+        const request = new Request('/games/find/all');
         fetch(request, {
-            method: 'POST',
-            body: JSON.stringify({ "gameUrl": gameUrl })
+            method: 'GET'
+        }).then(response => handleResponse(response, resolve, reject));
+    });
+}
+
+function findOneGame(url) {
+    return new Promise((resolve, reject) => {
+        const request = new Request(`/games/find/one/?url=${encodeURIComponent(url)}`);
+        fetch(request, {
+            method: 'GET'
+        }).then(response => handleResponse(response, resolve, reject));
+    });
+}
+
+function findGameFromSony(url) {
+    return new Promise((resolve, reject) => {
+        const gameCode = url.slice(url.indexOf('cid=') + 4);
+        const uri = 'https://store.playstation.com/store/api/chihiro/00_09_000/container/US/en/19/' + gameCode;
+        const request = new Request(uri);
+        fetch(request, {
+            method: 'GET'
         }).then(response => {
             if (!response.ok) {
-                reject('Unable to get info from store');
+                console.error(new Error(response));
+                reject(response);
             }
-            resolve(response.json());
+            response.json()
+                .then(response => {
+                    response.uri = uri;
+                    processResponseFromSony(response)
+                        .then(response => {
+                            addOrUpdateGame(response);
+                            resolve(response)
+                        });
+                });
         });
     });
 }
 
-function createPriceAlert(gameInfo) {
+function addOrUpdateGame(gameInfo) {
     return new Promise((resolve, reject) => {
-        var request = new Request('/games/create', {
+        const request = new Request('/games/add', {
             headers: new Headers({ 'Content-Type': 'application/json' })
         });
         fetch(request, {
             method: 'POST',
             body: JSON.stringify(gameInfo)
-        }).then(response => {
-            if (!response.ok) {
-                reject('Unable to add price alert to db');
-            }
-            response.json().then(response => {
-                resolve(response);
-            });
-        });
+        }).then(response => handleResponse(response, resolve, reject));
     });
 }
 
-function checkForCurrentPriceAlerts(userEmail) {
+function createPriceAlert(priceAlertInfo) {
     return new Promise((resolve, reject) => {
-        var request = new Request('/games/check', {
+        const request = new Request('/priceAlerts/add', {
             headers: new Headers({ 'Content-Type': 'application/json' })
         });
         fetch(request, {
             method: 'POST',
-            body: JSON.stringify({ "userEmail": userEmail })
-        }).then(response => {
-            if (!response.ok) {
-                reject('Unable to check for active price alerts for userEmail');
-            }
-            response.json().then(response => {
-                resolve(response);
-            });
-        });
+            body: JSON.stringify(priceAlertInfo)
+        }).then(response => handleResponse(response, resolve, reject));
     });
 }
 
-function deletePriceAlert(alertInfo) {
+function findOnePriceAlert(id) {
     return new Promise((resolve, reject) => {
-        var request = new Request('/games/delete', {
+        console.log(id);
+        const request = new Request('/priceAlerts/find/one', {
+            headers: new Headers({ 'Content-Type': 'application/json' })
+        });
+        fetch(request, {
+            method: 'POST',
+            body: JSON.stringify({ id: id })
+        }).then(response => handleResponse(response, resolve, reject));
+    });
+}
+
+function deletePriceAlert(userInfo) {
+    return new Promise((resolve, reject) => {
+        const request = new Request('/priceAlerts/delete', {
             headers: new Headers({ 'Content-Type': 'application/json' })
         });
         fetch(request, {
             method: 'DELETE',
-            body: JSON.stringify(alertInfo)
-        }).then(response => {
-            if (!response.ok) {
-                reject('Unable to delete from DB');
-            }
-            response.json().then(response => {
-                resolve(response);
-            });
-        });
+            body: JSON.stringify(userInfo)
+        }).then(response => handleResponse(response, resolve, reject));
     });
 }
 
-function checkBlacklistForUserEmail(userEmail) {
+function checkBlacklist(userEmail) {
     return new Promise((resolve, reject) => {
-        var request = new Request('/blacklist/check', {
+        const request = new Request('/blacklist/find/one', {
             headers: new Headers({ 'Content-Type': 'application/json' })
         });
         fetch(request, {
             method: 'POST',
-            body: JSON.stringify({ "userEmail": userEmail })
-        }).then(response => {
-            if (!response.ok) {
-                reject('Unable to check blacklist for userEmail');
-            }
-            response.json().then(response => {
-                resolve(response);
-            });
-        });
+            body: JSON.stringify({ userEmail: userEmail })
+        }).then(response => handleResponse(response, resolve, reject));
     });
 }
 
-function addUserToBlacklist(userEmail) {
+function addToBlacklist(userEmail) {
     return new Promise((resolve, reject) => {
-        var request = new Request('/blacklist/add', {
+        const request = new Request('/blacklist/add', {
             headers: new Headers({ 'Content-Type': 'application/json' })
         });
         fetch(request, {
             method: 'PUT',
-            body: JSON.stringify({ "userEmail": userEmail })
-        }).then(response => {
-            if (!response.ok) {
-                reject('Unable to add to email blacklist');
-            }
-            response.json().then(response => {
-                resolve(response);
-            });
-        });
+            body: JSON.stringify({ userEmail: userEmail })
+        }).then(response => handleResponse(response, resolve, reject));
+    });
+}
+
+function handleResponse(response, resolve, reject) {
+    if (!response.ok) {
+        console.error(new Error(response));
+        reject(response);
+    }
+    response.json().then(response => {
+        console.log(response.api);
+        resolve(response.api);
     });
 }
 
 
-const Client = { requestScrape, createPriceAlert, checkForCurrentPriceAlerts, deletePriceAlert, checkBlacklistForUserEmail, addUserToBlacklist };
+const Client = {
+    findAllGames,
+    findOneGame,
+    findGameFromSony,
+    createPriceAlert,
+    findOnePriceAlert,
+    deletePriceAlert,
+    checkBlacklist,
+    addToBlacklist
+};
 export default Client;
