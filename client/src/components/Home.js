@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import UserSignUp from './UserSignUp';
+import SubmitGameForm from './SubmitGameForm';
 import { Jumbotron, Container } from 'reactstrap';
 
 class Home extends Component {
@@ -8,11 +8,12 @@ class Home extends Component {
   }
   render() {
     return (
-        <Jumbotron fluid>
-          <Container fluid>
-            <UserSignUp {...this.props} />
-          </Container>
-        </Jumbotron>
+      <Jumbotron fluid>
+        <Container fluid>
+          <p className='lead'>Get an email when your game goes on sale.</p>
+          <SubmitGameForm {...this.props} />
+        </Container>
+      </Jumbotron>
     );
   }
 }

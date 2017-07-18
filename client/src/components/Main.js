@@ -10,9 +10,9 @@ import './Main.css';
 
 class Main extends Component {
     componentDidMount() {
-        if (this.props.allGames.length === 0) {
-            this.props.fetchAllGamesInDb();
-        }
+        // if (this.props.allGames.length === 0) {
+        //     this.props.fetchAllGamesInDb();
+        // }
     }
     render() {
         return (
@@ -25,7 +25,7 @@ class Main extends Component {
                         </Link>
                         <LoadingBar className='loading' />
                         {React.cloneElement(this.props.children, this.props)}
-                        <GamesGrid className='gamesGridInMain' {...this.props} />
+                        <GamesGrid allGames={this.props.allGames} />
                     </Col>
                 </Row>
                 <Footer />
