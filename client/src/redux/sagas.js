@@ -1,5 +1,6 @@
 import { all, call, put, takeLatest } from 'redux-saga/effects';
 import Client from '../Client';
+import searchByTitle from '../searchTitle';
 import { showLoading, hideLoading } from 'react-redux-loading-bar';
 
 
@@ -12,10 +13,28 @@ function* fetchAllGamesInDb(action) {
     }
 }
 
+function* searchTitle(action) {
+    try {
+        const searchResults = yield call(searchByTitle, action.payload.title);
+        yield put({ type: 'SEARCH_BY_TITLE_SUCCEEDED', searchResults });
+    } catch (e) {
+        yield put({ type: 'SEARCH_BY_TITLE_FAILED', message: e.message });
+    }
+}
+
+function* generateAutoSuggestions(action) {
+    try {
+        const suggestions = yield call(searchByTitle, action.payload.title);
+        yield put({ type: 'FIND_AUTO_SUGGESTIONS_SUCCEEDED', suggestions });
+    } catch (e) {
+        yield put({ type: 'FIND_AUTO_SUGGESTIONS__FAILED', message: e.message });
+    }
+}
+
 function* makeActiveGame(action) {
     try {
         yield put(showLoading());
-        var activeGame = yield call(Client.findGameFromSony, action.payload.url);
+        var activeGame = yield call(Client.findGameFromSony, action.payload.storeCode);
         yield put({ type: 'MAKE_ACTIVE_GAME_SUCCEEDED', activeGame });
     } catch (e) {
         yield put({ type: 'MAKE_ACTIVE_GAME_FAILED', message: e.message });
@@ -74,6 +93,8 @@ function* addToBlacklist(action) {
 function* gamePriceTrackerSagas() {
     yield all([
         takeLatest('FETCH_ALL_GAMES_IN_DB_REQUESTED', fetchAllGamesInDb),
+        takeLatest('FIND_AUTO_SUGGESTIONS_REQUESTED', generateAutoSuggestions),
+        takeLatest('SEARCH_BY_TITLE_REQUESTED', searchTitle),
         takeLatest('MAKE_ACTIVE_GAME_REQUESTED', makeActiveGame),
         takeLatest('SUBMIT_PRICE_ALERT_REQUESTED', submitPriceAlert),
         takeLatest('CHECK_BLACKLIST_REQUESTED', checkBlacklist),

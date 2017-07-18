@@ -19,28 +19,17 @@ function findOneGame(url) {
     });
 }
 
-function findGameFromSony(url) {
+function findGameFromSony(storeCode) {
     return new Promise((resolve, reject) => {
-        const gameCode = url.slice(url.indexOf('cid=') + 4);
-        const uri = 'https://store.playstation.com/store/api/chihiro/00_09_000/container/US/en/19/' + gameCode;
-        const request = new Request(uri);
-        fetch(request, {
-            method: 'GET'
-        }).then(response => {
-            if (!response.ok) {
-                console.error(new Error(response));
-                reject(response);
-            }
-            response.json()
-                .then(response => {
-                    response.uri = uri;
-                    processResponseFromSony(response)
-                        .then(response => {
-                            addOrUpdateGame(response);
-                            resolve(response)
-                        });
-                });
-        });
+        const request = new Request(`https://store.playstation.com/store/api/chihiro/00_09_000/container/US/en/19/${storeCode}`);
+        fetch(request, { method: 'GET' })
+            .then(response => processResponseFromSony(response))
+            .then(response => {
+                addOrUpdateGame(response);
+                resolve(response);
+            }).catch(err => {
+                reject(err);
+            });
     });
 }
 
@@ -137,6 +126,6 @@ const Client = {
     findOnePriceAlert,
     deletePriceAlert,
     checkBlacklist,
-    addToBlacklist
+    addToBlacklist,
 };
 export default Client;

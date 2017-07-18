@@ -28,7 +28,7 @@ module.exports = function scrapeSony(url) {
                 }
 
                 return {
-                    _id: $('.productTitle').text().replace(/’/g, "\'"),
+                    _id: $('.productTitle').text().replace(/’/g, "\'"), // Todo: change to grab cid from url
                     price: parseFloat($('.buyPrice .price').text().slice(1)),
                     onSale: onSale,
                     strikePrice: strikePrice,

@@ -29,6 +29,31 @@ function activeGame(state = {}, action) {
     }
 }
 
+function suggestions(state = [], action) {
+    switch (action.type) {
+        case 'FIND_AUTO_SUGGESTIONS_SUCCEEDED':
+            return action.suggestions;
+        case 'SEARCH_BY_TITLE_SUCCEEDED':
+        case 'MAKE_ACTIVE_GAME_REQUESTED':
+        case 'RESET_ACTIVE_GAME':
+            return [];
+        default:
+            return state;
+    }
+}
+
+function searchResults(state = [], action) {
+    switch (action.type) {
+        case 'SEARCH_BY_TITLE_SUCCEEDED':
+            return action.searchResults;
+        //        case 'MAKE_ACTIVE_GAME_REQUESTED':
+        case 'RESET_ACTIVE_GAME':
+            return [];
+        default:
+            return state;
+    }
+}
+
 function priceAlertCreated(state = false, action) {
     switch (action.type) {
         case 'SUBMIT_PRICE_ALERT_SUCCEEDED':
@@ -52,6 +77,7 @@ function userInfo(state = {}, action) {
             return {
                 ...state,
                 game_id: action.activeGame._id,
+                gameTitle: action.activeGame.title,
                 price: action.activeGame.price
             };
         case 'CHECK_BLACKLIST_SUCCEEDED':
@@ -90,6 +116,10 @@ function errors(state = [], action) {
     switch (action.type) {
         case 'ERROR':
             return [...state, { error: action.error }];
+        case 'MAKE_ACTIVE_GAME_FAILED':
+            return [...state, { invalidInfo: true }];
+        case 'RESET_ACTIVE_GAME':
+            return [];
         default:
             return state;
     }
@@ -97,6 +127,8 @@ function errors(state = [], action) {
 
 const rootReducer = combineReducers({
     allGames,
+    suggestions,
+    searchResults,
     activeGame,
     priceAlertCreated,
     userInfo,
