@@ -59,7 +59,7 @@ class Unsubscribe extends Component {
         this.toggle();
     }
     render() {
-        const { game_id, userEmail, onBlacklist, price, expiration } = this.props.userInfo;
+        const { gameTitle, userEmail, onBlacklist, price, expiration } = this.props.userInfo;
         const { activeGame } = this.props;
 
         return (
@@ -73,7 +73,7 @@ class Unsubscribe extends Component {
                                 {activeGame.onSale &&
                                     <p>Here's <a href={activeGame.url}>the link</a> to the Sony PlayStation store</p>}
 
-                                <p>You're all signed up to receive a message at <strong>{userEmail}</strong> if {game_id}'s price drops below ${price} before {new Date(expiration).toDateString()}.</p>
+                                <p>You're all signed up to receive a message at <strong>{userEmail}</strong> if {gameTitle}'s price drops below ${price} before {new Date(expiration).toDateString()}.</p>
                                 <GamePriceTrackerButton handleClick={() => this.props.createPriceAlert(this.props.userInfo)} message={'Renew price alert'} color={'success'} />
                                 <GamePriceTrackerButton handleClick={() => this.props.deletePriceAlert(this.props.userInfo)} message={'Delete'} />
                             </GamePreview>
