@@ -1,27 +1,27 @@
 import React, { Component } from 'react';
 import { browserHistory } from 'react-router';
-import { Button, Badge, Card, CardImg, CardText, CardImgOverlay } from 'reactstrap';
+import { Button, Badge, Card, CardImg, CardText, CardImgOverlay, CardBlock, CardSubtitle } from 'reactstrap';
 import './Game.css';
 
 
 class Game extends Component {
-    handleClick(url) {
-        this.props.makeActiveGame(url)
-        browserHistory.push(url.slice(url.indexOf('/games/')));
+    handleClick(storeCode) {
+        browserHistory.push(`/games/${storeCode}`);
     }
     render() {
-        const { _id, image, url } = this.props;
-        const { platforms } = this.props.details;
+        const { title, _id, image, } = this.props;
+        const { platforms, gameContentType } = this.props.details;
 
         return (
-            <Card inverse className='game'>
+            <Card className='game'>
+
                 <CardImg
                     width="100%"
                     src={image}
-                    alt={_id + 'cover image'}
+                    alt={title + ' cover image'}
                 />
                 <CardImgOverlay id='cardImgOver'>
-                    <div className='overlayBackground' onClick={() => this.handleClick(url)}>
+                    <div className='overlayBackground' onClick={() => this.handleClick(_id)}>
                         <Button
                             id='selectButton'
                             size='sm'
@@ -30,12 +30,17 @@ class Game extends Component {
                         >
                             Select for price alert
                             </Button>
-                        <CardText>
-                            {platforms.map((system, i) => <Badge pill key={system}>{system}</Badge>)}
-                        </CardText>
                     </div>
                 </CardImgOverlay>
 
+                <CardBlock>
+                    <CardSubtitle><strong>{title}</strong></CardSubtitle>
+                    <CardText>
+                        <small>{gameContentType}</small><br />
+                        {platforms.map((system, i) => <span key={system}><Badge pill>{system}</Badge> </span>)}
+                    </CardText>
+                </CardBlock>
+                
             </Card>
         );
     }

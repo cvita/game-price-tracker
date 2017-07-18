@@ -15,23 +15,23 @@ function Price(props) {
 
 class GamePreview extends Component {
     render() {
-        const { _id, image, strikePrice, onSale } = this.props;
+        const { title, image, strikePrice, onSale } = this.props;
 
         return (
             <Container>
                 <Row>
                     <Col xs='6'>
-                        <img className='img-fluid' src={image} alt={_id} />
+                        <img className='img-fluid' src={image} alt={title} />
                     </Col>
 
                     <Col xl='6'>
                         {!onSale ?
                             <div>
-                                <h3>{_id} is currently </h3>
+                                <h3>{title} is currently </h3>
                                 <Price {...this.props} />
                             </div> :
                             <div>
-                                <h3><i>Nice!</i> {_id} is on sale for </h3>
+                                <h3><i>Nice!</i> {title} is on sale for </h3>
                                 <Price {...this.props} />
                                 <strong>Regular price: ${strikePrice}</strong>
                             </div>}
