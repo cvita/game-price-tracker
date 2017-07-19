@@ -1,7 +1,6 @@
 import { all, call, put, takeLatest } from 'redux-saga/effects';
 import Client from '../Client';
-import findGameFromSony from '../processResponse';
-import searchByTitle from '../searchTitle';
+import sonyStore from '../sonyStore';
 import { showLoading, hideLoading } from 'react-redux-loading-bar';
 
 
@@ -16,7 +15,7 @@ function* fetchAllGamesInDb(action) {
 
 function* searchTitle(action) {
     try {
-        const searchResults = yield call(searchByTitle, action.payload.title);
+        const searchResults = yield call(sonyStore.findOneGameByTitle, action.payload.title);
         yield put({ type: 'SEARCH_BY_TITLE_SUCCEEDED', searchResults });
     } catch (e) {
         yield put({ type: 'SEARCH_BY_TITLE_FAILED', message: e.message });
@@ -25,7 +24,7 @@ function* searchTitle(action) {
 
 function* generateAutoSuggestions(action) {
     try {
-        const suggestions = yield call(searchByTitle, action.payload.title);
+        const suggestions = yield call(sonyStore.findOneGameByTitle, action.payload.title);
         yield put({ type: 'FIND_AUTO_SUGGESTIONS_SUCCEEDED', suggestions });
     } catch (e) {
         yield put({ type: 'FIND_AUTO_SUGGESTIONS__FAILED', message: e.message });
@@ -35,7 +34,7 @@ function* generateAutoSuggestions(action) {
 function* makeActiveGame(action) {
     try {
         yield put(showLoading());
-        var activeGame = yield call(findGameFromSony, action.payload.storeCode);
+        const activeGame = yield call(sonyStore.findOneGameById, action.payload.gameId);
         yield put({ type: 'MAKE_ACTIVE_GAME_SUCCEEDED', activeGame });
     } catch (e) {
         yield put({ type: 'MAKE_ACTIVE_GAME_FAILED', message: e.message });
