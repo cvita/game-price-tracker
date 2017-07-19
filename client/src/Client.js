@@ -1,46 +1,16 @@
-import processResponseFromSony from './processResponse';
-
-
 function findAllGames() {
     return new Promise((resolve, reject) => {
         const request = new Request('/games/find/all');
-        fetch(request, {
-            method: 'GET'
-        }).then(response => handleResponse(response, resolve, reject));
+        fetch(request, { method: 'GET' })
+            .then(response => handleResponse(response, resolve, reject));
     });
 }
 
 function findOneGame(url) {
     return new Promise((resolve, reject) => {
         const request = new Request(`/games/find/one/?url=${encodeURIComponent(url)}`);
-        fetch(request, {
-            method: 'GET'
-        }).then(response => handleResponse(response, resolve, reject));
-    });
-}
-
-function findGameFromSony(url) {
-    return new Promise((resolve, reject) => {
-        const gameCode = url.slice(url.indexOf('cid=') + 4);
-        const uri = 'https://store.playstation.com/store/api/chihiro/00_09_000/container/US/en/19/' + gameCode;
-        const request = new Request(uri);
-        fetch(request, {
-            method: 'GET'
-        }).then(response => {
-            if (!response.ok) {
-                console.error(new Error(response));
-                reject(response);
-            }
-            response.json()
-                .then(response => {
-                    response.uri = uri;
-                    processResponseFromSony(response)
-                        .then(response => {
-                            addOrUpdateGame(response);
-                            resolve(response)
-                        });
-                });
-        });
+        fetch(request, { method: 'GET' })
+            .then(response => handleResponse(response, resolve, reject));
     });
 }
 
@@ -49,10 +19,8 @@ function addOrUpdateGame(gameInfo) {
         const request = new Request('/games/add', {
             headers: new Headers({ 'Content-Type': 'application/json' })
         });
-        fetch(request, {
-            method: 'POST',
-            body: JSON.stringify(gameInfo)
-        }).then(response => handleResponse(response, resolve, reject));
+        fetch(request, { method: 'POST', body: JSON.stringify(gameInfo) })
+            .then(response => handleResponse(response, resolve, reject));
     });
 }
 
@@ -61,10 +29,8 @@ function createPriceAlert(priceAlertInfo) {
         const request = new Request('/priceAlerts/add', {
             headers: new Headers({ 'Content-Type': 'application/json' })
         });
-        fetch(request, {
-            method: 'POST',
-            body: JSON.stringify(priceAlertInfo)
-        }).then(response => handleResponse(response, resolve, reject));
+        fetch(request, { method: 'POST', body: JSON.stringify(priceAlertInfo) })
+            .then(response => handleResponse(response, resolve, reject));
     });
 }
 
@@ -74,10 +40,8 @@ function findOnePriceAlert(id) {
         const request = new Request('/priceAlerts/find/one', {
             headers: new Headers({ 'Content-Type': 'application/json' })
         });
-        fetch(request, {
-            method: 'POST',
-            body: JSON.stringify({ id: id })
-        }).then(response => handleResponse(response, resolve, reject));
+        fetch(request, { method: 'POST', body: JSON.stringify({ id: id }) })
+            .then(response => handleResponse(response, resolve, reject));
     });
 }
 
@@ -86,10 +50,8 @@ function deletePriceAlert(userInfo) {
         const request = new Request('/priceAlerts/delete', {
             headers: new Headers({ 'Content-Type': 'application/json' })
         });
-        fetch(request, {
-            method: 'DELETE',
-            body: JSON.stringify(userInfo)
-        }).then(response => handleResponse(response, resolve, reject));
+        fetch(request, { method: 'DELETE', body: JSON.stringify(userInfo) })
+            .then(response => handleResponse(response, resolve, reject));
     });
 }
 
@@ -98,10 +60,8 @@ function checkBlacklist(userEmail) {
         const request = new Request('/blacklist/find/one', {
             headers: new Headers({ 'Content-Type': 'application/json' })
         });
-        fetch(request, {
-            method: 'POST',
-            body: JSON.stringify({ userEmail: userEmail })
-        }).then(response => handleResponse(response, resolve, reject));
+        fetch(request, { method: 'POST', body: JSON.stringify({ userEmail: userEmail }) })
+            .then(response => handleResponse(response, resolve, reject));
     });
 }
 
@@ -110,10 +70,8 @@ function addToBlacklist(userEmail) {
         const request = new Request('/blacklist/add', {
             headers: new Headers({ 'Content-Type': 'application/json' })
         });
-        fetch(request, {
-            method: 'PUT',
-            body: JSON.stringify({ userEmail: userEmail })
-        }).then(response => handleResponse(response, resolve, reject));
+        fetch(request, { method: 'PUT', body: JSON.stringify({ userEmail: userEmail }) })
+            .then(response => handleResponse(response, resolve, reject));
     });
 }
 
@@ -129,14 +87,13 @@ function handleResponse(response, resolve, reject) {
 }
 
 
-const Client = {
+export default {
     findAllGames,
     findOneGame,
-    findGameFromSony,
+    addOrUpdateGame,
     createPriceAlert,
     findOnePriceAlert,
     deletePriceAlert,
     checkBlacklist,
-    addToBlacklist
+    addToBlacklist,
 };
-export default Client;

@@ -12,8 +12,8 @@ class GamesGrid extends Component {
                 <div className='gamesGrid'>
                     {allGames.map((game, i) => {
                         return this.props.activeGame && game._id === this.props.activeGame._id ?
-                            <div key={game._id} /> :
-                            <Game {...game} key={game._id} makeActiveGame={this.props.makeActiveGame} />;
+                            <div key={game._id + '' + i} /> :
+                            <Game {...game} key={game._id + ' ' + i} />;
                     })}
                 </div>
             </div>

@@ -29,7 +29,8 @@ module.exports = function querySony(gameCode) {
                 }
 
                 const info = {
-                    _id: game.title_name,
+                    _id: game.id,
+                    title: game.title_name,
                     url: 'https://store.playstation.com/#!/en-us/games/cid=' + game.id,
                     price: normalPrice || salePrice,
                     strikePrice: strikePrice,

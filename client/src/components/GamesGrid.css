@@ -1,15 +1,11 @@
-.gamesGridContainer {
-
-}
-
 .gamesGrid{
     display: flex;
-    flex-direction: row-reverse;
+    flex-direction: row;
     flex-wrap: wrap;
-    justify-content: center;
+    justify-content: flex-start;
 }
 
 .game {
-    max-width: 250px; 
+    width: 225px; 
     margin: 1em;
 }

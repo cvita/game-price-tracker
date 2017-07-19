@@ -6,11 +6,35 @@ export function fetchAllGamesInDb() {
     };
 }
 
-export function makeActiveGame(url) {
-    console.log(`makeActiveGame(${url.slice(0, 10)})`);
+export function findNewGames(maxResults) {
+    console.log(`findNewGames(${maxResults})`);
+    return {
+        type: 'FIND_NEW_GAMES_REQUESTED',
+        payload: { maxResults }
+    };
+}
+
+export function generateAutoSuggestions(title, maxResults) {
+    console.log(`generateAutoSuggestions(${title})`);
+    return {
+        type: 'GENERATE_AUTO_SUGGESTIONS_REQUESTED',
+        payload: { title, maxResults }
+    };
+}
+
+export function searchByTitle(title) {
+    console.log(`searchByTitle(${title})`);
+    return {
+        type: 'SEARCH_BY_TITLE_REQUESTED',
+        payload: { title }
+    };
+}
+
+export function makeActiveGame(gameId) {
+    console.log(`makeActiveGame(${gameId.slice(0, 10)})`);
     return {
         type: 'MAKE_ACTIVE_GAME_REQUESTED',
-        payload: { url }
+        payload: { gameId }
     };
 }
 

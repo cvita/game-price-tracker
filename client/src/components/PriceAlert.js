@@ -32,16 +32,19 @@ function ConfirmAndResetButtons(props) {
 
 class PriceAlert extends Component {
     componentDidMount() {
-        if (!this.props.activeGame) {
-            const url = window.location.toString();
-            const sonyStoreUrl = 'https://store.playstation.com/#!/en-us' + url.slice(url.indexOf('/games/'));
-            this.props.makeActiveGame(sonyStoreUrl);
+        const url = window.location.toString();
+        const gameId = url.slice(url.indexOf('games/') + 6);
+        const regEx = /UP\d{4}-\w{9}_00-\w{16}/g;
+        if (regEx.test(gameId)) {
+            this.props.makeActiveGame(gameId);
+        } else {
+            // return search results for term entered
         }
     }
     render() {
         const { activeGame, priceAlertCreated, userInfo, createPriceAlert } = this.props;
         const validUserEmail = userInfo.userEmail !== null;
-        console.log(priceAlertCreated);
+
         return (
             <div>
                 {activeGame &&

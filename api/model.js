@@ -104,7 +104,6 @@ function handleError(err, reject) {
 }
 
 
-
 module.exports = {
     findAllGames,
     findOneGame,

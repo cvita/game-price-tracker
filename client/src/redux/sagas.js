@@ -1,5 +1,6 @@
 import { all, call, put, takeLatest } from 'redux-saga/effects';
 import Client from '../Client';
+import sonyStore from '../sonyStore';
 import { showLoading, hideLoading } from 'react-redux-loading-bar';
 
 
@@ -12,10 +13,37 @@ function* fetchAllGamesInDb(action) {
     }
 }
 
+function* findNewGames(action) {
+    try {
+        const games = yield call(sonyStore.findNewGames, action.payload.maxResults);
+        yield put({ type: 'FIND_NEW_GAMES_SUCCEEDED', games });
+    } catch (e) {
+        yield put({ type: 'FIND_NEW_GAMES_FAILED', message: e.message });
+    }
+}
+
+function* searchTitle(action) {
+    try {
+        const searchResults = yield call(sonyStore.findGameByTitle, action.payload.title);
+        yield put({ type: 'SEARCH_BY_TITLE_SUCCEEDED', searchResults });
+    } catch (e) {
+        yield put({ type: 'SEARCH_BY_TITLE_FAILED', message: e.message });
+    }
+}
+
+function* generateAutoSuggestions(action) {
+    try {
+        const autoSuggestions = yield call(sonyStore.findGameByTitle, action.payload.title, action.payload.maxResults);
+        yield put({ type: 'GENERATE_AUTO_SUGGESTIONS_SUCCEEDED', autoSuggestions });
+    } catch (e) {
+        yield put({ type: 'GENERATE_AUTO_SUGGESTIONS__FAILED', message: e.message });
+    }
+}
+
 function* makeActiveGame(action) {
     try {
         yield put(showLoading());
-        var activeGame = yield call(Client.findGameFromSony, action.payload.url);
+        const activeGame = yield call(sonyStore.findGameById, action.payload.gameId);
         yield put({ type: 'MAKE_ACTIVE_GAME_SUCCEEDED', activeGame });
     } catch (e) {
         yield put({ type: 'MAKE_ACTIVE_GAME_FAILED', message: e.message });
@@ -74,6 +102,9 @@ function* addToBlacklist(action) {
 function* gamePriceTrackerSagas() {
     yield all([
         takeLatest('FETCH_ALL_GAMES_IN_DB_REQUESTED', fetchAllGamesInDb),
+        takeLatest('FIND_NEW_GAMES_REQUESTED', findNewGames),
+        takeLatest('GENERATE_AUTO_SUGGESTIONS_REQUESTED', generateAutoSuggestions),
+        takeLatest('SEARCH_BY_TITLE_REQUESTED', searchTitle),
         takeLatest('MAKE_ACTIVE_GAME_REQUESTED', makeActiveGame),
         takeLatest('SUBMIT_PRICE_ALERT_REQUESTED', submitPriceAlert),
         takeLatest('CHECK_BLACKLIST_REQUESTED', checkBlacklist),

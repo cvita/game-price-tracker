@@ -12,6 +12,15 @@ function allGames(state = [], action) {
     }
 }
 
+function newGames(state = [], action) {
+    switch (action.type) {
+        case 'FIND_NEW_GAMES_SUCCEEDED':
+            return action.games;
+        default:
+            return state;
+    }
+}
+
 function activeGame(state = {}, action) {
     switch (action.type) {
         case 'MAKE_ACTIVE_GAME_SUCCEEDED':
@@ -24,6 +33,31 @@ function activeGame(state = {}, action) {
             return null;
         case 'FETCH_PRICE_ALERT_SUCCEEDED':
             return action.gameAndUserInfo.activeGame;
+        default:
+            return state;
+    }
+}
+
+function autoSuggestions(state = [], action) {
+    switch (action.type) {
+        case 'GENERATE_AUTO_SUGGESTIONS_SUCCEEDED':
+            return action.autoSuggestions;
+        case 'SEARCH_BY_TITLE_SUCCEEDED':
+        case 'MAKE_ACTIVE_GAME_REQUESTED':
+        case 'RESET_ACTIVE_GAME':
+            return [];
+        default:
+            return state;
+    }
+}
+
+function searchResults(state = [], action) {
+    switch (action.type) {
+        case 'SEARCH_BY_TITLE_SUCCEEDED':
+            return action.searchResults;
+        //        case 'MAKE_ACTIVE_GAME_REQUESTED':
+        case 'RESET_ACTIVE_GAME':
+            return [];
         default:
             return state;
     }
@@ -52,6 +86,7 @@ function userInfo(state = {}, action) {
             return {
                 ...state,
                 game_id: action.activeGame._id,
+                gameTitle: action.activeGame.title,
                 price: action.activeGame.price
             };
         case 'CHECK_BLACKLIST_SUCCEEDED':
@@ -90,6 +125,10 @@ function errors(state = [], action) {
     switch (action.type) {
         case 'ERROR':
             return [...state, { error: action.error }];
+        case 'MAKE_ACTIVE_GAME_FAILED':
+            return [...state, { invalidInfo: true }];
+        case 'RESET_ACTIVE_GAME':
+            return [];
         default:
             return state;
     }
@@ -97,6 +136,9 @@ function errors(state = [], action) {
 
 const rootReducer = combineReducers({
     allGames,
+    newGames,
+    autoSuggestions,
+    searchResults,
     activeGame,
     priceAlertCreated,
     userInfo,
