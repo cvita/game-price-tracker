@@ -1,5 +1,6 @@
 import { all, call, put, takeLatest } from 'redux-saga/effects';
 import Client from '../Client';
+import findGameFromSony from '../processResponse';
 import searchByTitle from '../searchTitle';
 import { showLoading, hideLoading } from 'react-redux-loading-bar';
 
@@ -34,7 +35,7 @@ function* generateAutoSuggestions(action) {
 function* makeActiveGame(action) {
     try {
         yield put(showLoading());
-        var activeGame = yield call(Client.findGameFromSony, action.payload.storeCode);
+        var activeGame = yield call(findGameFromSony, action.payload.storeCode);
         yield put({ type: 'MAKE_ACTIVE_GAME_SUCCEEDED', activeGame });
     } catch (e) {
         yield put({ type: 'MAKE_ACTIVE_GAME_FAILED', message: e.message });

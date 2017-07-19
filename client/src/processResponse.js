@@ -1,3 +1,20 @@
+import Client from './Client';
+
+
+function findGameFromSony(storeCode) {
+    return new Promise((resolve, reject) => {
+        const request = new Request(`https://store.playstation.com/store/api/chihiro/00_09_000/container/US/en/19/${storeCode}`);
+        fetch(request, { method: 'GET' })
+            .then(response => processResponse(response))
+            .then(response => {
+                Client.addOrUpdateGame(response);
+                resolve(response);
+            }).catch(err => {
+                reject(err);
+            });
+    });
+}
+
 function processResponse(resp) {
     return new Promise((resolve, reject) => {
         resp.json().then(game => {
@@ -20,7 +37,7 @@ function processResponse(resp) {
                 const info = {
                     _id: game.id,
                     title: game.title_name,
-                    url: `https://store.playstation.com/#!/en-us/games/${game.id}`,
+                    url: `https://store.playstation.com/#!/en-us/games/cid=${game.id}`,
                     price: normalPrice || salePrice,
                     strikePrice: strikePrice,
                     onSale: onSale,
@@ -59,4 +76,4 @@ function processResponse(resp) {
 }
 
 
-export default processResponse;
+export default findGameFromSony;
