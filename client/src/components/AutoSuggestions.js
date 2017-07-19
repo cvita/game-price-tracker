@@ -29,13 +29,13 @@ class AutoSuggestions extends Component {
         browserHistory.push(`/games/${gameId}`);
     }
     render() {
-        const suggestions = this.props.suggestions.slice(0, 5);
+        const autoSuggestions = this.props.autoSuggestions;
 
         return (
             <InputGroupButton>
-                <Dropdown isOpen={suggestions.length > 0} toggle={this.toggle}>
+                <Dropdown isOpen={autoSuggestions.length > 0} toggle={this.toggle}>
                     <DropdownMenu>
-                        {suggestions.map((game, i) => {
+                        {autoSuggestions.map((game, i) => {
                             return (
                                 <div key={game.cid + '-' + i}>
                                     <DropdownItem onClick={() => this.handleClick(game._id)}>
@@ -51,5 +51,6 @@ class AutoSuggestions extends Component {
         );
     }
 }
+
 
 export default AutoSuggestions;

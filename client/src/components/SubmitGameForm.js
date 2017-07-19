@@ -14,7 +14,7 @@ class SubmitGameForm extends Component {
     }
     handleChange(event) {
         const value = event.target.value;
-        this.props.findAutoSuggestions(value);
+        this.props.generateAutoSuggestions(value, 5);
         this.setState({ gameInput: value });
     }
     handleSubmit(event) {

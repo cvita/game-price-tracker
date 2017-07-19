@@ -1,21 +1,14 @@
 import React, { Component } from 'react';
-import { Alert, Badge, Container, Row, Col } from 'reactstrap';
+import { Badge, Container, Row, Col } from 'reactstrap';
 import './GamePreview.css';
 
 
-function Price(props) {
-    return (
-        <div className='price'>
-            <h3><Badge>${props.price}</Badge></h3>
-            {props.hasOwnProperty('updating') &&
-                <Alert className='priceMessage' color='info'>Updating info from Sony PS store</Alert>}
-        </div>
-    );
-}
+
 
 class GamePreview extends Component {
     render() {
-        const { title, image, strikePrice, onSale } = this.props;
+        const { title, image, strikePrice, onSale, psPlusPrice, price } = this.props;
+        const regularPriceIsValid = !onSale || psPlusPrice;
 
         return (
             <Container>
@@ -25,19 +18,18 @@ class GamePreview extends Component {
                     </Col>
 
                     <Col xl='6'>
-                        {!onSale ?
+                        {regularPriceIsValid &&
+                            <h3>{title} is currently <Badge>${price}</Badge></h3>}
+
+                        {psPlusPrice &&
+                            <h5><i>PS Plus</i> member price <Badge color='info'>${psPlusPrice}</Badge></h5>}
+
+                        {onSale && !psPlusPrice &&
                             <div>
-                                <h3>{title} is currently </h3>
-                                <Price {...this.props} />
-                            </div> :
-                            <div>
-                                <h3><i>Nice!</i> {title} is on sale for </h3>
-                                <Price {...this.props} />
+                                <h3><i>Nice!</i> {title} is on sale for <Badge>${price}</Badge></h3>
                                 <strong>Regular price: ${strikePrice}</strong>
                             </div>}
-                        <div className='lastUpdated'>
-                            <small className='text-muted'>Updated {new Date().toLocaleTimeString()}</small>
-                        </div>
+
                         {this.props.children}
                     </Col>
                 </Row>
@@ -46,6 +38,5 @@ class GamePreview extends Component {
     }
 }
 
+
 export default GamePreview;
-
-
