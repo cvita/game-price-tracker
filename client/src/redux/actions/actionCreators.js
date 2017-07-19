@@ -6,11 +6,19 @@ export function fetchAllGamesInDb() {
     };
 }
 
-export function findAutoSuggestions(title) {
-    console.log(`findAutoSuggestions(${title})`);
+export function findNewGames(maxResults) {
+    console.log(`findNewGames(${maxResults})`);
     return {
-        type: 'FIND_AUTO_SUGGESTIONS_REQUESTED',
-        payload: { title }
+        type: 'FIND_NEW_GAMES_REQUESTED',
+        payload: { maxResults }
+    };
+}
+
+export function generateAutoSuggestions(title, maxResults) {
+    console.log(`generateAutoSuggestions(${title})`);
+    return {
+        type: 'GENERATE_AUTO_SUGGESTIONS_REQUESTED',
+        payload: { title, maxResults }
     };
 }
 

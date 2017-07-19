@@ -13,9 +13,18 @@ function* fetchAllGamesInDb(action) {
     }
 }
 
+function* findNewGames(action) {
+    try {
+        const games = yield call(sonyStore.findNewGames, action.payload.maxResults);
+        yield put({ type: 'FIND_NEW_GAMES_SUCCEEDED', games });
+    } catch (e) {
+        yield put({ type: 'FIND_NEW_GAMES_FAILED', message: e.message });
+    }
+}
+
 function* searchTitle(action) {
     try {
-        const searchResults = yield call(sonyStore.findOneGameByTitle, action.payload.title);
+        const searchResults = yield call(sonyStore.findGameByTitle, action.payload.title);
         yield put({ type: 'SEARCH_BY_TITLE_SUCCEEDED', searchResults });
     } catch (e) {
         yield put({ type: 'SEARCH_BY_TITLE_FAILED', message: e.message });
@@ -24,17 +33,17 @@ function* searchTitle(action) {
 
 function* generateAutoSuggestions(action) {
     try {
-        const suggestions = yield call(sonyStore.findOneGameByTitle, action.payload.title);
-        yield put({ type: 'FIND_AUTO_SUGGESTIONS_SUCCEEDED', suggestions });
+        const autoSuggestions = yield call(sonyStore.findGameByTitle, action.payload.title, action.payload.maxResults);
+        yield put({ type: 'GENERATE_AUTO_SUGGESTIONS_SUCCEEDED', autoSuggestions });
     } catch (e) {
-        yield put({ type: 'FIND_AUTO_SUGGESTIONS__FAILED', message: e.message });
+        yield put({ type: 'GENERATE_AUTO_SUGGESTIONS__FAILED', message: e.message });
     }
 }
 
 function* makeActiveGame(action) {
     try {
         yield put(showLoading());
-        const activeGame = yield call(sonyStore.findOneGameById, action.payload.gameId);
+        const activeGame = yield call(sonyStore.findGameById, action.payload.gameId);
         yield put({ type: 'MAKE_ACTIVE_GAME_SUCCEEDED', activeGame });
     } catch (e) {
         yield put({ type: 'MAKE_ACTIVE_GAME_FAILED', message: e.message });
@@ -93,7 +102,8 @@ function* addToBlacklist(action) {
 function* gamePriceTrackerSagas() {
     yield all([
         takeLatest('FETCH_ALL_GAMES_IN_DB_REQUESTED', fetchAllGamesInDb),
-        takeLatest('FIND_AUTO_SUGGESTIONS_REQUESTED', generateAutoSuggestions),
+        takeLatest('FIND_NEW_GAMES_REQUESTED', findNewGames),
+        takeLatest('GENERATE_AUTO_SUGGESTIONS_REQUESTED', generateAutoSuggestions),
         takeLatest('SEARCH_BY_TITLE_REQUESTED', searchTitle),
         takeLatest('MAKE_ACTIVE_GAME_REQUESTED', makeActiveGame),
         takeLatest('SUBMIT_PRICE_ALERT_REQUESTED', submitPriceAlert),

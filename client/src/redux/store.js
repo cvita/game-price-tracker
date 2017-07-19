@@ -10,7 +10,8 @@ import { loadingBarMiddleware } from 'react-redux-loading-bar'
 
 const defaultState = {
     allGames: [],
-    suggestions: [],
+    newGames: [],
+    autoSuggestions: [],
     searchResults: [],
     activeGame: null,
     priceAlertCreated: false,

@@ -12,6 +12,15 @@ function allGames(state = [], action) {
     }
 }
 
+function newGames(state = [], action) {
+    switch (action.type) {
+        case 'FIND_NEW_GAMES_SUCCEEDED':
+            return action.games;
+        default:
+            return state;
+    }
+}
+
 function activeGame(state = {}, action) {
     switch (action.type) {
         case 'MAKE_ACTIVE_GAME_SUCCEEDED':
@@ -29,10 +38,10 @@ function activeGame(state = {}, action) {
     }
 }
 
-function suggestions(state = [], action) {
+function autoSuggestions(state = [], action) {
     switch (action.type) {
-        case 'FIND_AUTO_SUGGESTIONS_SUCCEEDED':
-            return action.suggestions;
+        case 'GENERATE_AUTO_SUGGESTIONS_SUCCEEDED':
+            return action.autoSuggestions;
         case 'SEARCH_BY_TITLE_SUCCEEDED':
         case 'MAKE_ACTIVE_GAME_REQUESTED':
         case 'RESET_ACTIVE_GAME':
@@ -127,7 +136,8 @@ function errors(state = [], action) {
 
 const rootReducer = combineReducers({
     allGames,
-    suggestions,
+    newGames,
+    autoSuggestions,
     searchResults,
     activeGame,
     priceAlertCreated,
