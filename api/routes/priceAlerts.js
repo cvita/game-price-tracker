@@ -11,13 +11,7 @@ module.exports = function (app, priceAlerts, games) {
             const priceAlertId = manageId.slice(3, (manageId.indexOf('user:')));
             userEmail = manageId.slice(manageId.indexOf('user:') + 5);
             findOnePriceAlert(priceAlerts, priceAlertId).then(result => {
-                if (!result) {
-                    res.send({ api: { userInfo: {}, activeGame: null } });
-                } else {
-                    findOneGame(games, null, result.game_id).then(gameResult => {
-                        res.send({ api: { userInfo: result, activeGame: gameResult } });
-                    });
-                }
+                res.send({ api: result });
             });
         }
     });

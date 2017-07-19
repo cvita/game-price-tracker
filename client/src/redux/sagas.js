@@ -63,8 +63,9 @@ function* submitPriceAlert(action) {
 
 function* fetchPriceAlert(action) {
     try {
-        const gameAndUserInfo = yield call(Client.findOnePriceAlert, action.payload._id);
-        console.log(gameAndUserInfo);
+        const userInfo = yield call(Client.findOnePriceAlert, action.payload._id);
+        const activeGame = yield call(sonyStore.findGameById, userInfo.game_id);
+        const gameAndUserInfo = { userInfo, activeGame };
         yield put({ type: 'FETCH_PRICE_ALERT_SUCCEEDED', gameAndUserInfo });
     } catch (e) {
         yield put({ type: 'FETCH_PRICE_ALERT_FAILED', message: e.message });
