@@ -6,18 +6,18 @@ export function fetchAllGamesInDb() {
     };
 }
 
-export function searchByTitle(title) {
-    console.log(`searchByTitle(${title})`);
-    return {
-        type: 'SEARCH_BY_TITLE_REQUESTED',
-        payload: { title }
-    };
-}
-
 export function findAutoSuggestions(title) {
     console.log(`findAutoSuggestions(${title})`);
     return {
         type: 'FIND_AUTO_SUGGESTIONS_REQUESTED',
+        payload: { title }
+    };
+}
+
+export function searchByTitle(title) {
+    console.log(`searchByTitle(${title})`);
+    return {
+        type: 'SEARCH_BY_TITLE_REQUESTED',
         payload: { title }
     };
 }
