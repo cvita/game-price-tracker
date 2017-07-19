@@ -5,8 +5,8 @@ import './Game.css';
 
 
 class Game extends Component {
-    handleClick(storeCode) {
-        browserHistory.push(`/games/${storeCode}`);
+    handleClick(gameId) {
+        browserHistory.push(`/games/${gameId}`);
     }
     render() {
         const { title, _id, image, } = this.props;

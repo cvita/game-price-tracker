@@ -22,11 +22,11 @@ export function searchByTitle(title) {
     };
 }
 
-export function makeActiveGame(storeCode) {
-    console.log(`makeActiveGame(${storeCode.slice(0, 10)})`);
+export function makeActiveGame(gameId) {
+    console.log(`makeActiveGame(${gameId.slice(0, 10)})`);
     return {
         type: 'MAKE_ACTIVE_GAME_REQUESTED',
-        payload: { storeCode }
+        payload: { gameId }
     };
 }
 

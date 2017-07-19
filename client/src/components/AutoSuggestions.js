@@ -25,8 +25,8 @@ class AutoSuggestions extends Component {
     toggle() {
         this.setState({ toggle: !this.state.toggle });
     }
-    handleClick(storeCode) {
-        browserHistory.push(`/games/${storeCode}`);
+    handleClick(gameId) {
+        browserHistory.push(`/games/${gameId}`);
     }
     render() {
         const suggestions = this.props.suggestions.slice(0, 5);
