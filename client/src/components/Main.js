@@ -9,11 +9,6 @@ import './Main.css';
 
 
 class Main extends Component {
-    componentDidMount() {
-        // if (this.props.allGames.length === 0) {
-        //     this.props.fetchAllGamesInDb();
-        // }
-    }
     render() {
         return (
             <Container>

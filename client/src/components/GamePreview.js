@@ -3,8 +3,6 @@ import { Badge, Container, Row, Col } from 'reactstrap';
 import './GamePreview.css';
 
 
-
-
 class GamePreview extends Component {
     render() {
         const { title, image, strikePrice, onSale, psPlusPrice, price } = this.props;
