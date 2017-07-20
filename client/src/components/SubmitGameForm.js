@@ -1,11 +1,11 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { browserHistory } from 'react-router'
 import AutoSuggestions from './AutoSuggestions';
 import { Button, Input, InputGroup, InputGroupButton } from 'reactstrap';
 import './SubmitGameForm.css';
 
 
-class SubmitGameForm extends Component {
+class SubmitGameForm extends PureComponent {
     constructor(props) {
         super(props);
         this.state = { gameInput: '' };
@@ -20,7 +20,6 @@ class SubmitGameForm extends Component {
     handleSubmit(event) {
         event.preventDefault();
         const { gameInput } = this.state;
-        console.log(gameInput);
         if (typeof gameInput === 'string' && gameInput !== '') {
             this.props.searchByTitle(gameInput);
             browserHistory.push(`/search/${gameInput}`);
@@ -36,7 +35,7 @@ class SubmitGameForm extends Component {
                         <Button type='submit' onClick={this.handleSubmit} disabled={this.state.gameInput === ''}>Search</Button>
                     </InputGroupButton>
                 </InputGroup>
-                <AutoSuggestions {...this.props} />
+                <AutoSuggestions autoSuggestions={this.props.autoSuggestions} />
             </form>
         );
     }

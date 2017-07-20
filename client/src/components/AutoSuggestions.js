@@ -1,6 +1,7 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { browserHistory } from 'react-router'
 import { Badge, InputGroupButton, Dropdown, DropdownMenu, DropdownItem } from 'reactstrap';
+import './AutoSuggestions.css';
 
 
 function SuggestedResult(props) {
@@ -16,7 +17,7 @@ function SuggestedResult(props) {
     );
 }
 
-class AutoSuggestions extends Component {
+class AutoSuggestions extends PureComponent {
     constructor(props) {
         super(props);
         this.state = { toggle: false };
@@ -29,25 +30,27 @@ class AutoSuggestions extends Component {
         browserHistory.push(`/games/${gameId}`);
     }
     render() {
-        const autoSuggestions = this.props.autoSuggestions;
+        const { autoSuggestions } = this.props;
 
         return (
-            <InputGroupButton>
+
+            <InputGroupButton >
                 <Dropdown isOpen={autoSuggestions.length > 0} toggle={this.toggle}>
                     <DropdownMenu>
-                        {autoSuggestions.map((game, i) => {
-                            return (
-                                <div key={game.cid + '-' + i}>
-                                    <DropdownItem onClick={() => this.handleClick(game._id)}>
-                                        <SuggestedResult {...game} />
-                                    </DropdownItem>
-                                    <DropdownItem divider />
-                                </div>
-                            );
-                        })}
+                            {autoSuggestions.map((game, i) => {
+                                return (
+                                    <div key={game.cid + '-' + i}>
+                                        <DropdownItem onClick={() => this.handleClick(game._id)}>
+                                            <SuggestedResult {...game} />
+                                        </DropdownItem>
+                                        <DropdownItem divider />
+                                    </div>
+                                );
+                            })}
                     </DropdownMenu>
                 </Dropdown>
             </InputGroupButton>
+
         );
     }
 }
