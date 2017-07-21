@@ -18,12 +18,15 @@
     "redux-saga": "^0.15.4"
   },
   "devDependencies": {
-    "react-scripts": "1.0.7"
+    "babel-jest": "^20.0.3",
+    "react-scripts": "1.0.7",
+    "react-test-renderer": "^15.5.4"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
+    "coverage": "react-scripts test --env=jsdom --coverage",
     "eject": "react-scripts eject"
   }
 }
