@@ -1,6 +1,6 @@
 import { all, call, put, takeLatest } from 'redux-saga/effects';
 import Client from '../Client';
-import sonyStore from '../sonyStore';
+import sonyStore from '../sonyStore/sonyStore';
 import { showLoading, hideLoading } from 'react-redux-loading-bar';
 
 

@@ -1,0 +1,496 @@
+{
+  "age_limit": 13,
+  "bucket": "games",
+  "container_type": "product",
+  "content_descriptors": [
+    {
+      "description": "Violence",
+      "url": null,
+      "name": "Violence"
+    },
+    {
+      "description": "Mild Blood",
+      "url": null,
+      "name": "Mild Blood"
+    },
+    {
+      "description": "Suggestive Themes",
+      "url": null,
+      "name": "Suggestive Themes"
+    }
+  ],
+  "content_origin": 0,
+  "content_rating": {
+    "description": "ESRB Teen",
+    "rating_system": "ESRB",
+    "url": "https://cdn-a.sonyentertainmentnetwork.com/grc/images/ratings/hd/esrb/t.png"
+  },
+  "content_type": "1",
+  "default_sku": {
+    "amortizeFlag": false,
+    "bundleExclusiveFlag": false,
+    "chargeImmediatelyFlag": false,
+    "charge_type_id": 0,
+    "credit_card_required_flag": 0,
+    "defaultSku": true,
+    "display_price": "$49.99",
+    "eligibilities": [],
+    "entitlements": [
+      {
+        "description": null,
+        "drms": [],
+        "duration": 0,
+        "durationOverrideTypeId": null,
+        "exp_after_first_use": 0,
+        "feature_type_id": 3,
+        "id": "UP0082-CUSA05532_00-FFXIIGAMEPS400NA",
+        "license_type": 0,
+        "metadata": null,
+        "name": "FINAL FANTASY Ⅻ THE ZODIAC AGE",
+        "packageType": "PS4GD",
+        "packages": [
+          {
+            "platformId": 13,
+            "platformName": "ps4",
+            "size": 40563245056
+          }
+        ],
+        "preorder_placeholder_flag": false,
+        "size": 0,
+        "subType": 0,
+        "subtitle_language_codes": null,
+        "type": 5,
+        "use_count": 0,
+        "voice_language_codes": null
+      }
+    ],
+    "id": "UP0082-CUSA05532_00-FFXIIGAMEPS400NA-U001",
+    "is_original": false,
+    "name": "Downloadable Game",
+    "platforms": [
+      0,
+      10,
+      13
+    ],
+    "price": 4999,
+    "rewards": [],
+    "seasonPassExclusiveFlag": false,
+    "skuAvailabilityOverrideFlag": false,
+    "sku_type": 0,
+    "type": "standard"
+  },
+  "dob_required": false,
+  "gameContentTypesList": [
+    {
+      "name": "Full Game",
+      "key": "FULL_GAME"
+    }
+  ],
+  "game_contentType": "Full Game",
+  "id": "UP0082-CUSA05532_00-FFXIIGAMEPS400NA",
+  "images": [
+    {
+      "type": 1,
+      "url": "https://apollo2.dl.playstation.net/cdn/UP0082/CUSA05532_00/wySgMfhUC2OonkkupXsD7p0eznN9gSNo.png"
+    },
+    {
+      "type": 2,
+      "url": "https://apollo2.dl.playstation.net/cdn/UP0082/CUSA05532_00/V25Ev4v0H9YX4qeK1MftUnmNuJpC8Dw9.png"
+    },
+    {
+      "type": 9,
+      "url": "https://apollo2.dl.playstation.net/cdn/UP0082/CUSA05532_00/y3XObKUZHldFR4mTjuQ47mQn2HdZOkjr.png"
+    },
+    {
+      "type": 10,
+      "url": "https://apollo2.dl.playstation.net/cdn/UP0082/CUSA05532_00/oPNs22FnkTZrFUIxpp07GvmJ0xPwUX0T.png"
+    },
+    {
+      "type": 12,
+      "url": "https://apollo2.dl.playstation.net/cdn/UP0082/CUSA05532_00/TXsuOBZR4nYJj2fMVW9NqKVc4gJya0T0.jpg"
+    },
+    {
+      "type": 13,
+      "url": "https://apollo2.dl.playstation.net/cdn/UP0082/CUSA05532_00/7N57sRW2sBaLGOzrn6MsyQlGXwiM7fvc.png"
+    }
+  ],
+  "links": [],
+  "long_desc": "FINAL FANTASY® XII THE ZODIAC AGE improves upon the classic FINAL FANTASY® XII, now more beautiful and easier to play than ever. The high-definition remaster introduces several modern advancements, including reconstructed battle design and a revamped job system. Players both returning and new to the game will experience a grand adventure that spans the world of Ivalice in an entirely fresh and improved way.<br><br>Enter an era of war within the world of Ivalice. The small kingdom of Dalmasca, conquered by the Archadian Empire, is left in ruin and uncertainty. Princess Ashe, the one and only heir to the throne, devotes herself to the resistance to liberate her country. Vaan, a young man who lost his family in the war, dreams of flying freely in the skies. In a fight for freedom and fallen royalty, join these unlikely allies and their companions as they embark on a heroic adventure to free their homeland. <br><br>1 player<br>DUALSHOCK®4<br><br>  Software subject to license (us.playstation.com/softwarelicense). Online features require an account and are subject to terms of service and applicable privacy policy (playstationnetwork.com/terms-of-service & playstationnetwork.com/privacy-policy). One-time license fee for play on account’s designated primary PS4™ system and other PS4™ systems when signed in with that account.<br><br>© 2006, 2017 SQUARE ENIX CO., LTD. All Rights Reserved.<br>ILLUSTRATION: ©2006 YOSHITAKA AMANO<br>THE ZODIAC AGE is a registered trademark or trademark of Square Enix Co., Ltd.<br>FINAL FANTASY, SQUARE ENIX and the SQUARE ENIX logo are registered trademarks or trademarks of Square Enix Holdings Co., Ltd.<br><br>THE ZODIAC AGE is a registered trademark or trademark of Square Enix Co., Ltd.<br>FINAL FANTASY, SQUARE ENIX and the SQUARE ENIX logo are registered trademarks or trademarks of Square Enix Holdings Co., Ltd.",
+  "mediaList": {
+    "previews": [
+      {
+        "type": "PREVIEW",
+        "typeId": 2,
+        "source": "PRODUCT_MEDIA",
+        "url": "https://apollo2.dl.playstation.net/cdn/UP0082/CUSA05532_00/FREE_CONTENTsZb2lJP4Aqa82gKabf3B/PREVIEW_GAMEPLAY_VIDEO_3_140665.mp4",
+        "order": 0,
+        "streamUrl": "http://d1v33d7b5ul6gp.cloudfront.net/2627390/PREVIEW_GAMEPLAY_VIDEO_3_140665_playlist.m3u8",
+        "shots": [
+          "http://d1v33d7b5ul6gp.cloudfront.net/2627390/frame_0011.jpg",
+          "http://d1v33d7b5ul6gp.cloudfront.net/2627390/frame_0010.jpg",
+          "http://d1v33d7b5ul6gp.cloudfront.net/2627390/frame_0009.jpg",
+          "http://d1v33d7b5ul6gp.cloudfront.net/2627390/frame_0008.jpg",
+          "http://d1v33d7b5ul6gp.cloudfront.net/2627390/frame_0007.jpg",
+          "http://d1v33d7b5ul6gp.cloudfront.net/2627390/frame_0006.jpg",
+          "http://d1v33d7b5ul6gp.cloudfront.net/2627390/frame_0005.jpg",
+          "http://d1v33d7b5ul6gp.cloudfront.net/2627390/frame_0004.jpg",
+          "http://d1v33d7b5ul6gp.cloudfront.net/2627390/frame_0003.jpg",
+          "http://d1v33d7b5ul6gp.cloudfront.net/2627390/frame_0002.jpg",
+          "http://d1v33d7b5ul6gp.cloudfront.net/2627390/frame_0001.jpg",
+          "http://d1v33d7b5ul6gp.cloudfront.net/2627390/frame_0000.jpg"
+        ]
+      },
+      {
+        "type": "PREVIEW",
+        "typeId": 2,
+        "source": "PRODUCT_MEDIA",
+        "url": "https://apollo2.dl.playstation.net/cdn/UP0082/CUSA05532_00/FREE_CONTENTCaeYSIoq0U3UvJQh1Yz0/PREVIEW_GAMEPLAY_VIDEO_4_140665.mp4",
+        "order": 1,
+        "streamUrl": "http://d1v33d7b5ul6gp.cloudfront.net/2627398/PREVIEW_GAMEPLAY_VIDEO_4_140665_playlist.m3u8",
+        "shots": [
+          "http://d1v33d7b5ul6gp.cloudfront.net/2627398/frame_0011.jpg",
+          "http://d1v33d7b5ul6gp.cloudfront.net/2627398/frame_0010.jpg",
+          "http://d1v33d7b5ul6gp.cloudfront.net/2627398/frame_0009.jpg",
+          "http://d1v33d7b5ul6gp.cloudfront.net/2627398/frame_0008.jpg",
+          "http://d1v33d7b5ul6gp.cloudfront.net/2627398/frame_0007.jpg",
+          "http://d1v33d7b5ul6gp.cloudfront.net/2627398/frame_0006.jpg",
+          "http://d1v33d7b5ul6gp.cloudfront.net/2627398/frame_0005.jpg",
+          "http://d1v33d7b5ul6gp.cloudfront.net/2627398/frame_0004.jpg",
+          "http://d1v33d7b5ul6gp.cloudfront.net/2627398/frame_0003.jpg",
+          "http://d1v33d7b5ul6gp.cloudfront.net/2627398/frame_0002.jpg",
+          "http://d1v33d7b5ul6gp.cloudfront.net/2627398/frame_0001.jpg",
+          "http://d1v33d7b5ul6gp.cloudfront.net/2627398/frame_0000.jpg"
+        ]
+      },
+      {
+        "type": "PREVIEW",
+        "typeId": 2,
+        "source": "PRODUCT_MEDIA",
+        "url": "https://apollo2.dl.playstation.net/cdn/UP0082/CUSA05532_00/FREE_CONTENT6KYaUNWlTRMH3JcHYq9X/PREVIEW_GAMEPLAY_VIDEO_140665.mp4",
+        "order": 2,
+        "streamUrl": "http://d1v33d7b5ul6gp.cloudfront.net/2627406/PREVIEW_GAMEPLAY_VIDEO_140665_playlist.m3u8",
+        "shots": [
+          "http://d1v33d7b5ul6gp.cloudfront.net/2627406/frame_0011.jpg",
+          "http://d1v33d7b5ul6gp.cloudfront.net/2627406/frame_0010.jpg",
+          "http://d1v33d7b5ul6gp.cloudfront.net/2627406/frame_0009.jpg",
+          "http://d1v33d7b5ul6gp.cloudfront.net/2627406/frame_0008.jpg",
+          "http://d1v33d7b5ul6gp.cloudfront.net/2627406/frame_0007.jpg",
+          "http://d1v33d7b5ul6gp.cloudfront.net/2627406/frame_0006.jpg",
+          "http://d1v33d7b5ul6gp.cloudfront.net/2627406/frame_0005.jpg",
+          "http://d1v33d7b5ul6gp.cloudfront.net/2627406/frame_0004.jpg",
+          "http://d1v33d7b5ul6gp.cloudfront.net/2627406/frame_0003.jpg",
+          "http://d1v33d7b5ul6gp.cloudfront.net/2627406/frame_0002.jpg",
+          "http://d1v33d7b5ul6gp.cloudfront.net/2627406/frame_0001.jpg",
+          "http://d1v33d7b5ul6gp.cloudfront.net/2627406/frame_0000.jpg"
+        ]
+      },
+      {
+        "type": "PREVIEW",
+        "typeId": 2,
+        "source": "PRODUCT_MEDIA",
+        "url": "https://apollo2.dl.playstation.net/cdn/UP0082/CUSA05532_00/FREE_CONTENT9qQlLumQGFahMesAZ0Dl/PREVIEW_TRAILER_VIDEO_140665.mp4",
+        "order": 3,
+        "streamUrl": "http://d1v33d7b5ul6gp.cloudfront.net/2627414/PREVIEW_TRAILER_VIDEO_140665_playlist.m3u8",
+        "shots": [
+          "http://d1v33d7b5ul6gp.cloudfront.net/2627414/frame_0011.jpg",
+          "http://d1v33d7b5ul6gp.cloudfront.net/2627414/frame_0010.jpg",
+          "http://d1v33d7b5ul6gp.cloudfront.net/2627414/frame_0009.jpg",
+          "http://d1v33d7b5ul6gp.cloudfront.net/2627414/frame_0008.jpg",
+          "http://d1v33d7b5ul6gp.cloudfront.net/2627414/frame_0007.jpg",
+          "http://d1v33d7b5ul6gp.cloudfront.net/2627414/frame_0006.jpg",
+          "http://d1v33d7b5ul6gp.cloudfront.net/2627414/frame_0005.jpg",
+          "http://d1v33d7b5ul6gp.cloudfront.net/2627414/frame_0004.jpg",
+          "http://d1v33d7b5ul6gp.cloudfront.net/2627414/frame_0003.jpg",
+          "http://d1v33d7b5ul6gp.cloudfront.net/2627414/frame_0002.jpg",
+          "http://d1v33d7b5ul6gp.cloudfront.net/2627414/frame_0001.jpg",
+          "http://d1v33d7b5ul6gp.cloudfront.net/2627414/frame_0000.jpg"
+        ]
+      }
+    ],
+    "screenshots": [
+      {
+        "type": "SCREENSHOT",
+        "typeId": 4,
+        "source": "PRODUCT_MEDIA",
+        "url": "https://apollo2.dl.playstation.net/cdn/UP0082/CUSA05532_00/FREE_CONTENTBgAaMmiGMSq0UnRDpFC2/PREVIEW_SCREENSHOT1_140665.jpg",
+        "order": 4
+      },
+      {
+        "type": "SCREENSHOT",
+        "typeId": 4,
+        "source": "PRODUCT_MEDIA",
+        "url": "https://apollo2.dl.playstation.net/cdn/UP0082/CUSA05532_00/FREE_CONTENTKVHVkKGVmCdWUNwp4QuB/PREVIEW_SCREENSHOT2_140665.jpg",
+        "order": 5
+      },
+      {
+        "type": "SCREENSHOT",
+        "typeId": 4,
+        "source": "PRODUCT_MEDIA",
+        "url": "https://apollo2.dl.playstation.net/cdn/UP0082/CUSA05532_00/FREE_CONTENTC0poaIqoqScXxe0VTsSq/PREVIEW_SCREENSHOT3_140665.jpg",
+        "order": 6
+      },
+      {
+        "type": "SCREENSHOT",
+        "typeId": 4,
+        "source": "PRODUCT_MEDIA",
+        "url": "https://apollo2.dl.playstation.net/cdn/UP0082/CUSA05532_00/FREE_CONTENTNNINevCt7ZXMDRLPKstj/PREVIEW_SCREENSHOT4_140665.jpg",
+        "order": 7
+      },
+      {
+        "type": "SCREENSHOT",
+        "typeId": 4,
+        "source": "PRODUCT_MEDIA",
+        "url": "https://apollo2.dl.playstation.net/cdn/UP0082/CUSA05532_00/FREE_CONTENTE2XEXfeQW01uyIZ4dgoi/PREVIEW_SCREENSHOT5_140665.jpg",
+        "order": 8
+      },
+      {
+        "type": "SCREENSHOT",
+        "typeId": 4,
+        "source": "PRODUCT_MEDIA",
+        "url": "https://apollo2.dl.playstation.net/cdn/UP0082/CUSA05532_00/FREE_CONTENTN2Wy4NjxSUbPiPQC1rhH/PREVIEW_SCREENSHOT6_140665.jpg",
+        "order": 9
+      }
+    ]
+  },
+  "media_layouts": [
+    {
+      "type": "description",
+      "height": 1,
+      "width": 4
+    }
+  ],
+  "metadata": {
+    "cn_remotePlay": {
+      "name": "cn_remotePlay",
+      "values": [
+        "FALSE"
+      ]
+    },
+    "cn_vrEnabled": {
+      "name": "cn_vrEnabled",
+      "values": [
+        "FALSE"
+      ]
+    },
+    "cn_playstationMove": {
+      "name": "cn_playstationMove",
+      "values": [
+        "NOTREQUIRED"
+      ]
+    },
+    "cn_wirelessController": {
+      "name": "cn_wirelessController",
+      "values": [
+        "NOTREQUIRED"
+      ]
+    },
+    "secondary_classification": {
+      "name": "secondary_classification",
+      "values": [
+        "GAME"
+      ]
+    },
+    "cn_vrRequired": {
+      "name": "cn_vrRequired",
+      "values": [
+        "FALSE"
+      ]
+    },
+    "game_genre": {
+      "name": "Genre",
+      "values": [
+        "ROLE_PLAYING_GAMES"
+      ]
+    },
+    "playable_platform": {
+      "name": "playable_platform",
+      "values": [
+        "PS4™"
+      ]
+    },
+    "cn_dualshockVibration": {
+      "name": "cn_dualshockVibration",
+      "values": [
+        "TRUE"
+      ]
+    },
+    "tertiary_classification": {
+      "name": "tertiary_classification",
+      "values": [
+        "NA"
+      ]
+    },
+    "container_type": {
+      "name": "Container Type",
+      "values": [
+        "NP_PS4_REPRESENTATIVE"
+      ]
+    },
+    "genre": {
+      "name": "Genre",
+      "values": [
+        "Role-Playing Games (RPG)"
+      ]
+    },
+    "cn_psVrAimRequired": {
+      "name": "cn_psVrAimRequired",
+      "values": [
+        "FALSE"
+      ]
+    },
+    "cn_playstationCamera": {
+      "name": "cn_playstationCamera",
+      "values": [
+        "NOTREQUIRED"
+      ]
+    },
+    "cn_singstarMicrophone": {
+      "name": "cn_singstarMicrophone",
+      "values": [
+        "NOTREQUIRED"
+      ]
+    },
+    "cn_crossPlatformPSVita": {
+      "name": "cn_crossPlatformPSVita",
+      "values": [
+        "FALSE"
+      ]
+    },
+    "cn_psVrAimEnabled": {
+      "name": "cn_psVrAimEnabled",
+      "values": [
+        "FALSE"
+      ]
+    },
+    "primary_classification": {
+      "name": "primary_classification",
+      "values": [
+        "PREMIUM_GAME"
+      ]
+    }
+  },
+  "name": "Final Fantasy XII The Zodiac Age",
+  "pageTypeId": 2,
+  "playable_platform": [
+    "PS4™"
+  ],
+  "promomedia": [
+    {
+      "id": 0,
+      "key": "preview",
+      "type": 2,
+      "url": "https://apollo2.dl.playstation.net/cdn/UP0082/CUSA05532_00/FREE_CONTENTsZb2lJP4Aqa82gKabf3B/PREVIEW_GAMEPLAY_VIDEO_3_140665.mp4?country=US"
+    },
+    {
+      "id": 0,
+      "key": "preview",
+      "type": 2,
+      "url": "https://apollo2.dl.playstation.net/cdn/UP0082/CUSA05532_00/FREE_CONTENTCaeYSIoq0U3UvJQh1Yz0/PREVIEW_GAMEPLAY_VIDEO_4_140665.mp4?country=US"
+    },
+    {
+      "id": 0,
+      "key": "preview",
+      "type": 2,
+      "url": "https://apollo2.dl.playstation.net/cdn/UP0082/CUSA05532_00/FREE_CONTENT6KYaUNWlTRMH3JcHYq9X/PREVIEW_GAMEPLAY_VIDEO_140665.mp4?country=US"
+    },
+    {
+      "id": 0,
+      "key": "preview",
+      "type": 2,
+      "url": "https://apollo2.dl.playstation.net/cdn/UP0082/CUSA05532_00/FREE_CONTENT9qQlLumQGFahMesAZ0Dl/PREVIEW_TRAILER_VIDEO_140665.mp4?country=US"
+    }
+  ],
+  "provider_name": "SQUARE ENIX CO. LTD.",
+  "release_date": "2017-07-11T00:00:00Z",
+  "restricted": false,
+  "revision": 22,
+  "short_name": "Final Fantasy XII The Zodiac Age",
+  "size": 0,
+  "sku_links": [],
+  "skus": [
+    {
+      "amortizeFlag": false,
+      "bundleExclusiveFlag": false,
+      "chargeImmediatelyFlag": false,
+      "charge_type_id": 0,
+      "credit_card_required_flag": 0,
+      "defaultSku": true,
+      "display_price": "$49.99",
+      "eligibilities": [],
+      "entitlements": [
+        {
+          "description": null,
+          "drms": [],
+          "duration": 0,
+          "durationOverrideTypeId": null,
+          "exp_after_first_use": 0,
+          "feature_type_id": 3,
+          "id": "UP0082-CUSA05532_00-FFXIIGAMEPS400NA",
+          "license_type": 0,
+          "metadata": null,
+          "name": "FINAL FANTASY Ⅻ THE ZODIAC AGE",
+          "packageType": "PS4GD",
+          "packages": [
+            {
+              "platformId": 13,
+              "platformName": "ps4",
+              "size": 40563245056
+            }
+          ],
+          "preorder_placeholder_flag": false,
+          "size": 0,
+          "subType": 0,
+          "subtitle_language_codes": null,
+          "type": 5,
+          "use_count": 0,
+          "voice_language_codes": null
+        }
+      ],
+      "id": "UP0082-CUSA05532_00-FFXIIGAMEPS400NA-U001",
+      "is_original": false,
+      "name": "Downloadable Game",
+      "platforms": [
+        0,
+        10,
+        13
+      ],
+      "price": 4999,
+      "rewards": [],
+      "seasonPassExclusiveFlag": false,
+      "skuAvailabilityOverrideFlag": false,
+      "sku_type": 0,
+      "type": "standard"
+    }
+  ],
+  "star_rating": {
+    "total": "767",
+    "score": "4.91",
+    "count": [
+      {
+        "star": 1,
+        "count": 7
+      },
+      {
+        "star": 2,
+        "count": 2
+      },
+      {
+        "star": 3,
+        "count": 4
+      },
+      {
+        "star": 4,
+        "count": 27
+      },
+      {
+        "star": 5,
+        "count": 727
+      }
+    ]
+  },
+  "start": 0,
+  "timestamp": 1500390234000,
+  "title_name": "Final Fantasy XII The Zodiac Age",
+  "top_category": "downloadable_game",
+  "total_results": 0
+}
