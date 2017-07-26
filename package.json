@@ -21,7 +21,8 @@
     "client": "cd client && npm start",
     "server": "node server.js",
     "lint": "eslint .",
-    "test": "cd client && npm run test"
+    "test": "cd client && npm run test",
+    "setupFrontEnd": "cd client && npm install"
   },
   "devDependencies": {
     "babel-cli": "^6.24.1",
