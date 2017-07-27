@@ -19,6 +19,7 @@
   },
   "devDependencies": {
     "babel-jest": "^20.0.3",
+    "chromeless": "^1.0.0",
     "fetch-mock": "^5.12.1",
     "react-scripts": "1.0.7",
     "react-test-renderer": "^15.5.4"
@@ -28,6 +29,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "coverage": "react-scripts test --env=jsdom --coverage",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "acceptance": "/Applications/Google\\ Chrome\\ Canary.app/Contents/MacOS/Google\\ Chrome\\ Canary --remote-debugging-port=9222 --disable-gpu --headless | node acceptanceTest.js"
   }
 }
