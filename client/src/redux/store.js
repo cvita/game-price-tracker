@@ -8,23 +8,7 @@ import { loadingBarMiddleware } from 'react-redux-loading-bar'
 
 //import {loadState, saveState} from './localStorage';
 
-const defaultState = {
-    allGames: [],
-    newGames: [],
-    autoSuggestions: [],
-    searchResults: [],
-    activeGame: null,
-    priceAlertCreated: false,
-    userInfo: {
-        userEmail: null,
-        onBlacklist: null,
-        game_id: null,
-        price: null,
-        dateAdded: null,
-        expiration: null
-    },
-    errors: []
-};
+import initialState from './initialState';
 
 const sagaMiddleware = createSagaMiddleware();
 const loadingBar = loadingBarMiddleware();
@@ -37,7 +21,7 @@ const enhancers = compose(
 
 //const persistedState = loadState();
 
-const store = createStore(rootReducer, defaultState, enhancers);
+const store = createStore(rootReducer, initialState, enhancers);
 
 // store.subscribe(() => {
 //     saveState(store.getState());
