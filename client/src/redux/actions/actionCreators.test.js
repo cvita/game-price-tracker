@@ -6,7 +6,7 @@ describe('action creators', () => {
   it('should create an action to fetch all games in the db', () => {
     const expectedAction = {
       type: types.FETCH_ALL_GAMES_IN_DB_REQUESTED,
-      payload: {}
+      payload: null
     };
     expect(actions.fetchAllGamesInDb()).toEqual(expectedAction);
   });
@@ -15,7 +15,7 @@ describe('action creators', () => {
     const maxResults = 25;
     const expectedAction = {
       type: types.FIND_NEW_GAMES_REQUESTED,
-      payload: { maxResults }
+      payload: maxResults
     };
     expect(actions.findNewGames(maxResults)).toEqual(expectedAction);
   });
@@ -34,7 +34,7 @@ describe('action creators', () => {
     const title = 'last of us';
     const expectedAction = {
       type: types.SEARCH_BY_TITLE_REQUESTED,
-      payload: { title }
+      payload: title
     };
     expect(actions.searchByTitle(title)).toEqual(expectedAction);
   });
@@ -43,7 +43,7 @@ describe('action creators', () => {
     const gameId = 'UP0082-CUSA05532_00-FFXIIGAMEPS400NA';
     const expectedAction = {
       type: types.MAKE_ACTIVE_GAME_REQUESTED,
-      payload: { gameId }
+      payload: gameId
     };
     expect(actions.makeActiveGame(gameId)).toEqual(expectedAction);
   });
@@ -60,7 +60,7 @@ describe('action creators', () => {
     const priceAlertInfo = { mockInfo: 'info' };
     const expectedAction = {
       type: types.SUBMIT_PRICE_ALERT_REQUESTED,
-      payload: { priceAlertInfo }
+      payload: priceAlertInfo
     };
     expect(actions.createPriceAlert(priceAlertInfo)).toEqual(expectedAction);
   });
@@ -69,7 +69,7 @@ describe('action creators', () => {
     const _id = '5970da5dd6070cc46c9e6b90';
     const expectedAction = {
       type: types.FETCH_PRICE_ALERT_REQUESTED,
-      payload: { _id }
+      payload: _id
     };
     expect(actions.fetchPriceAlert(_id)).toEqual(expectedAction);
   });
@@ -78,7 +78,7 @@ describe('action creators', () => {
     const userInfo = { mockInfo: 'info' };
     const expectedAction = {
       type: types.DELETE_PRICE_ALERT_REQUESTED,
-      payload: { userInfo }
+      payload: userInfo
     };
     expect(actions.deletePriceAlert(userInfo)).toEqual(expectedAction);
   });
@@ -87,7 +87,7 @@ describe('action creators', () => {
     const userEmail = 'anyone@gmail.com'
     const expectedAction = {
       type: types.CHECK_BLACKLIST_REQUESTED,
-      payload: { userEmail }
+      payload: userEmail
     };
     expect(actions.checkBlacklist(userEmail)).toEqual(expectedAction);
   });
@@ -96,7 +96,7 @@ describe('action creators', () => {
     const userEmail = 'anyone@gmail.com'
     const expectedAction = {
       type: types.ADD_TO_BLACKLIST_REQUESTED,
-      payload: { userEmail }
+      payload: userEmail
     };
     expect(actions.addToBlacklist(userEmail)).toEqual(expectedAction);
   });
