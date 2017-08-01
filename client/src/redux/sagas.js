@@ -5,7 +5,7 @@ import { showLoading, hideLoading } from 'react-redux-loading-bar';
 import * as types from './constants/actionTypes'
 
 
-function* fetchAllGamesInDb(action) {
+export function* fetchAllGamesInDb(action) {
     try {
         const allGames = yield call(Client.findAllGames);
         yield put({ type: types.FETCH_ALL_GAMES_IN_DB_SUCCEEDED, payload: allGames });
@@ -14,7 +14,7 @@ function* fetchAllGamesInDb(action) {
     }
 }
 
-function* findNewGames(action) {
+export function* findNewGames(action) {
     try {
         const games = yield call(sonyStore.findNewGames, action.payload.maxResults);
         yield put({ type: types.FIND_NEW_GAMES_SUCCEEDED, payload: games });
@@ -23,7 +23,7 @@ function* findNewGames(action) {
     }
 }
 
-function* searchTitle(action) {
+export function* searchTitle(action) {
     try {
         const searchResults = yield call(sonyStore.findGameByTitle, action.payload);
         yield put({ type: types.SEARCH_BY_TITLE_SUCCEEDED, payload: searchResults });
@@ -32,7 +32,7 @@ function* searchTitle(action) {
     }
 }
 
-function* generateAutoSuggestions(action) {
+export function* generateAutoSuggestions(action) {
     try {
         const autoSuggestions = yield call(sonyStore.findGameByTitle, action.payload.title, action.payload.maxResults);
         yield put({ type: types.GENERATE_AUTO_SUGGESTIONS_SUCCEEDED, payload: autoSuggestions });
@@ -41,7 +41,7 @@ function* generateAutoSuggestions(action) {
     }
 }
 
-function* makeActiveGame(action) {
+export function* makeActiveGame(action) {
     try {
         yield put(showLoading());
         const activeGame = yield call(sonyStore.findGameById, action.payload);
@@ -53,7 +53,7 @@ function* makeActiveGame(action) {
     }
 }
 
-function* submitPriceAlert(action) {
+export function* submitPriceAlert(action) {
     try {
         const priceAlert = yield call(Client.createPriceAlert, action.payload);
         yield put({ type: types.SUBMIT_PRICE_ALERT_SUCCEEDED, payload: priceAlert });
@@ -62,7 +62,7 @@ function* submitPriceAlert(action) {
     }
 }
 
-function* fetchPriceAlert(action) {
+export function* fetchPriceAlert(action) {
     try {
         const userInfo = yield call(Client.findOnePriceAlert, action.payload);
         const activeGame = yield call(sonyStore.findGameById, userInfo.game_id);
@@ -72,7 +72,7 @@ function* fetchPriceAlert(action) {
     }
 }
 
-function* deletePriceAlert(action) {
+export function* deletePriceAlert(action) {
     try {
         const priceAlert = yield call(Client.deletePriceAlert, action.payload);
         yield put({ type: types.DELETE_PRICE_ALERT_SUCCEEDED, payload: priceAlert });
@@ -81,7 +81,7 @@ function* deletePriceAlert(action) {
     }
 }
 
-function* checkBlacklist(action) {
+export function* checkBlacklist(action) {
     try {
         const blacklistInfo = yield call(Client.checkBlacklist, action.payload);
         yield put({ type: types.CHECK_BLACKLIST_SUCCEEDED, payload: blacklistInfo });
@@ -90,7 +90,7 @@ function* checkBlacklist(action) {
     }
 }
 
-function* addToBlacklist(action) {
+export function* addToBlacklist(action) {
     try {
         const blacklistInfo = yield call(Client.addToBlacklist, action.payload);
         yield put({ type: types.ADD_TO_BLACKLIST_SUCCEEDED, payload: blacklistInfo });
