@@ -27,28 +27,27 @@ function processSingleResultGameInfo(game) {
 
 function processMultipleResultGameInfo(results, maxResults) {
   return new Promise(resolve => {
-    const validResults = [];
+    const validatedResults = [];
 
     if (results.hasOwnProperty('links') && Array.isArray(results.links)) {
-      const idValidation = /UP\d{4}-\w{9}_00-\w{16}/g;
+      const games = results.links;
 
-      for (let i = 0; i < results.links.length; i++) {
-        let game = results.links[i];
+      for (let i = 0; i < games.length; i++) {
+        if (validatedResults.length >= maxResults) {
+          break;
+        }
         try {
-          if (!idValidation.test(game.id)) {
+          if (!validateGameId(games[i].id)) {
             continue;
           }
-          if (validResults.length >= maxResults) {
-            break;
-          }
-          validResults.push(parseBasicGameInfo(game, 225));
+          validatedResults.push(parseBasicGameInfo(games[i], 225));
         } catch (e) {
           continue;
         }
       }
     }
 
-    resolve(validResults);
+    resolve(validatedResults);
   });
 }
 
@@ -85,8 +84,21 @@ function parseBasicGameInfo(game, imageSize = 400) {
   return info;
 }
 
+function validateGameId(gameId) {
+  const idValidation = /UP\d{4}-\w{9}_00-\w{16}/g;
+  return idValidation.test(gameId.toString());
+}
+
+function normalizeTitle(title) {
+  return title
+    .replace(/[.,#!$%^&*;:{}=\-_'"`~()]/g, '')
+    .replace(/\s{2,}/g, ' ')
+}
+
 
 export default {
   processSingleResultGameInfo,
-  processMultipleResultGameInfo
+  processMultipleResultGameInfo,
+  validateGameId,
+  normalizeTitle
 };
