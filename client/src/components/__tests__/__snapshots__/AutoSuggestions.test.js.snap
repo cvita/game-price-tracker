@@ -1,0 +1,54 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly 1`] = `
+<div
+  className="input-group-btn"
+>
+  <div
+    className="dropdown show"
+  >
+    <div
+      aria-hidden={false}
+      className="dropdown-menu"
+      role="menu"
+      tabIndex="-1"
+    >
+      <div>
+        <button
+          className="dropdown-item"
+          onClick={[Function]}
+          tabIndex="0"
+          type="button"
+        >
+          <div
+            className="suggestion"
+          >
+            <span>
+              <span
+                className="badge badge-default badge-pill"
+              >
+                PS4™
+              </span>
+               
+            </span>
+            <small>
+              The Last of Us: Left Behind Stand Alone
+            </small>
+            <img
+              alt="The Last of Us: Left Behind Stand Alone cover"
+              className="suggestionImage"
+              src="https://store.playstation.com/store/api/chihiro/00_09_000/container/US/en/19/UP9000-CUSA00553_00-THELASTOFUS00000/image?w=225&h=225"
+            />
+          </div>
+        </button>
+        <div
+          className="dropdown-divider"
+          onClick={[Function]}
+          tabIndex="-1"
+          type={undefined}
+        />
+      </div>
+    </div>
+  </div>
+</div>
+`;

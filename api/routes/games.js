@@ -1,4 +1,3 @@
-const scrapeSony = require('../scrape');
 const querySony = require('../querySony');
 const email = require('../email');
 const { findAllGames, findOneGame, createOrUpdateGame } = require('../model');

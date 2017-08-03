@@ -32,7 +32,7 @@ class SubmitGameForm extends PureComponent {
                 <InputGroup>
                     <Input id='gameInput' onChange={this.handleChange} value={this.state.gameInput} type='text' autoComplete='off' placeholder='Enter title, or select from below' />
                     <InputGroupButton>
-                        <Button type='submit' onClick={this.handleSubmit} disabled={this.state.gameInput === ''}>Search</Button>
+                        <Button id='gameInputButton' type='submit' onClick={this.handleSubmit} disabled={this.state.gameInput === ''}>Search</Button>
                     </InputGroupButton>
                 </InputGroup>
                 <AutoSuggestions autoSuggestions={this.props.autoSuggestions} />
