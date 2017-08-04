@@ -34,12 +34,7 @@ class PriceAlert extends Component {
     componentDidMount() {
         const url = window.location.toString();
         const gameId = url.slice(url.indexOf('games/') + 6);
-        const regEx = /UP\d{4}-\w{9}_00-\w{16}/g;
-        if (regEx.test(gameId)) {
-            this.props.makeActiveGame(gameId);
-        } else {
-            // return search results for term entered
-        }
+        this.props.makeActiveGame(gameId);
     }
     render() {
         const { activeGame, priceAlertCreated, userInfo, createPriceAlert } = this.props;
