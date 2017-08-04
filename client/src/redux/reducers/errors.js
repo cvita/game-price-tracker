@@ -12,6 +12,8 @@ function errors(state = initialState.errors, action) {
     case types.SEARCH_BY_TITLE_FAILED:
     case types.SUBMIT_PRICE_ALERT_FAILED:
       return [...state, action.message];
+    case types.RESET_ACTIVE_GAME:
+      return initialState.errors;
     default:
       return state;
   }
