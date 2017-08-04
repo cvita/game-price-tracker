@@ -1,4 +1,6 @@
-# Game Price Tracker
+# Game Price Tracker ![travis-ci](https://travis-ci.org/VitaC123/game-price-tracker.svg?branch=master)
+
+
 
 *The PlayStation store has weekly sales with some surprisingly deep discounts on their games. The problem: I don't care enough to check their sales regularly. The solution: some fancy pants automation!*  
 
