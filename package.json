@@ -19,8 +19,7 @@
     "client": "cd client && npm start",
     "server": "node server.js",
     "lint": "eslint .",
-    "test": "jest --config=backendJestConfig.json",
-    "setupFrontEnd": "cd client && npm install"
+    "test": "jest --config=backendJestConfig.json"
   },
   "devDependencies": {
     "babel-cli": "^6.24.1",
