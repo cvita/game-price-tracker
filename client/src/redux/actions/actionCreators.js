@@ -91,3 +91,11 @@ export function addToBlacklist(userEmail) {
         payload: userEmail
     };
 }
+
+export function searchVideo(keywords) {
+    console.log(`searchVideo(${keywords})`);
+    return {
+        type: types.SEARCH_VIDEO_REQUESTED,
+        payload: keywords
+    };
+}

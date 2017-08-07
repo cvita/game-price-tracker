@@ -100,4 +100,13 @@ describe('action creators', () => {
     };
     expect(actions.addToBlacklist(userEmail)).toEqual(expectedAction);
   });
+
+  it('should create an action to search YouTube by keywords', () => {
+    const searchKeywords = 'Last Of Us';
+    const expectedAction = {
+      type: types.SEARCH_VIDEO_REQUESTED,
+      payload: searchKeywords
+    };
+    expect(actions.searchVideo(searchKeywords)).toEqual(expectedAction);
+  });
 });
