@@ -17,6 +17,15 @@ describe('activeGame reducer', () => {
     ).toEqual(stubData);
   });
 
+  it('should handle VIDEO_SEARCH_SUCCEEDED', () => {
+    const stubData1 = { title: 'Last Of Us' };
+    const stubData2 = ['videoId1234'];
+    const expectedResult = { title: 'Last Of Us', videos: stubData2 };
+    expect(
+      reducer(stubData1, { type: types.SEARCH_VIDEO_SUCCEEDED, payload: stubData2 })
+    ).toEqual(expectedResult);
+  });
+
   it('should handle FETCH_PRICE_ALERT_SUCCEEDED', () => {
     const stubData = { activeGame: { title: 'Last Of Us' } };
     const expectedResult = { title: 'Last Of Us' };

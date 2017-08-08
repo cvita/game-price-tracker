@@ -1,6 +1,7 @@
 import { all, call, put, takeLatest } from 'redux-saga/effects';
 import Client from '../Client';
 import sonyStore from '../sonyStore/sonyStore';
+import youTube from '../youTube/youTube';
 import { showLoading, hideLoading } from 'react-redux-loading-bar';
 import * as types from './constants/actionTypes'
 
@@ -99,6 +100,16 @@ export function* addToBlacklist(action) {
     }
 }
 
+export function* searchVideo(action) {
+    try {
+        console.log('SAGA: searchVideo() called');
+        const videoId = yield call(youTube.searchVideo, action.payload);
+        yield put({ type: types.SEARCH_VIDEO_SUCCEEDED, payload: videoId });
+    } catch (e) {
+        yield put({ type: types.SEARCH_VIDEO_FAILED, message: e.message });
+    }
+}
+
 
 function* gamePriceTrackerSagas() {
     yield all([
@@ -111,7 +122,8 @@ function* gamePriceTrackerSagas() {
         takeLatest(types.CHECK_BLACKLIST_REQUESTED, checkBlacklist),
         takeLatest(types.ADD_TO_BLACKLIST_REQUESTED, addToBlacklist),
         takeLatest(types.FETCH_PRICE_ALERT_REQUESTED, fetchPriceAlert),
-        takeLatest(types.DELETE_PRICE_ALERT_REQUESTED, deletePriceAlert)
+        takeLatest(types.DELETE_PRICE_ALERT_REQUESTED, deletePriceAlert),
+        takeLatest(types.SEARCH_VIDEO_REQUESTED, searchVideo)
     ]);
 }
 

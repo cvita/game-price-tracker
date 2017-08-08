@@ -37,6 +37,7 @@ function findNewGames(maxResults = 25) {
     return new Promise((resolve, reject) => {
         const apiUrl = 'https://store.playstation.com/store/api/chihiro/00_09_000/container/US/en/19/';
         const request = apiUrl + 'STORE-MSF77008-NEWGAMESGRID?size=' + maxResults;
+        // const request = apiUrl + 'STORE-MSF77008-TOPGAMES';
         fetch(request, { method: 'GET' })
             .then(resp => resp.json())
             .then(resp => model.processMultipleResultGameInfo(resp))

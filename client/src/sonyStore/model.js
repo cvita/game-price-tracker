@@ -3,8 +3,7 @@ function processSingleResultGameInfo(game) {
     const info = parseBasicGameInfo(game);
 
     info.details = {
-      description: game.long_desc.slice(0, game.long_desc.indexOf('<br>')),
-      genre: null,
+      description: game.long_desc,
       releaseDate: game.release_date,
       gameDev: game.provider_name,
       platforms: game.playable_platform,
@@ -13,12 +12,9 @@ function processSingleResultGameInfo(game) {
     };
 
     try {
-      info.media = {
-        screenshots: game.mediaList.screenshots.slice(0, 3).map(pic => pic.url),
-        videos: game.promomedia.slice(0, 2).map(video => video.url)
-      };
+      info.screenshots = game.mediaList.screenshots.slice(0, 3).map(pic => pic.url);
     } catch (e) {
-      info.media = { screenshots: [], videos: [] };
+      info.screenshots = [];
     }
 
     resolve(info);

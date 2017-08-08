@@ -33,7 +33,6 @@ class AutoSuggestions extends PureComponent {
         const { autoSuggestions } = this.props;
 
         return (
-
             <InputGroupButton >
                 <Dropdown isOpen={autoSuggestions.length > 0} toggle={this.toggle}>
                     <DropdownMenu>
@@ -50,7 +49,6 @@ class AutoSuggestions extends PureComponent {
                     </DropdownMenu>
                 </Dropdown>
             </InputGroupButton>
-
         );
     }
 }

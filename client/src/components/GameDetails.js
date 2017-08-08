@@ -1,24 +1,51 @@
 import React, { Component } from 'react';
-import { Container, Row, Col, Badge } from 'reactstrap';
-
+import { Container, Row, Col, Badge, Button, Collapse } from 'reactstrap';
+import YouTubePlayer from './YouTubePlayer';
 import './GameDetails.css';
+
+
+class Description extends Component {
+    constructor(props) {
+        super(props);
+        this.state = { collapse: false };
+        this.toggle = this.toggle.bind(this);
+    }
+    toggle() {
+        this.setState({ collapse: !this.state.collapse });
+    }
+    render() {
+        const { description } = this.props;
+        const descriptionLead = description.slice(0, description.indexOf('<br>'));
+        const descriptionBody = description.slice(descriptionLead.length + 4);
+
+        return (
+            <div>
+                <p className='lead' dangerouslySetInnerHTML={{ __html: descriptionLead }} />
+                {!this.state.collapse &&
+                    <Button color="secondary" outline onClick={this.toggle}>Continue reading</Button>}
+                <Collapse isOpen={this.state.collapse}>
+                    <p dangerouslySetInnerHTML={{ __html: descriptionBody }} />
+                </Collapse>
+            </div>
+        );
+    }
+}
 
 class GameDetails extends Component {
     render() {
-        const { url } = this.props;
+        const { url, screenshots } = this.props;
         const { description, esrbRating, starRating, platforms, gameDev, releaseDate } = this.props.details;
-        const { videos, screenshots } = this.props.media;
 
         return (
             <div className='gameDetailsContainer'>
                 <Container>
+
                     <Row className='descriptionAndDetails'>
                         <Col sm='8'>
                             <div className='gameDescription'>
-                                <p className='lead'>{description}</p>
+                                <Description description={description} />
                             </div>
                         </Col>
-
                         <Col xl='4'>
                             <dl className='row'>
                                 <dt className='col-lg-3'>Purchase</dt>
@@ -43,27 +70,24 @@ class GameDetails extends Component {
                         </Col>
                     </Row>
 
-                    {videos.length > 0 &&
-                        <Row>
-                            <Col md='8'>
-                                <video className='videoPlayer' controls>
-                                    <source src={videos[0]} type='video/mp4' />
-                                    Your browser does not support HTML5 video.
-                            </video>
-                            </Col>
-                            <Col md='4'>
-                                <div className='screenshotsContainer'>
-                                    {screenshots.map((url, i) =>
-                                        <img src={url} alt={'screenshot' + i} key={i} className='screenshot' />)}
-                                </div>
-                            </Col>
-                        </Row>}
+                    <Row>
+                        <Col md={12 - screenshots.length}>
+                            <div className='videoPlayerContainer'>
+                                <YouTubePlayer {...this.props} />
+                            </div>
+                        </Col>
+                        <Col md={screenshots.length}>
+                            <div className='screenshotsContainer'>
+                                {screenshots.map((url, i) => <img src={url} alt={'screenshot' + i} key={i} className='screenshot' />)}
+                            </div>
+                        </Col>
+                    </Row>
+
                 </Container>
             </div>
         );
     }
 }
 
+
 export default GameDetails;
-
-

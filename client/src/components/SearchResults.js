@@ -6,13 +6,15 @@ import './SearchResults.css';
 
 class SearchResults extends Component {
     componentDidMount() {
-        if (this.props.searchResults.length === 0) {
-            const url = window.location.toString();
-            const searchTerm = url.slice(url.indexOf('search/') + 7);
-            if (typeof searchTerm === 'string' && searchTerm !== '') {
-                this.props.searchByTitle(searchTerm);
+        setTimeout(() => {
+            if (this.props.searchResults.length === 0) {
+                const url = window.location.toString();
+                const searchTerm = decodeURIComponent(url.slice(url.indexOf('search/') + 7));
+                if (searchTerm !== '') {
+                    this.props.searchByTitle(searchTerm);
+                }
             }
-        }
+        }, 250);
     }
     render() {
         return (

@@ -8,6 +8,7 @@ import * as types from './constants/actionTypes';
 import * as actionCreators from './actions/actionCreators';
 import sonyStore from '../sonyStore/sonyStore';
 import Client from '../Client';
+import youTube from '../youTube/youTube';
 
 
 const stubData = [{ placeholderData: 'some data' }];
@@ -205,6 +206,27 @@ describe('saga: addToBlacklist', () => {
         [matchers.call.fn(Client.addToBlacklist), throwError(error)]
       ])
       .put({ type: types.ADD_TO_BLACKLIST_FAILED, message: error.message })
+      .run();
+  });
+});
+
+describe('saga: searchVideo', () => {
+  it('searches YouTube for videoId', () => {
+
+    return expectSaga(sagas.searchVideo, actionCreators.searchVideo(stubData))
+      .provide([
+        [matchers.call.fn(youTube.searchVideo), stubData]
+      ])
+      .put({ type: types.SEARCH_VIDEO_SUCCEEDED, payload: stubData })
+      .run();
+  });
+
+  it('handles errors', () => {
+    return expectSaga(sagas.searchVideo, actionCreators.searchVideo(stubData))
+      .provide([
+        [matchers.call.fn(youTube.searchVideo), throwError(error)]
+      ])
+      .put({ type: types.SEARCH_VIDEO_FAILED, message: error.message })
       .run();
   });
 });
