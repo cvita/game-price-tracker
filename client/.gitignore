@@ -22,3 +22,4 @@ yarn-error.log*
 
 README.md
 App.test.js
+local-dev-creds.js
