@@ -16,24 +16,17 @@ const singleResultSearchEx = {
   image: 'https://store.playstation.com/store/api/chihiro/00_09_000/container/US/en/19/UP0082-CUSA05532_00-FFXIIGAMEPS400NA/image?w=400&h=400',
   details: {
     platforms: ['PS4™'],
-    description: "FINAL FANTASY® XII THE ZODIAC AGE improves upon the classic FINAL FANTASY® XII, now more beautiful and easier to play than ever. The high-definition remaster introduces several modern advancements, including reconstructed battle design and a revamped job system. Players both returning and new to the game will experience a grand adventure that spans the world of Ivalice in an entirely fresh and improved way.",
-    genre: null,
+    description: "FINAL FANTASY® XII THE ZODIAC AGE improves upon the classic FINAL FANTASY® XII, now more beautiful and easier to play than ever. The high-definition remaster introduces several modern advancements, including reconstructed battle design and a revamped job system. Players both returning and new to the game will experience a grand adventure that spans the world of Ivalice in an entirely fresh and improved way.<br><br>Enter an era of war within the world of Ivalice. The small kingdom of Dalmasca, conquered by the Archadian Empire, is left in ruin and uncertainty. Princess Ashe, the one and only heir to the throne, devotes herself to the resistance to liberate her country. Vaan, a young man who lost his family in the war, dreams of flying freely in the skies. In a fight for freedom and fallen royalty, join these unlikely allies and their companions as they embark on a heroic adventure to free their homeland. <br><br>1 player<br>DUALSHOCK®4<br><br>  Software subject to license (us.playstation.com/softwarelicense). Online features require an account and are subject to terms of service and applicable privacy policy (playstationnetwork.com/terms-of-service & playstationnetwork.com/privacy-policy). One-time license fee for play on account’s designated primary PS4™ system and other PS4™ systems when signed in with that account.<br><br>© 2006, 2017 SQUARE ENIX CO., LTD. All Rights Reserved.<br>ILLUSTRATION: ©2006 YOSHITAKA AMANO<br>THE ZODIAC AGE is a registered trademark or trademark of Square Enix Co., Ltd.<br>FINAL FANTASY, SQUARE ENIX and the SQUARE ENIX logo are registered trademarks or trademarks of Square Enix Holdings Co., Ltd.<br><br>THE ZODIAC AGE is a registered trademark or trademark of Square Enix Co., Ltd.<br>FINAL FANTASY, SQUARE ENIX and the SQUARE ENIX logo are registered trademarks or trademarks of Square Enix Holdings Co., Ltd.",
     releaseDate: '2017-07-11T00:00:00Z',
     gameDev: 'SQUARE ENIX CO. LTD.',
     starRating: 4.91,
     esrbRating: 'https://cdn-a.sonyentertainmentnetwork.com/grc/images/ratings/hd/esrb/t.png'
   },
-  media: {
-    screenshots: [
-      "https://apollo2.dl.playstation.net/cdn/UP0082/CUSA05532_00/FREE_CONTENTBgAaMmiGMSq0UnRDpFC2/PREVIEW_SCREENSHOT1_140665.jpg",
-      "https://apollo2.dl.playstation.net/cdn/UP0082/CUSA05532_00/FREE_CONTENTKVHVkKGVmCdWUNwp4QuB/PREVIEW_SCREENSHOT2_140665.jpg",
-      "https://apollo2.dl.playstation.net/cdn/UP0082/CUSA05532_00/FREE_CONTENTC0poaIqoqScXxe0VTsSq/PREVIEW_SCREENSHOT3_140665.jpg",
-    ],
-    videos: [
-      "https://apollo2.dl.playstation.net/cdn/UP0082/CUSA05532_00/FREE_CONTENTsZb2lJP4Aqa82gKabf3B/PREVIEW_GAMEPLAY_VIDEO_3_140665.mp4?country=US",
-      "https://apollo2.dl.playstation.net/cdn/UP0082/CUSA05532_00/FREE_CONTENTCaeYSIoq0U3UvJQh1Yz0/PREVIEW_GAMEPLAY_VIDEO_4_140665.mp4?country=US"
-    ]
-  }
+  screenshots: [
+    "https://apollo2.dl.playstation.net/cdn/UP0082/CUSA05532_00/FREE_CONTENTBgAaMmiGMSq0UnRDpFC2/PREVIEW_SCREENSHOT1_140665.jpg",
+    "https://apollo2.dl.playstation.net/cdn/UP0082/CUSA05532_00/FREE_CONTENTKVHVkKGVmCdWUNwp4QuB/PREVIEW_SCREENSHOT2_140665.jpg",
+    "https://apollo2.dl.playstation.net/cdn/UP0082/CUSA05532_00/FREE_CONTENTC0poaIqoqScXxe0VTsSq/PREVIEW_SCREENSHOT3_140665.jpg",
+  ]
 };
 
 const multipleResultSearchEx = {
