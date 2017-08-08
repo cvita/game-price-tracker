@@ -45,7 +45,6 @@ class PriceAlert extends Component {
                 {activeGame &&
                     <div>
                         <PriceAlertPreview {...this.props} >
-
                             {!priceAlertCreated && !userInfo.onBlacklist ?
                                 <ConfirmAndResetButtons handleClick={() => createPriceAlert(userInfo)} validUserEmail={validUserEmail} /> :
                                 <Alert className='confirmationMessages' color='danger' toggle={() => browserHistory.push('/')} isOpen={userInfo.onBlacklist}>
@@ -57,10 +56,9 @@ class PriceAlert extends Component {
                                 <strong>You're all set! </strong>
                                 Make sure you allow messages from <strong>game.price.tracker@gmail.com</strong> or you might miss a sale.
                             </Alert>
-
                         </PriceAlertPreview>
 
-                        <GameDetails {...this.props.activeGame} />
+                        <GameDetails {...this.props.activeGame} searchVideo={this.props.searchVideo} />
                     </div>}
             </div>
         );

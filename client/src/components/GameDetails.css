@@ -14,13 +14,14 @@
     max-width: 2.5em;
 }
 
-.videoPlayer {
-    max-width: 100%;
+.videoPlayerContainer {
+    width: 100%;
     min-width: 300px;
-} 
+    margin-bottom: 5%;
+}
 
 .screenshotsContainer {
-    max-width: 100%;
+    width: 100%;
     display: flex;
     flex-direction: column;
     flex-wrap: nowrap;
