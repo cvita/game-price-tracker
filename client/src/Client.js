@@ -87,8 +87,8 @@ function addToBlacklist(userEmail) {
 
 function handleResponse(response, resolve, reject) {
     if (!response.ok) {
-        console.error(new Error(response));
-        reject(response);
+        reject(new Error(response.statusText));
+        return;
     }
     response.json().then(response => {
         console.log(response.api);
