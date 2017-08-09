@@ -1,105 +1,161 @@
+const MongoClient = require('mongodb').MongoClient;
 const ObjectID = require('mongodb').ObjectID;
+const databaseUrl = require('../db/database').url;
 
 
-function findAllGames(collection) {
+function connectToDb(collectionName) {
     return new Promise((resolve, reject) => {
-        collection.find().toArray((err, docs) => {
-            handleError(err, reject);
-            resolve(docs);
+        MongoClient.connect(databaseUrl, (err, db) => {
+            if (err) {
+                reject(err.message);
+                return;
+            }
+            resolve(db.collection(collectionName));
         });
     });
 }
 
-function findOneGame(collection, url, _id) {
+
+function findAllGames() {
+    return new Promise((resolve, reject) => {
+        connectToDb('games').then(collection => {
+            collection.find().toArray((err, docs) => {
+                handleResponse(err, docs, resolve);
+            });
+        });
+    });
+}
+
+function findOneGame(url, _id) {
     return new Promise((resolve, reject) => {
         const details = url !== null ?
             { "url": url } :
             { "_id": _id };
-        collection.findOne(details, (err, doc) => {
-            handleError(err, reject);
-            resolve(doc);
+        connectToDb('games').then(collection => {
+            collection.findOne(details, (err, doc) => {
+                handleResponse(err, doc, resolve);
+            });
         });
     });
 }
 
-function createOrUpdateGame(collection, gameInfo) {
+function createOrUpdateGame(gameInfo) {
     return new Promise((resolve, reject) => {
         const details = [
             { _id: gameInfo._id },
             gameInfo,
             { upsert: true },
         ];
-        collection.update(...details, (err, doc) => {
-            handleError(err, reject);
-            resolve(doc);
+        connectToDb('games').then(collection => {
+            collection.update(...details, (err, doc) => {
+                handleResponse(err, doc, resolve);
+            });
         });
     });
 }
 
-function findOnePriceAlert(collection, _id) {
+function addToPriceHistory(info) {
     return new Promise((resolve, reject) => {
-        const details = { _id: ObjectID(_id) };
-        collection.findOne(details, (err, doc) => {
-            handleError(err, reject);
-            resolve(doc);
-        })
+        const details = [
+            { _id: info._id },
+            { $push: { history: { date: info.date, price: info.price } } },
+            { upsert: true },
+        ];
+        connectToDb('priceHistory').then(collection => {
+            collection.update(...details, (err, doc) => {
+                handleResponse(err, doc, resolve);
+            });
+        });
     });
 }
 
-function createOrUpdatePriceAlert(collection, priceAlertInfo) {
+function findAllPriceAlerts(relationToExpiration, date) {
     return new Promise((resolve, reject) => {
+        const details = { expiration: { [relationToExpiration]: date } };
+        connectToDb('priceAlerts').then(collection => {
+            collection.find(details).toArray((err, docs) => {
+                handleResponse(err, docs, resolve);
+            });
+        });
+    });
+}
+
+function findOnePriceAlert(_id) {
+    return new Promise((resolve, reject) => {
+        const details = { _id: ObjectID(_id) };
+        connectToDb('priceAlerts').then(collection => {
+            collection.findOne(details, (err, doc) => {
+                handleResponse(err, doc, resolve);
+            });
+        });
+    });
+}
+
+function createOrUpdatePriceAlert(priceAlertInfo) {
+    return new Promise((resolve, reject) => {
+        priceAlertInfo._id = ObjectID(priceAlertInfo._id);
         const details = [
             { game_id: priceAlertInfo.game_id, userEmail: priceAlertInfo.userEmail },
             priceAlertInfo,
-            {
-                upsert: true,
-                returnNewDocument: true
-            }
+            { upsert: true, returnNewDocument: true }
         ];
-        collection.findOneAndUpdate(...details, (err, response) => {
-            handleError(err, reject)
-            resolve(response);
+        connectToDb('priceAlerts').then(collection => {
+            collection.findOneAndUpdate(...details, (err, doc) => {
+                handleResponse(err, doc, resolve);
+            });
         });
     });
 }
 
-function deletePriceAlert(collection, userInfo) {
+function deletePriceAlert(userEmail, game_id) {
     return new Promise((resolve, reject) => {
-        const details = { userEmail: userInfo.userEmail, game_id: userInfo.game_id };
-        collection.deleteOne(details, (err, doc) => {
-            handleError(err, reject);
-            resolve(doc);
+        const details = { userEmail: userEmail, game_id: game_id };
+        connectToDb('priceAlerts').then(collection => {
+            collection.deleteOne(details, (err, doc) => {
+                handleResponse(err, doc, resolve);
+            });
         });
     });
 }
 
-function checkIfUserIsOnBlacklist(collection, userEmail) {
+function deleteAllPriceAlertsForUser(userEmail) {
+    return new Promise((resolve, reject) => {
+        const details = { userEmail: userEmail };
+        connectToDb('priceAlerts').then(collection => {
+            collection.remove(details, (err, doc) => {
+                handleResponse(err, doc, resolve);
+            });
+        });
+    });
+}
+
+function checkIfUserIsOnBlacklist(userEmail) {
     return new Promise((resolve, reject) => {
         const details = { _id: userEmail };
-        collection.findOne(details, (err, doc) => {
-            handleError(err, reject);
-            resolve(doc !== null);
+        connectToDb('blacklist').then(collection => {
+            collection.findOne(details, (err, doc) => {
+                handleResponse(err, doc !== null, resolve);
+            });
         });
     });
 }
 
-function addToBlacklist(collection, userEmail) {
+function addToBlacklist(userEmail) {
     return new Promise((resolve, reject) => {
-        const details = {
-            _id: userEmail,
-            dateAdded: new Date().getTime()
-        };
-        collection.insertOne(details, (err, doc) => {
-            handleError(err, reject);
-            resolve(doc !== null);
+        const details = { _id: userEmail, dateAdded: new Date().getTime() };
+        connectToDb('blacklist').then(collection => {
+            collection.insertOne(details, (err, doc) => {
+                handleResponse(err, doc !== null, resolve);
+            });
         });
     });
 }
 
-function handleError(err, reject) {
+function handleResponse(err, resp, resolve) {
     if (err) {
-        console.error(new Error(err));
-        reject(err);
+        throw err;
+    } else {
+        resolve(resp);
     }
 }
 
@@ -108,9 +164,12 @@ module.exports = {
     findAllGames,
     findOneGame,
     createOrUpdateGame,
+    addToPriceHistory,
+    findAllPriceAlerts,
     findOnePriceAlert,
     createOrUpdatePriceAlert,
     deletePriceAlert,
+    deleteAllPriceAlertsForUser,
     checkIfUserIsOnBlacklist,
     addToBlacklist
 };
