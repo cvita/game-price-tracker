@@ -1,4 +1,4 @@
-var dbPassword = process.env.dbPassword || require('../local-dev-creds').dbPassword;
+const dbPassword = process.env.dbPassword || require('../local-dev-creds').dbPassword;
 
 module.exports = {
     url: 'mongodb://game-price-tracker-user1:' +

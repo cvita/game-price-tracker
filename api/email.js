@@ -1,15 +1,13 @@
 const nodemailer = require('nodemailer');
-const encryption = require('./encrypt'); // may not need
-const MongoClient = require('mongodb').MongoClient;
-const database = require('../db/database').url;
+const { checkIfUserIsOnBlacklist } = require('./model');
+const { encrypt } = require('./encrypt');
 
 
 function sendEmail(email, subject, message) {
-    checkBlacklist(email).then(result => {
+    checkIfUserIsOnBlacklist(email).then(result => {
         if (result) {
-            return console.log('Email not sent! ' + email + ' is on blacklist.');
+            return console.warn(`Email not sent: ${email} is on blacklist.`);
         }
-
         const transport = nodemailer.createTransport({
             service: 'Gmail',
             auth: {
@@ -17,45 +15,25 @@ function sendEmail(email, subject, message) {
                 pass: process.env.emailPassword || require('../local-dev-creds').emailPassword
             }
         });
-
         const mailOptions = {
             from: 'game.price.tracker@gmail.com',
             to: email,
             subject: subject,
             html: message
         };
-
         transport.sendMail(mailOptions, (err, info) => {
             if (err) {
-                return console.error(new Error(err));
+                throw new Error(err.message);
+                return;
             }
-            console.log('Message sent to:', email);
+            console.log(`Message sent to: ${email}`);
         });
     });
 }
 
-function checkBlacklist(userEmail) {
-    console.log('checkBlacklist()');
-    return new Promise((resolve, reject) => {
-        MongoClient.connect(database, (err, db) => {
-            if (err) {
-                console.error(new Error(err));
-                reject(err);
-            }
-            const details = { _id: userEmail };
-            db.collection('blacklist').findOne(details, (err, doc) => {
-                if (err) {
-                    console.error(new Error(err));
-                    reject(err);
-                }
-                resolve(doc !== null);
-            });
-        });
-    });
-}
 
 function sendConfirmation(info) {
-    console.log('sendConfirmation()');
+    console.log(`sendConfirmation(${info.userEmail})`);
     const { gameTitle, userEmail, price, expiration } = info;
     const subject = gameTitle + ' is now being tracked';
     const message = (
@@ -68,7 +46,7 @@ function sendConfirmation(info) {
 }
 
 function sendSalePrice(info) {
-    console.log('sendSalePrice()');
+    console.log(`sendSalePrice(${info.userEmail})`);
     const { gameTitle, userEmail, price, url } = info;
     const subject = gameTitle + ' is on sale';
     const message = (
@@ -81,7 +59,7 @@ function sendSalePrice(info) {
 }
 
 function sendRemovingPriceAlert(info) {
-    console.log('sendRemovingPriceAlert()');
+    console.log(`sendRemovingPriceAlert(${info.userEmail})`);
     const { gameTitle, userEmail } = info;
     const subject = 'Removing Game Price Tracker alert for ' + _id;
     const message = (
@@ -93,13 +71,16 @@ function sendRemovingPriceAlert(info) {
 
 function generateManagePriceAlertLink(info, linkText) {
     const { _id, userEmail } = info;
-    const userDetails = encryption.encrypt('id:' + _id + 'user:' + userEmail);
+    const userDetails = encrypt('id:' + _id + 'user:' + userEmail);
     const managePriceAlertUrl = process.env.NODE_ENV === 'production' ?
         'https://game-price-tracker.herokuapp.com/manage/' :
-        'https://localhost:3000/manage/';
-
+        'http://localhost:3000/manage/';
     return '<a href=' + managePriceAlertUrl + userDetails + '>' + linkText + '</a>';
 }
 
 
-module.exports = { sendConfirmation, sendSalePrice, sendRemovingPriceAlert };
+module.exports = {
+    sendConfirmation,
+    sendSalePrice,
+    sendRemovingPriceAlert
+};
