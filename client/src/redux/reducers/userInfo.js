@@ -19,14 +19,11 @@ function userInfo(state = initialState.userInfo, action) {
                 userEmail: action.payload.userEmail
             };
         case types.FETCH_PRICE_ALERT_SUCCEEDED:
-            delete action.payload.activeGame._id;
             delete action.payload.userInfo.onBlacklist;
             return {
                 ...state,
-                ...action.payload.activeGame,
                 ...action.payload.userInfo
             };
-        case types.SUBMIT_PRICE_ALERT_REQUESTED:
         case types.RESET_ACTIVE_GAME:
             return initialState.userInfo;
         default:
