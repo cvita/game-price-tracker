@@ -1,88 +1,88 @@
-const MongoClient = require('mongodb').MongoClient;
-const databaseUrl = require('../db/database').url;
+const { findAllPriceAlerts, deletePriceAlert, addToPriceHistory, createOrUpdateGame } = require('./model');
+const { sendRemovingPriceAlert, sendSalePrice } = require('./email');
 const querySony = require('./querySony');
-const email = require('./email');
-const { createOrUpdateGame } = require('./model');
+const today = new Date(new Date().toDateString()).getTime();
 
 
-(function () {
-    const today = new Date(new Date().toDateString()).getTime();
-    console.log('Running schedule.js at ' + new Date().getTime());
-
-    MongoClient.connect(databaseUrl, (err, db) => {
-        handleError(err);
-        const gamesCollection = db.collection('games');
-        const priceAlertsCollection = db.collection('priceAlerts');
-
-        updateGamesInfo(gamesCollection).then(result => {
-            console.log(result);
-            determineSaleEvents(gamesCollection, priceAlertsCollection);
-        });
-        removeExpiredPriceAlerts(priceAlertsCollection);
+(function updateAndInformUsers() {
+    console.log('updateAndInformUsers beginning...');
+    const startTime = new Date().getTime();
+    
+    removeExpiredPriceAlerts().then(() => {
+        return addGamesFromPriceAlertsToDb();
+    }).then(result => {
+        return determineSaleEvents(result);
+    }).then(result => {
+        const completionMessage = 'updateAndInformUsers completed in ' + (new Date().getTime() - startTime) + 'ms';
+        console.log(result + '\n' + completionMessage);
+    }).catch(e => {
+        throw new Error(e.message);
     });
+})();
 
-    function updateGamesInfo(gamesCollection) {
-        console.log('updateGamesInfo()');
-        return new Promise((resolve, reject) => {
-            const details = { lastUpdated: { $lt: today } };
-            gamesCollection.find(details).toArray((err, games) => {
-                handleError(err);
-                if (games.length === 0) {
-                    resolve('case1');
-                } else {
-                    var counter = 0;
-                    games.forEach((game, i) => {
-                        querySony(game.url.slice(game.url.indexOf('cid=') + 4)).then(result => {
-                            let finalResult = { game: game._id };
-                            createOrUpdateGame(gamesCollection, result).then(result => {
-                                finalResult.updated = result !== null;
-                                counter++;
-                                if (counter === games.length) {
-                                    resolve('case2');
-                                }
-                            });
-                        });
-                    });
+function removeExpiredPriceAlerts() {
+    return new Promise(resolve => {
+        console.log('removeExpiredPriceAlerts()');
+        findAllPriceAlerts('$lte', today).then(expiredAlerts => {
+            if (expiredAlerts.length === 0) {
+                resolve('removeExpiredPriceAlerts() complete');
+                return;
+            }
+            let counter = 0;
+            expiredAlerts.forEach(priceAlert => {
+                deletePriceAlert(priceAlert.userEmail, priceAlert.game_id);
+                sendRemovingPriceAlert(priceAlert);
+                counter++;
+                if (counter === expiredAlerts.length) {
+                    resolve('removeExpiredPriceAlerts() complete');
                 }
             });
         });
-    }
+    });
+}
 
-    function determineSaleEvents(gamesCollection, priceAlertsCollection) {
-        console.log('determineSalesEvents');
-        const alertsDetails = { expiration: { $gt: today } };
-        priceAlertsCollection.find(alertsDetails).toArray((err, alerts) => {
-            handleError(err);
-            if (alerts.length > 0) {
-                alerts.forEach(alert => {
-                    const gamesDetails = [{ _id: alert.game_id }, { price: 1, url: 1 }];
-                    gamesCollection.findOne(...gamesDetails, (err, game) => {
-                        handleError(err);
-                        if (game.price < alert.price) {
-                            alert.url = game.url;
-                            email.sendSalePrice(alert);
+function addGamesFromPriceAlertsToDb() {
+    return new Promise(resolve => {
+        console.log('addGamesFromPriceAlertsToDb()');
+        findAllPriceAlerts('$gt', today).then(currentPriceAlerts => {
+            let counter = 0;
+            let currentGames = [];
+            currentPriceAlerts.forEach(priceAlert => {
+                querySony(priceAlert.game_id).then(gameInfo => {
+                    addToPriceHistory({ _id: gameInfo._id, date: today, price: gameInfo.price });
+                    createOrUpdateGame(gameInfo).then(() => {
+                        currentGames.push(gameInfo);
+                        counter++;
+                        if (counter === currentPriceAlerts.length) {
+                            resolve({
+                                message: 'addGamesFromPriceAlertsToDb() complete',
+                                currentPriceAlerts: currentPriceAlerts,
+                                currentGames: currentGames
+                            });
                         }
-                        console.log('All done with schedule.js at ' + new Date().getTime());
                     });
                 });
-            }
-        });
-    }
-
-    function removeExpiredPriceAlerts(priceAlertsCollection, gamesCollection) {
-        console.log('removeExpiredPriceAlerts()');
-        const details = { expiration: { $lte: today } };
-        priceAlertsCollection.find(details).toArray((err, alerts) => {
-            handleError(err);
-            alerts.forEach(alert => {
-                email.sendRemovingPriceAlert(alert);
             });
         });
-    }
+    });
+}
 
-    function handleError(err) {
-        if (err) {
-            return console.error(new Error(err));
-        }
-    }
-})();
+function determineSaleEvents(info) {
+    return new Promise(resolve => {
+        console.log('determineSaleEvents()');
+        const games = info.currentGames;
+        const priceAlerts = info.currentPriceAlerts;
+        let counter = 0;
+        games.forEach(game => {
+            priceAlerts.forEach(priceAlert => {
+                if (game._id === priceAlert.game_id && game.price < priceAlert.price) {
+                    sendSalePrice(Object.assign(priceAlert, { url: game.url }));
+                }
+            });
+            counter++;
+            if (counter === games.length) {
+                resolve('determineSalesEvents() complete');
+            }
+        });
+    });
+}
