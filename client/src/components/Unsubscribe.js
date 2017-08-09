@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Redirect } from 'react-router';
+import { browserHistory } from 'react-router'
 import GamePreview from './GamePreview';
 import { Alert, Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import './Unsubscribe.css';
@@ -76,12 +76,12 @@ class Unsubscribe extends Component {
     componentDidMount() {
         const url = window.location.toString();
         const manageId = url.slice(url.indexOf('manage/') + 7) || null;
-        if (manageId) {
+        if (manageId && manageId.indexOf('@') === -1) {
             this.props.fetchPriceAlert(manageId);
             this.props.checkBlacklist(manageId);
         } else {
-            console.log('Should redirect');
-            return <Redirect to='/' />
+            console.error('Redirecting to home page: manageId must be an encrypted string');
+            browserHistory.push('/');
         }
     }
     toggle() {
