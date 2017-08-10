@@ -5,9 +5,9 @@ function findAllGames() {
     });
 }
 
-function findOneGame(url) {
+function findOneGame(id) {
     return new Promise((resolve, reject) => {
-        fetch(`/games/find/one/?url=${encodeURIComponent(url)}`, { method: 'GET' })
+        fetch(`/games/find/one/?id=${encodeURIComponent(id)}`, { method: 'GET' })
             .then(response => handleResponse(response, resolve, reject));
     });
 }

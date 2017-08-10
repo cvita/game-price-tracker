@@ -26,11 +26,9 @@ function findAllGames() {
     });
 }
 
-function findOneGame(url, _id) {
+function findOneGame(id) {
     return new Promise((resolve, reject) => {
-        const details = url !== null ?
-            { "url": url } :
-            { "_id": _id };
+        const details = { '_id': id };
         connectToDb('games').then(collection => {
             collection.findOne(details, (err, doc) => {
                 handleResponse(err, doc, resolve);
@@ -48,6 +46,17 @@ function createOrUpdateGame(gameInfo) {
         ];
         connectToDb('games').then(collection => {
             collection.update(...details, (err, doc) => {
+                handleResponse(err, doc, resolve);
+            });
+        });
+    });
+}
+
+function deleteGame(game_id) {
+    return new Promise((resolve, reject) => {
+        const details = { _id: game_id };
+        connectToDb('games').then(collection => {
+            collection.deleteOne(details, (err, doc) => {
                 handleResponse(err, doc, resolve);
             });
         });
@@ -164,6 +173,7 @@ module.exports = {
     findAllGames,
     findOneGame,
     createOrUpdateGame,
+    deleteGame,
     addToPriceHistory,
     findAllPriceAlerts,
     findOnePriceAlert,

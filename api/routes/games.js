@@ -8,7 +8,7 @@ module.exports = function (app) {
     });
 
     app.get('/games/find/one', (req, res) => {
-        findOneGame(req.query.url)
+        findOneGame(req.query.id)
             .then(result => res.send({ api: result }));
     });
 
