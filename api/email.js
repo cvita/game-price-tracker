@@ -1,5 +1,5 @@
 const nodemailer = require('nodemailer');
-const { checkIfUserIsOnBlacklist } = require('./model');
+const { checkIfUserIsOnBlacklist } = require('./routes/Model');
 const { encrypt } = require('./encrypt');
 
 

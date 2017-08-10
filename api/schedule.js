@@ -1,4 +1,4 @@
-const { findAllPriceAlerts, deletePriceAlert, addToPriceHistory, createOrUpdateGame } = require('./model');
+const { findAllPriceAlerts, deletePriceAlert, addToPriceHistory, createOrUpdateGame } = require('./routes/Model');
 const { sendRemovingPriceAlert, sendSalePrice } = require('./email');
 const querySony = require('./querySony');
 const today = new Date(new Date().toDateString()).getTime();

@@ -1,4 +1,4 @@
-const { findAllGames, findOneGame, createOrUpdateGame } = require('../model');
+const { findAllGames, findOneGame, createOrUpdateGame } = require('./Model');
 
 
 module.exports = function (app) {

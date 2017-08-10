@@ -1,6 +1,6 @@
 const MongoClient = require('mongodb').MongoClient;
 const ObjectID = require('mongodb').ObjectID;
-const databaseUrl = require('../db/database').url;
+const databaseUrl = require('../../db/database').url;
 
 
 function connectToDb(collectionName) {

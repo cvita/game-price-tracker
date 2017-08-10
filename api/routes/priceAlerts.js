@@ -1,5 +1,5 @@
 const { decrypt } = require('../encrypt');
-const { findOnePriceAlert, createOrUpdatePriceAlert, deletePriceAlert } = require('../model');
+const { findOnePriceAlert, createOrUpdatePriceAlert, deletePriceAlert } = require('./Model');
 const { sendConfirmation } = require('../email');
 
 

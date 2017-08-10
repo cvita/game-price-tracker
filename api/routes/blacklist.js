@@ -1,5 +1,5 @@
 const { decrypt } = require('../encrypt'); // may not need
-const { checkIfUserIsOnBlacklist, addToBlacklist, deleteAllPriceAlertsForUser } = require('../model');
+const { checkIfUserIsOnBlacklist, addToBlacklist, deleteAllPriceAlertsForUser } = require('./Model');
 
 
 module.exports = function (app) {
