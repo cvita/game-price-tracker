@@ -1,7 +1,7 @@
 const request = require('supertest');
 const fs = require('fs');
-const app = require('../../app');
-const { deleteGame } = require('./Model');
+const app = require('../../../app');
+const { deleteGame } = require('../Model');
 const exampleGameInfo = JSON.parse(fs.readFileSync('./api/routes/__mockData__/exampleGameInfo.json', 'utf8'));
 afterAll(() => deleteGame(exampleGameInfo._id));
 
@@ -20,7 +20,7 @@ const requiredKeys = [
   'screenshots'
 ];
 
-describe.skip('routes: /games', () => {
+describe('routes: /games', () => {
   it('handles a POST to `/games/add` by adding to games collection', () => {
     return request(app)
       .post('/games/add')
