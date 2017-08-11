@@ -1,4 +1,4 @@
-const { decrypt } = require('../encrypt'); // may not need
+const { decrypt } = require('../encrypt');
 const { checkIfUserIsOnBlacklist, addToBlacklist, deleteAllPriceAlertsForUser } = require('./Model');
 
 

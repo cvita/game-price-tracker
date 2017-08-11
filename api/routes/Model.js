@@ -160,6 +160,17 @@ function addToBlacklist(userEmail) {
     });
 }
 
+function deleteUserFromBlacklist(userEmail) {
+    return new Promise((resolve, reject) => {
+        const details = { _id: userEmail };
+        connectToDb('blacklist').then(collection => {
+            collection.deleteOne(details, (err, doc) => {
+                handleResponse(err, doc, resolve);
+            });
+        });
+    });
+}
+
 function handleResponse(err, resp, resolve) {
     if (err) {
         throw err;
@@ -181,5 +192,6 @@ module.exports = {
     deletePriceAlert,
     deleteAllPriceAlertsForUser,
     checkIfUserIsOnBlacklist,
-    addToBlacklist
+    addToBlacklist,
+    deleteUserFromBlacklist
 };
