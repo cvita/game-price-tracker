@@ -127,6 +127,16 @@ function deletePriceAlert(userEmail, game_id) {
     });
 }
 
+function createPriceAlertsFromArray(arrayOfPriceAlerts) {
+    return new Promise((resolve, reject) => {
+        connectToDb('priceAlerts').then(collection => {
+            collection.insertMany(arrayOfPriceAlerts, (err, doc) => {
+                handleResponse(err, doc, resolve);
+            });
+        });
+    });
+}
+
 function deleteAllPriceAlertsForUser(userEmail) {
     return new Promise((resolve, reject) => {
         const details = { userEmail: userEmail };
@@ -192,7 +202,6 @@ function handleResponse(err, resp, resolve) {
 
 
 module.exports = {
-    connectToDb,
     findAllGames,
     findOneGame,
     createOrUpdateGame,
@@ -201,6 +210,7 @@ module.exports = {
     findAllPriceAlerts,
     findOnePriceAlert,
     createOrUpdatePriceAlert,
+    createPriceAlertsFromArray,
     deletePriceAlert,
     deleteAllPriceAlertsForUser,
     deleteExpiredPriceAlerts,

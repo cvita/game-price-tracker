@@ -1,4 +1,4 @@
-const { connectToDb, deleteAllPriceAlertsForUser } = require('../routes/Model');
+const { createPriceAlertsFromArray, deleteAllPriceAlertsForUser } = require('../routes/Model');
 const updateInfoAndInformUsers = require('../schedule');
 
 
@@ -39,12 +39,7 @@ const requiredKeys = [
   'currentGames'
 ];
 
-beforeAll(() => {
-  return connectToDb('priceAlerts').then(collection => {
-    collection.insertMany(examplePriceAlerts);
-  });
-});
-
+beforeAll(() => createPriceAlertsFromArray(examplePriceAlerts));
 afterAll(() => deleteAllPriceAlertsForUser('gamePriceTracker.user@gmail.com'));
 
 
