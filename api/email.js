@@ -45,9 +45,9 @@ function sendConfirmation(info) {
     sendEmail(userEmail, subject, message);
 }
 
-function sendSalePrice(info) {
+function sendSalePrice(info, url) {
     console.log(`sendSalePrice(${info.userEmail})`);
-    const { gameTitle, userEmail, price, url } = info;
+    const { gameTitle, userEmail, price } = info;
     const subject = gameTitle + ' is on sale';
     const message = (
         gameTitle + ' is currently on sale for $' + price + ' on the Sony PlayStation store.' +
@@ -61,7 +61,7 @@ function sendSalePrice(info) {
 function sendRemovingPriceAlert(info) {
     console.log(`sendRemovingPriceAlert(${info.userEmail})`);
     const { gameTitle, userEmail } = info;
-    const subject = 'Removing Game Price Tracker alert for ' + _id;
+    const subject = 'Removing Game Price Tracker alert for ' + gameTitle;
     const message = (
         gameTitle + ' has not gone on sale for 18 weeks. We are removing this price alert. ' +
         'Feel free to visit Game Price Tracker to sign up for another 18 week period.'
