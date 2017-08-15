@@ -1,88 +1,84 @@
-const { findAllPriceAlerts, deletePriceAlert, addToPriceHistory, createOrUpdateGame } = require('./routes/Model');
-const { sendRemovingPriceAlert, sendSalePrice } = require('./email');
+const { findAllPriceAlerts, deleteExpiredPriceAlerts, addToPriceHistory, createOrUpdateGame } = require('./routes/Model');
 const querySony = require('./querySony');
-const today = new Date(new Date().toDateString()).getTime();
+const { sendRemovingPriceAlert, sendSalePrice } = require('./email');
+const writeFile = require('fs').writeFile;
+const join = require('path').join;
 
 
-(function updateAndInformUsers() {
-    console.log('updateAndInformUsers beginning...');
-    const startTime = new Date().getTime();
-    
-    removeExpiredPriceAlerts().then(() => {
-        return addGamesFromPriceAlertsToDb();
-    }).then(result => {
-        return determineSaleEvents(result);
-    }).then(result => {
-        const completionMessage = 'updateAndInformUsers completed in ' + (new Date().getTime() - startTime) + 'ms';
-        console.log(result + '\n' + completionMessage);
-    }).catch(e => {
-        throw new Error(e.message);
-    });
-})();
-
-function removeExpiredPriceAlerts() {
-    return new Promise(resolve => {
-        console.log('removeExpiredPriceAlerts()');
-        findAllPriceAlerts('$lte', today).then(expiredAlerts => {
-            if (expiredAlerts.length === 0) {
-                resolve('removeExpiredPriceAlerts() complete');
-                return;
-            }
-            let counter = 0;
-            expiredAlerts.forEach(priceAlert => {
-                deletePriceAlert(priceAlert.userEmail, priceAlert.game_id);
-                sendRemovingPriceAlert(priceAlert);
-                counter++;
-                if (counter === expiredAlerts.length) {
-                    resolve('removeExpiredPriceAlerts() complete');
-                }
-            });
-        });
+if (process.env.NODE_ENV === 'production') {
+    updateInfoAndInformUsers().then(status => {
+        writeFile(
+            join(__dirname, `./schedule-logs/${status.started}.json`),
+            JSON.stringify(status),
+            'utf-8'
+        );
     });
 }
 
-function addGamesFromPriceAlertsToDb() {
+
+function updateInfoAndInformUsers() {
+    return new Promise((resolve, reject) => {
+        const status = {
+            started: new Date().getTime(),
+            elapsed: null
+        };
+        const expired = () => {
+            return new Promise(resolve => {
+                findAllPriceAlerts('$lte', status.started)
+                    .then(expiredAlerts => handleExpiredAlerts(expiredAlerts))
+                    .then(expiredAlerts => resolve(expiredAlerts));
+            });
+        }
+        const current = () => {
+            return new Promise(resolve => {
+                findAllPriceAlerts('$gt', status.started)
+                    .then(currentAlerts => handleCurrentAlerts(currentAlerts))
+                    .then(currentGames => resolve(currentGames));
+            });
+        }
+
+        Promise.all([expired(), current()]).then(results => {
+            status.expiredAlerts = results[0];
+            status.currentGames = results[1];
+            status.elapsed = new Date().getTime() - status.started;
+            resolve(status);
+        }).catch(e => reject(e));
+    });
+}
+
+function handleExpiredAlerts(expiredAlerts) {
     return new Promise(resolve => {
-        console.log('addGamesFromPriceAlertsToDb()');
-        findAllPriceAlerts('$gt', today).then(currentPriceAlerts => {
-            let counter = 0;
-            let currentGames = [];
-            currentPriceAlerts.forEach(priceAlert => {
-                querySony(priceAlert.game_id).then(gameInfo => {
-                    addToPriceHistory({ _id: gameInfo._id, date: today, price: gameInfo.price });
-                    createOrUpdateGame(gameInfo).then(() => {
-                        currentGames.push(gameInfo);
-                        counter++;
-                        if (counter === currentPriceAlerts.length) {
-                            resolve({
-                                message: 'addGamesFromPriceAlertsToDb() complete',
-                                currentPriceAlerts: currentPriceAlerts,
-                                currentGames: currentGames
-                            });
-                        }
-                    });
+        const simplifiedPriceAlertInfo = expiredAlerts.map(priceAlert => {
+            sendRemovingPriceAlert(priceAlert);
+            return { title: priceAlert.gameTitle, userEmail: priceAlert.userEmail };
+        });
+        deleteExpiredPriceAlerts().then(() => resolve(simplifiedPriceAlertInfo));
+    });
+}
+
+function handleCurrentAlerts(currentAlerts) {
+    return new Promise((resolve, reject) => {
+        const currentGames = currentAlerts.map(priceAlert => {
+            return querySony(priceAlert.game_id).then(game => {
+                return Promise.all([createOrUpdateGame(game), addToPriceHistory(game)]).then(() => {
+                    return { onSale: determineSaleEvents(game, priceAlert), title: game.title };
                 });
-            });
+            }).catch(e => { throw new Error(e.message) });
         });
+
+        Promise.all(currentGames)
+            .then(results => resolve(results))
+            .catch(e => reject(e));
     });
 }
 
-function determineSaleEvents(info) {
-    return new Promise(resolve => {
-        console.log('determineSaleEvents()');
-        const games = info.currentGames;
-        const priceAlerts = info.currentPriceAlerts;
-        let counter = 0;
-        games.forEach(game => {
-            priceAlerts.forEach(priceAlert => {
-                if (game._id === priceAlert.game_id && game.price < priceAlert.price) {
-                    sendSalePrice(Object.assign(priceAlert, { url: game.url }));
-                }
-            });
-            counter++;
-            if (counter === games.length) {
-                resolve('determineSalesEvents() complete');
-            }
-        });
-    });
+function determineSaleEvents(game, priceAlert) {
+    const onSale = game.price < priceAlert.price;
+    if (onSale) {
+        sendSalePrice(priceAlert, game.url);
+    }
+    return onSale;
 }
+
+
+module.exports = updateInfoAndInformUsers;

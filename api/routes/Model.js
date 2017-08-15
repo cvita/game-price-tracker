@@ -67,7 +67,7 @@ function addToPriceHistory(info) {
     return new Promise((resolve, reject) => {
         const details = [
             { _id: info._id },
-            { $push: { history: { date: info.date, price: info.price } } },
+            { $addToSet: { history: { date: info.lastUpdated, price: info.price } } },
             { upsert: true },
         ];
         connectToDb('priceHistory').then(collection => {
@@ -138,6 +138,17 @@ function deleteAllPriceAlertsForUser(userEmail) {
     });
 }
 
+function deleteExpiredPriceAlerts() {
+    return new Promise((resolve, reject) => {
+        const details = { expiration: { $lte: new Date().getTime() } };
+        connectToDb('priceAlerts').then(collection => {
+            collection.deleteMany(details, (err, doc) => {
+                handleResponse(err, doc, resolve);
+            });
+        });
+    });
+}
+
 function checkIfUserIsOnBlacklist(userEmail) {
     return new Promise((resolve, reject) => {
         const details = { _id: userEmail };
@@ -181,6 +192,7 @@ function handleResponse(err, resp, resolve) {
 
 
 module.exports = {
+    connectToDb,
     findAllGames,
     findOneGame,
     createOrUpdateGame,
@@ -191,6 +203,7 @@ module.exports = {
     createOrUpdatePriceAlert,
     deletePriceAlert,
     deleteAllPriceAlertsForUser,
+    deleteExpiredPriceAlerts,
     checkIfUserIsOnBlacklist,
     addToBlacklist,
     deleteUserFromBlacklist
