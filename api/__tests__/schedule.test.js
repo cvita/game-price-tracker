@@ -42,7 +42,6 @@ const requiredKeys = [
 beforeAll(() => createPriceAlertsFromArray(examplePriceAlerts));
 afterAll(() => deleteAllPriceAlertsForUser('gamePriceTracker.user@gmail.com'));
 
-
 describe('schedule.js', () => {
   it('handles updateInfoAndInformUsers() and returns `status`', () => {
     return updateInfoAndInformUsers().then(status => {
