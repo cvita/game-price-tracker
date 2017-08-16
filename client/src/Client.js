@@ -5,9 +5,9 @@ function findAllGames() {
     });
 }
 
-function findOneGame(url) {
+function findOneGame(id) {
     return new Promise((resolve, reject) => {
-        fetch(`/games/find/one/?url=${encodeURIComponent(url)}`, { method: 'GET' })
+        fetch(`/games/find/one/?id=${encodeURIComponent(id)}`, { method: 'GET' })
             .then(response => handleResponse(response, resolve, reject));
     });
 }
@@ -87,8 +87,8 @@ function addToBlacklist(userEmail) {
 
 function handleResponse(response, resolve, reject) {
     if (!response.ok) {
-        console.error(new Error(response));
-        reject(response);
+        reject(new Error(response.statusText));
+        return;
     }
     response.json().then(response => {
         console.log(response.api);

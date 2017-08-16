@@ -19,7 +19,7 @@
     "client": "cd client && npm start",
     "server": "node server.js",
     "lint": "eslint .",
-    "test": "jest --config=backendJestConfig.json"
+    "test": "jest --config=backendJestConfig.json --runInBand --forceExit"
   },
   "devDependencies": {
     "babel-cli": "^6.24.1",
@@ -32,7 +32,8 @@
     "eslint-plugin-jsx-a11y": "4.0.0",
     "eslint-plugin-react": "6.9.0",
     "jest": "^20.0.4",
-    "nodemon": "^1.11.0"
+    "nodemon": "^1.11.0",
+    "supertest": "^3.0.0"
   },
   "main": "server.js",
   "author": "chris vita <chris.vita@gmail.com>",

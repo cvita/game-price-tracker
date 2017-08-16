@@ -45,22 +45,12 @@ describe('userInfo reducer', () => {
       userInfo: {
         onBlacklist: false,
         userEmail: 'anyone@gmail.com'
-      },
-      activeGame: {
-        title: 'Last Of Us',
-        _id: '5970da5dd6070cc46c9e6b90'
       }
     };
-    const expectedResult = { title: 'Last Of Us', userEmail: 'anyone@gmail.com' };
+    const expectedResult = { userEmail: 'anyone@gmail.com' };
     expect(
       reducer([], { type: types.FETCH_PRICE_ALERT_SUCCEEDED, payload: stubData })
     ).toEqual(expectedResult);
-  });
-
-  it('should handle SUBMIT_PRICE_ALERT_REQUESTED', () => {
-    expect(
-      reducer([], { type: types.SUBMIT_PRICE_ALERT_REQUESTED, payload: null })
-    ).toEqual(initialState.userInfo);
   });
 
   it('should handle RESET_ACTIVE_GAME', () => {

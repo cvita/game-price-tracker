@@ -3,3 +3,4 @@ npm-debug.log
 dist
 local-dev-creds.js
 settings.json
+schedule-logs

@@ -1,3 +1,0 @@
-it('should simply pass', () => {
-
-});
