@@ -192,6 +192,16 @@ function deleteUserFromBlacklist(userEmail) {
     });
 }
 
+function addScheduleLog(status) {
+    return new Promise((resolve, reject) => {
+        connectToDb('scheduleLogs').then(collection => {
+            collection.insertOne(status, (err, doc) => {
+                handleResponse(err, doc, resolve);
+            });
+        });
+    });
+}
+
 function handleResponse(err, resp, resolve) {
     if (err) {
         throw err;
@@ -216,5 +226,6 @@ module.exports = {
     deleteExpiredPriceAlerts,
     checkIfUserIsOnBlacklist,
     addToBlacklist,
-    deleteUserFromBlacklist
+    deleteUserFromBlacklist,
+    addScheduleLog
 };

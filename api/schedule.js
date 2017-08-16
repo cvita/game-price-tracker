@@ -1,19 +1,15 @@
-const { findAllPriceAlerts, deleteExpiredPriceAlerts, addToPriceHistory, createOrUpdateGame } = require('./routes/Model');
+const { findAllPriceAlerts, deleteExpiredPriceAlerts, addToPriceHistory, createOrUpdateGame, addScheduleLog } = require('./routes/Model');
 const querySony = require('./querySony');
 const { sendRemovingPriceAlert, sendSalePrice } = require('./email');
-const writeFile = require('fs').writeFile;
-const join = require('path').join;
 
 
-if (process.env.NODE_ENV === 'production') {
-    updateInfoAndInformUsers().then(status => {
-        writeFile(
-            join(__dirname, `./schedule-logs/${status.started}.json`),
-            JSON.stringify(status),
-            'utf-8'
-        );
-    });
-}
+updateInfoAndInformUsers().then(status => {
+    console.log(status);
+    if (process.env.NODE_ENV === 'production') {
+        addScheduleLog(status).then(result => console.log({ logSubmitted: result.insertedId !== null }));
+        return;
+    }
+});
 
 
 function updateInfoAndInformUsers() {
