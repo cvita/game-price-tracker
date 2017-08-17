@@ -89,14 +89,14 @@ describe('findGameByTitle()', () => {
   });
 });
 
-describe('findNewGames()', () => { });
+describe('findPopularGames()', () => { });
 it('returns expected values when searching sony store for new games', () => {
   fetchMock.get(
-    'https://store.playstation.com/store/api/chihiro/00_09_000/container/US/en/19/STORE-MSF77008-NEWGAMESGRID?size=25',
-    fs.readFileSync('./src/sonyStore/__mockData__/sonyStoreApiFindNewGames.json', 'utf8')
+    'https://store.playstation.com/store/api/chihiro/00_09_000/container/US/en/19/STORE-MSF77008-TOPGAMES?size=25',
+    fs.readFileSync('./src/sonyStore/__mockData__/sonyStoreApiFindPopularGames.json', 'utf8')
   );
   expect.assertions(2);
-  return sonyStore.findNewGames(25)
+  return sonyStore.findPopularGames(25)
     .then(resp => {
       expect(resp).toBeDefined();
       expect(resp[0]).toEqual(multipleResultSearchEx);

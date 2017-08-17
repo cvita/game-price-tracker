@@ -4,20 +4,21 @@ import * as types from '../constants/actionTypes'
 
 describe('action creators', () => {
   it('should create an action to fetch all games in the db', () => {
+    const maxResults = 25;
     const expectedAction = {
       type: types.FETCH_ALL_GAMES_IN_DB_REQUESTED,
-      payload: null
+      payload: maxResults
     };
-    expect(actions.fetchAllGamesInDb()).toEqual(expectedAction);
+    expect(actions.fetchAllGamesInDb(25)).toEqual(expectedAction);
   });
 
   it('should create an action to find new games', () => {
     const maxResults = 25;
     const expectedAction = {
-      type: types.FIND_NEW_GAMES_REQUESTED,
+      type: types.FIND_POPULAR_GAMES_REQUESTED,
       payload: maxResults
     };
-    expect(actions.findNewGames(maxResults)).toEqual(expectedAction);
+    expect(actions.findPopularGames(maxResults)).toEqual(expectedAction);
   });
 
   it('should create an action to generate autosuggestions', () => {
