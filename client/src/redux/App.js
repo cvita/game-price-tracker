@@ -7,7 +7,7 @@ import Main from '../components/Main';
 function mapStateToProps(state) {
     return {
         allGames: state.allGames,
-        newGames: state.newGames,
+        popularGames: state.popularGames,
         autoSuggestions: state.autoSuggestions,
         searchResults: state.searchResults,
         activeGame: state.activeGame,

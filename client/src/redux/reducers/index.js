@@ -5,7 +5,7 @@ import { routerReducer } from 'react-router-redux';
 // Reducers
 import allGames from './allGames';
 import activeGame from './activeGame';
-import newGames from './newGames';
+import popularGames from './popularGames';
 import autoSuggestions from './autoSuggestions';
 import searchResults from './searchResults';
 import priceAlertCreated from './priceAlertCreated';
@@ -16,7 +16,7 @@ import { loadingBarReducer } from 'react-redux-loading-bar';
 
 const rootReducer = combineReducers({
     allGames,
-    newGames,
+    popularGames,
     autoSuggestions,
     searchResults,
     activeGame,

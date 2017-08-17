@@ -2,9 +2,9 @@ import * as types from '../constants/actionTypes';
 import initialState from '../initialState';
 
 
-function newGames(state = initialState.newGames, action) {
+function popularGames(state = initialState.popularGames, action) {
     switch (action.type) {
-        case types.FIND_NEW_GAMES_SUCCEEDED:
+        case types.FIND_POPULAR_GAMES_SUCCEEDED:
             return action.payload;
         default:
             return state;
@@ -12,4 +12,4 @@ function newGames(state = initialState.newGames, action) {
 }
 
 
-export default newGames;
+export default popularGames;

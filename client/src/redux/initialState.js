@@ -1,6 +1,6 @@
 const initialState = {
   allGames: [],
-  newGames: [],
+  popularGames: [],
   autoSuggestions: [],
   searchResults: [],
   activeGame: null,

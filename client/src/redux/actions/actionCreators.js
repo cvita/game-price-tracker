@@ -1,18 +1,18 @@
 import * as types from '../constants/actionTypes'
 
 
-export function fetchAllGamesInDb() {
-    console.log('fetchAllGamesInDb()');
+export function fetchAllGamesInDb(maxResults) {
+    console.log(`fetchAllGamesInDb(${maxResults})`);
     return {
         type: types.FETCH_ALL_GAMES_IN_DB_REQUESTED,
-        payload: null
+        payload: maxResults
     };
 }
 
-export function findNewGames(maxResults) {
-    console.log(`findNewGames(${maxResults})`);
+export function findPopularGames(maxResults) {
+    console.log(`findPopularGames(${maxResults})`);
     return {
-        type: types.FIND_NEW_GAMES_REQUESTED,
+        type: types.FIND_POPULAR_GAMES_REQUESTED,
         payload: maxResults
     };
 }
