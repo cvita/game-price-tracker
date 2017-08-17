@@ -3,7 +3,7 @@ const { findAllGames, findOneGame, createOrUpdateGame } = require('./Model');
 
 module.exports = function (app) {
     app.get('/games/find/all', (req, res) => {
-        findAllGames()
+        findAllGames(req.query.max)
             .then(result => res.send({ api: result }));
     });
 
