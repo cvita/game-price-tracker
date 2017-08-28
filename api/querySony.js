@@ -48,7 +48,7 @@ function processSingleResultGameInfo(game) {
     });
 }
 
-function parseBasicGameInfo(game, imageSize = 400) {
+function parseBasicGameInfo(game) {
     const normalPrice = game.default_sku.display_price !== 'Free' ?
         parseFloat(game.default_sku.display_price.slice(1)) :
         parseFloat('0.00').toFixed(2);
@@ -63,7 +63,7 @@ function parseBasicGameInfo(game, imageSize = 400) {
         discount: null,
         psPlusPrice: null,
         lastUpdated: new Date(new Date().toDateString()).getTime(),
-        image: `https://store.playstation.com/store/api/chihiro/00_09_000/container/US/en/19/${game.id}/image?w=${imageSize}&h=${imageSize}`,
+        image: `https://store.playstation.com/store/api/chihiro/00_09_000/container/US/en/19/${game.id}/image?w=225&h=225`,
         details: { platforms: game.playable_platform }
     };
 

@@ -7,12 +7,13 @@ class GamePreview extends Component {
     render() {
         const { title, image, strikePrice, onSale, psPlusPrice, price } = this.props;
         const regularPriceIsValid = !onSale || psPlusPrice;
+        const imageLarge = image.replace(/225/g, '400');
 
         return (
             <Container>
                 <Row>
                     <Col xs='6'>
-                        <img className='img-fluid' src={image} alt={title} />
+                        <img className='img-fluid' src={imageLarge} alt={title} />
                     </Col>
 
                     <Col xl='6'>

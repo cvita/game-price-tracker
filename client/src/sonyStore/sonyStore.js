@@ -39,7 +39,7 @@ function findPopularGames(maxResults = 25) {
         const request = apiUrl + 'STORE-MSF77008-TOPGAMES?size=' + maxResults;
         fetch(request, { method: 'GET' })
             .then(resp => resp.json())
-            .then(resp => model.processMultipleResultGameInfo(resp))
+            .then(resp => model.processMultipleResultGameInfo(resp, maxResults))
             .then(resp => resolve(resp))
             .catch(err => reject(err.message));
     });
