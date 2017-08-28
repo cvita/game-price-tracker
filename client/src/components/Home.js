@@ -3,11 +3,13 @@ import SubmitGameForm from './SubmitGameForm';
 import GamesGrid from './GamesGrid';
 import { Jumbotron, Container } from 'reactstrap';
 
+
 class Home extends Component {
   componentDidMount() {
     this.props.resetActiveGame();
-    if (this.props.newGames.length === 0) {
-      this.props.findNewGames(35);
+    this.props.fetchAllGamesInDb(10);
+    if (this.props.popularGames.length === 0) {
+      this.props.findPopularGames(20);
     }
   }
   render() {
@@ -21,11 +23,11 @@ class Home extends Component {
           </Container>
         </Jumbotron>
 
-        {this.props.newGames.length >= 3 &&
-          <div>
-            <p className='lead' style={{ 'margin': '1em' }}>New releases</p>
-            <GamesGrid allGames={this.props.newGames} />
-          </div>}
+        <p className='lead' style={{ 'margin': '1em' }}>Currently tracking</p>
+        <GamesGrid allGames={this.props.allGames} />
+
+        <p className='lead' style={{ 'margin': '1em' }}>Most popular</p>
+        <GamesGrid allGames={this.props.popularGames} />
       </div>
     );
   }
