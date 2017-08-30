@@ -17,7 +17,7 @@ it('should take a string and return a valid YouTube video id', () => {
     });
 });
 
-it.skip('should reject with an error message if YouTube has no results', () => {
+it('should reject with an error message if YouTube has no results', () => {
   const bogusSearch = 'izhrjfdngaeiyj94rkgfbzawierkslgdbcPwegklmsd,IRGKdfmbhsdfh';
   return youTube.searchVideo(bogusSearch).catch(e => {
     expect(e).toBeDefined();
