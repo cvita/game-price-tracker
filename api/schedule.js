@@ -3,6 +3,7 @@ const querySony = require('./querySony');
 const { sendRemovingPriceAlert, sendSalePrice } = require('./email');
 
 
+// Called from Heroku Scheduler
 updateInfoAndInformUsers().then(status => {
     console.log(status);
     if (process.env.NODE_ENV === 'production') {
@@ -20,9 +21,10 @@ function updateInfoAndInformUsers() {
         };
         const expired = () => {
             return new Promise(resolve => {
-                findAllPriceAlerts('$lte', status.started)
-                    .then(expiredAlerts => handleExpiredAlerts(expiredAlerts))
-                    .then(expiredAlerts => resolve(expiredAlerts));
+                findAllPriceAlerts('$lte', status.started).then(expiredAlerts => {
+                    expiredAlerts.map(priceAlert => sendRemovingPriceAlert(priceAlert));
+                    resolve(expiredAlerts);
+                });
             });
         }
         const current = () => {
@@ -37,18 +39,9 @@ function updateInfoAndInformUsers() {
             status.expiredAlerts = results[0];
             status.currentGames = results[1];
             status.elapsed = new Date().getTime() - status.started;
+            deleteExpiredPriceAlerts();
             resolve(status);
         }).catch(e => reject(e));
-    });
-}
-
-function handleExpiredAlerts(expiredAlerts) {
-    return new Promise(resolve => {
-        const simplifiedPriceAlertInfo = expiredAlerts.map(priceAlert => {
-            sendRemovingPriceAlert(priceAlert);
-            return { title: priceAlert.gameTitle, userEmail: priceAlert.userEmail };
-        });
-        deleteExpiredPriceAlerts().then(() => resolve(simplifiedPriceAlertInfo));
     });
 }
 

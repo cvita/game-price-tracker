@@ -49,9 +49,7 @@ describe('schedule.js', () => {
       requiredKeys.forEach(key => expect(status).toHaveProperty(key));
       checkTypesOnStatusObject(status);
 
-      const expectedExpiredAlerts = [
-        { title: examplePriceAlerts[0].gameTitle, userEmail: examplePriceAlerts[0].userEmail }
-      ];
+      const expectedExpiredAlerts = [examplePriceAlerts[0]];
       const expectedCurrentGames = [
         { onSale: false, title: examplePriceAlerts[1].gameTitle },
         { onSale: true, title: examplePriceAlerts[2].gameTitle }
