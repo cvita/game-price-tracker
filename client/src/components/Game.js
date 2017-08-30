@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { browserHistory } from 'react-router';
 import { Button, Badge, Card, CardImg, CardImgOverlay, CardBlock, CardSubtitle, CardFooter } from 'reactstrap';
+import LazyLoad from 'react-lazy-load';
 import './Game.css';
 
 
@@ -11,11 +12,13 @@ class Game extends Component {
     render() {
         const { title, _id, image, price, discount, psPlusPrice } = this.props;
         const { platforms, gameContentType } = this.props.details;
+        const imageHeight = parseInt(image.slice(-3), 10);
 
         return (
             <Card className='game'>
-                <CardImg width="100%" src={image} alt={title + ' cover image'} />
-                
+                <LazyLoad height={imageHeight} offset={imageHeight * 1.5}>
+                    <CardImg width="100%" src={image} alt={title + ' cover image'} />
+                </LazyLoad>
                 <CardImgOverlay id='cardImgOver'>
                     <div className='overlayBackground' onClick={() => this.handleClick(_id)}>
                         <Button id='selectButton' size='sm' color='secondary' outline>
