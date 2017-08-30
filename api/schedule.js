@@ -64,7 +64,7 @@ function handleCurrentAlerts(currentAlerts) {
 function determineSaleEvents(game, priceAlert) {
     const onSale = game.price < priceAlert.price;
     if (onSale) {
-        sendSalePrice(priceAlert, game.url);
+        sendSalePrice(priceAlert, game.price, game.url);
     }
     return onSale;
 }
