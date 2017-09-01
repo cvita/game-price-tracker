@@ -48,9 +48,9 @@ function processMultipleResultGameInfo(results, maxResults) {
 }
 
 function parseBasicGameInfo(game) {
-  const normalPrice = game.default_sku.display_price !== 'Free' ?
-    parseFloat(game.default_sku.display_price.slice(1)) :
-    parseFloat('0.00').toFixed(2);
+  const pricing = game.default_sku;
+  const normalPrice = pricing.display_price !== 'Free' ? parseFloat(pricing.display_price.slice(1)) : '0.00';
+  const onSale = pricing.rewards.length > 0 && pricing.rewards[0].reward_source_type_id === 2;
 
   const info = {
     _id: game.id,
@@ -58,7 +58,7 @@ function parseBasicGameInfo(game) {
     url: `https://store.playstation.com/#!/en-us/games/cid=${game.id}`,
     price: normalPrice,
     strikePrice: null,
-    onSale: game.default_sku.rewards.length > 0,
+    onSale: onSale,
     discount: null,
     psPlusPrice: null,
     lastUpdated: new Date(new Date().toDateString()).getTime(),
@@ -66,13 +66,13 @@ function parseBasicGameInfo(game) {
     details: { platforms: game.playable_platform }
   };
 
-  if (info.onSale) {
-    let saleInfo = game.default_sku.rewards[0];
+  if (onSale) {
+    const saleInfo = pricing.rewards[0];
     if (!saleInfo.isPlus) {
-      info.price = saleInfo.display_price !== 'Free' ? parseFloat(saleInfo.display_price.slice(1)) : parseFloat('0.00').toFixed(2);
+      info.price = saleInfo.display_price !== 'Free' ? parseFloat(saleInfo.display_price.slice(1)) : '0.00';
       info.strikePrice = normalPrice;
     } else {
-      info.psPlusPrice = saleInfo.display_price !== 'Free' ? parseFloat(saleInfo.display_price.slice(1)) : parseFloat('0.00').toFixed(2);
+      info.psPlusPrice = saleInfo.display_price !== 'Free' ? parseFloat(saleInfo.display_price.slice(1)) : '0.00';
     }
     info.discount = parseInt(saleInfo.discount, 10);
   }
