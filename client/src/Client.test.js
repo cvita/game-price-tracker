@@ -6,7 +6,8 @@ const mockInfo = { info: 'this is simply a placeholder' };
 
 describe('confirms routes and fetch methods for games collection in db', () => {
   it('returns a value after finding all games in db', () => {
-    fetchMock.get('/games/find/all', { api: mockInfo });
+    const maxResults = 25;
+    fetchMock.get(`/games/find/all?max=${maxResults}`, { api: mockInfo });
     return Client.findAllGames()
       .then(resp => {
         expect(resp).toBeDefined();
@@ -16,9 +17,9 @@ describe('confirms routes and fetch methods for games collection in db', () => {
   });
 
   it('returns expected value after finding one game in db', () => {
-    const url = 'https://mockurl.com';
-    fetchMock.get(`/games/find/one/?url=${encodeURIComponent(url)}`, { api: mockInfo });
-    return Client.findOneGame(url)
+    const id = 'UP9000-CUSA00552_00-THELASTOFUS00000';
+    fetchMock.get(`/games/find/one/?id=${encodeURIComponent(id)}`, { api: mockInfo });
+    return Client.findOneGame(id)
       .then(resp => {
         expect(resp).toBeDefined();
         expect(resp).toEqual(mockInfo);

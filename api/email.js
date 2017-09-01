@@ -45,13 +45,13 @@ function sendConfirmation(info) {
     sendEmail(userEmail, subject, message);
 }
 
-function sendSalePrice(info, url) {
+function sendSalePrice(info, salePrice, url) {
     console.log(`sendSalePrice(${info.userEmail})`);
-    const { gameTitle, userEmail, price } = info;
+    const { gameTitle, userEmail } = info;
     const subject = gameTitle + ' is on sale';
     const message = (
-        gameTitle + ' is currently on sale for $' + price + ' on the Sony PlayStation store.' +
-        ' Check it out <a href=' + url + '>here</a>' +
+        gameTitle + ' is currently on sale for $' + salePrice + ' on the Sony PlayStation store. ' +
+        'Check it out <a href=' + url + '>here</a>' +
         '<br><br>' +
         'No more? ' + generateManagePriceAlertLink(info, 'unsubscribe')
     );

@@ -8,19 +8,19 @@ import * as types from './constants/actionTypes'
 
 export function* fetchAllGamesInDb(action) {
     try {
-        const allGames = yield call(Client.findAllGames);
+        const allGames = yield call(Client.findAllGames, action.payload);
         yield put({ type: types.FETCH_ALL_GAMES_IN_DB_SUCCEEDED, payload: allGames });
     } catch (e) {
         yield put({ type: types.FETCH_ALL_GAMES_IN_DB_FAILED, message: e.message });
     }
 }
 
-export function* findNewGames(action) {
+export function* findPopularGames(action) {
     try {
-        const games = yield call(sonyStore.findNewGames, action.payload.maxResults);
-        yield put({ type: types.FIND_NEW_GAMES_SUCCEEDED, payload: games });
+        const games = yield call(sonyStore.findPopularGames, action.payload);
+        yield put({ type: types.FIND_POPULAR_GAMES_SUCCEEDED, payload: games });
     } catch (e) {
-        yield put({ type: types.FIND_NEW_GAMES_FAILED, message: e.message });
+        yield put({ type: types.FIND_POPULAR_GAMES_FAILED, message: e.message });
     }
 }
 
@@ -114,7 +114,7 @@ export function* searchVideo(action) {
 function* gamePriceTrackerSagas() {
     yield all([
         takeLatest(types.FETCH_ALL_GAMES_IN_DB_REQUESTED, fetchAllGamesInDb),
-        takeLatest(types.FIND_NEW_GAMES_REQUESTED, findNewGames),
+        takeLatest(types.FIND_POPULAR_GAMES_REQUESTED, findPopularGames),
         takeLatest(types.GENERATE_AUTO_SUGGESTIONS_REQUESTED, generateAutoSuggestions),
         takeLatest(types.SEARCH_BY_TITLE_REQUESTED, searchTitle),
         takeLatest(types.MAKE_ACTIVE_GAME_REQUESTED, makeActiveGame),

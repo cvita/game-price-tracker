@@ -1,6 +1,6 @@
-function findAllGames() {
+function findAllGames(maxResults = 25) {
     return new Promise((resolve, reject) => {
-        fetch('/games/find/all', { method: 'GET' })
+        fetch(`/games/find/all?max=${maxResults}`, { method: 'GET' })
             .then(response => handleResponse(response, resolve, reject));
     });
 }

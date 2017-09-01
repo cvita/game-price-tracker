@@ -34,21 +34,21 @@ describe('saga: fetchAllGamesInDb', () => {
   });
 });
 
-describe('saga: findNewGames', () => {
+describe('saga: findPopularGames', () => {
   it('finds new games from sonyStore', () => {
-    return expectSaga(sagas.findNewGames, actionCreators.findNewGames(25))
+    return expectSaga(sagas.findPopularGames, actionCreators.findPopularGames(25))
       .provide([
-        [matchers.call.fn(sonyStore.findNewGames), stubData]
+        [matchers.call.fn(sonyStore.findPopularGames), stubData]
       ])
-      .put({ type: types.FIND_NEW_GAMES_SUCCEEDED, payload: stubData })
+      .put({ type: types.FIND_POPULAR_GAMES_SUCCEEDED, payload: stubData })
       .run();
   });
 
   it('handles errors', () => {
-    return expectSaga(sagas.findNewGames, actionCreators.findNewGames(25))
-      .provide([[matchers.call.fn(sonyStore.findNewGames), throwError(error)]
+    return expectSaga(sagas.findPopularGames, actionCreators.findPopularGames(25))
+      .provide([[matchers.call.fn(sonyStore.findPopularGames), throwError(error)]
       ])
-      .put({ type: types.FIND_NEW_GAMES_FAILED, message: error.message })
+      .put({ type: types.FIND_POPULAR_GAMES_FAILED, message: error.message })
       .run();
   });
 });

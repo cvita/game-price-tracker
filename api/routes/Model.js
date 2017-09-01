@@ -16,11 +16,11 @@ function connectToDb(collectionName) {
 }
 
 
-function findAllGames() {
+function findAllGames(maxResults) {
     return new Promise((resolve, reject) => {
         connectToDb('games').then(collection => {
             collection.find().toArray((err, docs) => {
-                handleResponse(err, docs, resolve);
+                handleResponse(err, docs.slice(0, maxResults), resolve);
             });
         });
     });
