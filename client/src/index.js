@@ -5,7 +5,6 @@ import GamePriceTracker from './GamePriceTracker';
 // Service worker disabled for development...
 // import registerServiceWorker from './registerServiceWorker';
 
-import 'bootstrap/dist/css/bootstrap.css';
 import './index.css';
 
 
