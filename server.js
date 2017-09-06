@@ -5,10 +5,6 @@ const expressStatic = require('express').static;
 
 app.set('port', (process.env.PORT || 3001));
 
-if (process.env.NODE_ENV === 'production') {
-    app.use(requireHTTPS);
-}
-
 app.get('*.js', function (req, res, next) {
     console.log('REQ.URL', req.url);
     req.url = req.url + '.gz';
@@ -24,6 +20,7 @@ app.get('*.css', function (req, res, next) {
 });
 
 if (process.env.NODE_ENV === 'production') {
+    app.use(requireHTTPS);
     app.use(expressStatic('client/build'));
     app.get('*', function (req, res) {
         res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
@@ -36,8 +33,8 @@ app.listen(app.get('port'), function () {
 
 
 function requireHTTPS(req, res, next) {
-    if (req.headers['x-forwarded-proto'] !== 'https') {
+    if (req.headers['X-Forwarded-Proto'] !== 'https') {
         return res.redirect('https://' + req.get('host') + req.url);
     }
-    next();
+    return next();
 }
