@@ -20,12 +20,9 @@ app.get('*.css', function (req, res, next) {
 });
 
 if (process.env.NODE_ENV === 'production') {
+    app.use(requireHTTPS);
     app.use(expressStatic('client/build'));
     app.get('*', function (req, res) {
-        if (req.headers['x-forwarded-proto'] !== 'https') {
-            res.redirect('https://' + req.get('host') + req.url);
-        }
-
         res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
     });
 }
@@ -36,7 +33,7 @@ app.listen(app.get('port'), function () {
 
 
 function requireHTTPS(req, res, next) {
-    if (!req.secure) {
+    if (req.headers['x-forwarded-proto'] !== 'https') {
         return res.redirect('https://' + req.get('host') + req.url);
     }
     next();
