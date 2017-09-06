@@ -12,14 +12,15 @@ app.get('*.js', function (req, res, next) {
     next();
 });
 
-app.get('*.css', function(req, res, next) {
+app.get('*.css', function (req, res, next) {
     req.url = req.url + '.gz';
     res.set('Content-Encoding', 'gzip');
     res.set('Content-Type', 'text/css');
     next();
-   });
+});
 
 if (process.env.NODE_ENV === 'production') {
+    app.use(requireHTTPS);
     app.use(expressStatic('client/build'));
     app.get('*', function (req, res) {
         res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
@@ -29,3 +30,11 @@ if (process.env.NODE_ENV === 'production') {
 app.listen(app.get('port'), function () {
     console.log(`Find the server at: http://localhost:${app.get('port')}/`); // eslint-disable-line no-console
 });
+
+
+function requireHTTPS(req, res, next) {
+    if (!req.secure) {
+        return res.redirect('https://' + req.get('host') + req.url);
+    }
+    next();
+}
