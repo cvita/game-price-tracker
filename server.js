@@ -5,7 +5,7 @@ const expressStatic = require('express').static;
 
 app.set('port', (process.env.PORT || 3001));
 
-app.get('*.js', function (req, res, next) {
+app.get('main.76c654df.js', function (req, res, next) {
     console.log('REQ.URL', req.url);
     req.url = req.url + '.gz';
     res.set('Content-Encoding', 'gzip');
