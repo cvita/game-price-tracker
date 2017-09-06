@@ -5,6 +5,10 @@ const expressStatic = require('express').static;
 
 app.set('port', (process.env.PORT || 3001));
 
+if (process.env.NODE_ENV === 'production') {
+    app.use(requireHTTPS);
+}
+
 app.get('*.js', function (req, res, next) {
     console.log('REQ.URL', req.url);
     req.url = req.url + '.gz';
@@ -20,7 +24,6 @@ app.get('*.css', function (req, res, next) {
 });
 
 if (process.env.NODE_ENV === 'production') {
-    app.use(requireHTTPS);
     app.use(expressStatic('client/build'));
     app.get('*', function (req, res) {
         res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
