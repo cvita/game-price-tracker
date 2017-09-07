@@ -28,7 +28,8 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "react-scripts build && npm run gzip-bundles",
+    "gzip-bundles": "gzip build/static/js/main.76c654df.js & gzip build/static/css/main.d44e300a.css & gzip build/service-worker.js",
     "test": "react-scripts test --env=jsdom",
     "coverage": "react-scripts test --env=jsdom --coverage",
     "eject": "react-scripts eject",
