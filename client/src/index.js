@@ -4,7 +4,7 @@ import GamePriceTracker from './GamePriceTracker';
 import './index.css';
 
 // Service worker disabled for development...
-//import registerServiceWorker from './registerServiceWorker';
+import registerServiceWorker from './registerServiceWorker';
 
 
 const rootEl = document.getElementById('root');
@@ -24,4 +24,4 @@ if (module.hot) {
     });
 }
 
-//registerServiceWorker();
+registerServiceWorker();
