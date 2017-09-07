@@ -15,11 +15,10 @@ app.get('*', function (req, res, next) {
 
 app.get('*.js*', function (req, res, next) {
     console.log('REQ.URL', req.url);
-    if (req.url === '/service-worker.js' || req.url !== '/manifest.json') {
-        return next();
+    if (req.url !== '/service-worker.js' && req.url !== '/manifest.json') {
+        req.url = req.url + '.gz';
+        res.set('Content-Encoding', 'gzip');
     }
-    req.url = req.url + '.gz';
-    res.set('Content-Encoding', 'gzip');
     next();
 });
 
