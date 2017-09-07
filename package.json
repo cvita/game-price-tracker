@@ -20,7 +20,7 @@
     "server": "node server.js",
     "lint": "eslint .",
     "test": "jest --config=backendJestConfig.json --runInBand --forceExit",
-    "build-and-deploy": "cd client && npm run build && cd .. && npm run deploy-branch && npm run deploy-branch",
+    "build-and-deploy": "cd client && npm run build && cd .. && npm run deploy-branch",
     "deploy-branch": "git add client/build -f && git commit -m 'Add `build` folder for test deployment' && git push heroku revise-bundle:master"
   },
   "devDependencies": {

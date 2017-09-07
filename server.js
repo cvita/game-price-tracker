@@ -13,14 +13,14 @@ app.get('*', function (req, res, next) {
     }
 });
 
-app.get('*.js', function (req, res, next) {
+app.get('*.js*', function (req, res, next) {
     console.log('REQ.URL', req.url);
     req.url = req.url + '.gz';
     res.set('Content-Encoding', 'gzip');
     next();
 });
 
-app.get('*.css', function (req, res, next) {
+app.get('*.css*', function (req, res, next) {
     req.url = req.url + '.gz';
     res.set('Content-Encoding', 'gzip');
     res.set('Content-Type', 'text/css');
