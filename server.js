@@ -15,7 +15,7 @@ app.get('*', function (req, res, next) {
 
 app.get('*.js*', function (req, res, next) {
     console.log('REQ.URL', req.url);
-    if (req.url !== '/service-worker.js' || req.url !== '*.json') {
+    if (req.url !== '/service-worker.js' && req.url !== '*.json') {
         req.url = req.url + '.gz';
         res.set('Content-Encoding', 'gzip');
     }
