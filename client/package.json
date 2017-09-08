@@ -29,7 +29,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build && npm run gzip-bundles",
-    "gzip-bundles": "gzip -r build/static/js & gzip -r build/static/css",
+    "gzip-bundles": "gzip -r build/static/js & gzip -r build/static/css & gzip -r build/static/media",
     "test": "react-scripts test --env=jsdom",
     "coverage": "react-scripts test --env=jsdom --coverage",
     "eject": "react-scripts eject",
