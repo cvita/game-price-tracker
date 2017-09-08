@@ -11,7 +11,6 @@ class Home extends Component {
     this.props.fetchAllGamesInDb(10);
   }
   handleGetPopularGames() {
-    console.log('thinking about calling sony');
     if (this.props.popularGames.length === 0) {
       this.props.findPopularGames(20);
     }

@@ -5,20 +5,37 @@ const expressStatic = require('express').static;
 
 app.set('port', (process.env.PORT || 3001));
 
-app.get('*', function (req, res, next) {
-    if (req.headers['x-forwarded-proto'] !== 'https') {
+app.use('*', function (req, res, next) {
+    if (req.headers['x-forwarded-proto'] !== 'https') { // Specific to Heroku
         res.redirect('https://' + req.get('host') + req.url);
     } else {
         next();
     }
 });
 
-app.get('*.js*', function (req, res, next) {
-    console.log('REQ.URL', req.url);
-    if (req.url !== '/service-worker.js' && req.url !== '/manifest.json') {
+// app.get('*.js*', function (req, res, next) {
+//     if (req.url !== '/service-worker.js' && req.url !== '/manifest.json') {
+//         req.url = req.url + '.gz';
+//         res.set('Content-Encoding', 'gzip');
+//     }
+//     next();
+// });
+
+const gzippedFileExtensions = [
+    'main.*.js',
+    'main.*.js.map'
+];
+
+app.get('*', function (req, res, next) {
+    if (gzippedFileExtensions.some(fileExt => req.url === fileExt)) {
         req.url = req.url + '.gz';
         res.set('Content-Encoding', 'gzip');
     }
+
+    // if (req.url !== '/service-worker.js' && req.url !== '/manifest.json') {
+    //     req.url = req.url + '.gz';
+    //     res.set('Content-Encoding', 'gzip');
+    // }
     next();
 });
 
