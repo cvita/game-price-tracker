@@ -22,16 +22,17 @@ app.use('*', function (req, res, next) {
 // });
 
 const gzippedFileExtensions = [
-    '*main.*.js',
-    '*main.*.js.map'
+    '*.js',
+    '*.js.map'
 ];
 
 app.get('*', function (req, res, next) {
-    if (gzippedFileExtensions.some(fileExt => req.url === fileExt)) {
-        req.url = req.url + '.gz';
-        res.set('Content-Encoding', 'gzip');
+    if (req.url !== '/service-worker.js') {
+        if (gzippedFileExtensions.some(fileExt => req.url === fileExt)) {
+            req.url = req.url + '.gz';
+            res.set('Content-Encoding', 'gzip');
+        }
     }
-
     // if (req.url !== '/service-worker.js' && req.url !== '/manifest.json') {
     //     req.url = req.url + '.gz';
     //     res.set('Content-Encoding', 'gzip');
