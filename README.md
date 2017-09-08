@@ -19,4 +19,4 @@ Once a day, the app's back-end iterates through the database and queries the Pla
 ![development screenshot as of 8-11-17](./demo-assets/screenshot-8-11-17.png "development screenshot as of 7-17-17")
 
 
-**Credit:** Video game controller svg icon made by <a href="http://www.freepik.com" title="Freepik">Freepik</a> from <a href="http://www.flaticon.com" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a>
+**Credit:** Video game controller svg icon made by <a href="http://www.freepik.com" title="Freepik">Freepik</a> from <a href="http://www.flaticon.com" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a> // https://www.flaticon.com/free-icon/gamepad_263076#term=gamepad&page=1&position=3
