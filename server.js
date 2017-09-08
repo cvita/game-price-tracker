@@ -25,7 +25,9 @@ if (process.env.NODE_ENV === 'production') {
             }
 
             if (req.url.indexOf('.svg') !== -1) {
-                res.set('Content-Type', 'image/svg+xml')
+                req.url = req.url + '.gz';
+                res.set('Content-Encoding', 'gzip');
+                res.set('Content-Type', 'image/svg+xml');
             }
         }
         next();
