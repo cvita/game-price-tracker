@@ -22,8 +22,8 @@ app.use('*', function (req, res, next) {
 // });
 
 const gzippedFileExtensions = [
-    'main.*.js',
-    'main.*.js.map'
+    '*main.*.js',
+    '*main.*.js.map'
 ];
 
 app.get('*', function (req, res, next) {
