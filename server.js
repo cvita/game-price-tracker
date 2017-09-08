@@ -26,11 +26,15 @@ app.get('*', function (req, res, next) {
     if (req.url.indexOf('main.') !== -1) {
         req.url = req.url + '.gz';
         res.set('Content-Encoding', 'gzip');
-    }
-   
-
         
-    
+        if (req.url.indexOf('.css') !== -1) {
+            res.set('Content-Type', 'text/css');
+        }
+    }
+
+
+
+
     // if (req.url !== '/service-worker.js' && req.url !== '/manifest.json') {
     //     req.url = req.url + '.gz';
     //     res.set('Content-Encoding', 'gzip');
