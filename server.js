@@ -21,18 +21,16 @@ app.use('*', function (req, res, next) {
 //     next();
 // });
 
-const gzippedFileExtensions = [
-    '*.js',
-    '*.js.map'
-];
 
 app.get('*', function (req, res, next) {
-    if (req.url !== '/service-worker.js') {
-        if (gzippedFileExtensions.some(fileExt => req.url === fileExt)) {
-            req.url = req.url + '.gz';
-            res.set('Content-Encoding', 'gzip');
-        }
+    if (req.url.indexOf('main.') !== -1) {
+        req.url = req.url + '.gz';
+        res.set('Content-Encoding', 'gzip');
     }
+   
+
+        
+    
     // if (req.url !== '/service-worker.js' && req.url !== '/manifest.json') {
     //     req.url = req.url + '.gz';
     //     res.set('Content-Encoding', 'gzip');
@@ -40,12 +38,12 @@ app.get('*', function (req, res, next) {
     next();
 });
 
-app.get('*.css*', function (req, res, next) {
-    req.url = req.url + '.gz';
-    res.set('Content-Encoding', 'gzip');
-    res.set('Content-Type', 'text/css'); // try setting Content-type for service-worker.js
-    next();
-});
+// app.get('*.css*', function (req, res, next) {
+//     req.url = req.url + '.gz';
+//     res.set('Content-Encoding', 'gzip');
+//     res.set('Content-Type', 'text/css'); // try setting Content-type for service-worker.js
+//     next();
+// });
 
 if (process.env.NODE_ENV === 'production') {
     app.use(expressStatic('client/build'));
