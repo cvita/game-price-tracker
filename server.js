@@ -23,6 +23,10 @@ if (process.env.NODE_ENV === 'production') {
             if (req.url.indexOf('.css') !== -1) {
                 res.set('Content-Type', 'text/css');
             }
+
+            if (req.url.indexOf('.svg') !== -1) {
+                res.set('Content-Type', 'image/svg+xml')
+            }
         }
         next();
     });
