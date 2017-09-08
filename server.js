@@ -17,8 +17,7 @@ if (process.env.NODE_ENV === 'production') {
         .use(expressStatic('client/build'));
 
 
-    app
-        .get('*', function (req, res, next) {
+    app.get('*', function (req, res, next) {
             if (req.url.indexOf('main.') !== -1) {
                 req.url = req.url + '.gz';
                 res.set('Content-Encoding', 'gzip');
@@ -27,7 +26,7 @@ if (process.env.NODE_ENV === 'production') {
                     res.set('Content-Type', 'text/css');
                 }
             }
-            //  next();
+            next();
             res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
         });
 
