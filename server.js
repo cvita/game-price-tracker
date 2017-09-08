@@ -13,9 +13,8 @@ if (process.env.NODE_ENV === 'production') {
             next();
         }
     });
-    
-    app.use(expressStatic('client/build'));
 
+ 
     app.get('*', function (req, res, next) {
         if (req.url.indexOf('main.') !== -1) {
             req.url = req.url + '.gz';
@@ -28,6 +27,7 @@ if (process.env.NODE_ENV === 'production') {
         next();
     });
 
+    app.use(expressStatic('client/build'));
     app.get('*', function (req, res) {
         res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
     });
