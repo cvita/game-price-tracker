@@ -21,7 +21,7 @@
     "lint": "eslint .",
     "test": "jest --config=backendJestConfig.json --runInBand --forceExit",
     "build-and-deploy": "cd client && npm run build && cd .. && npm run deploy-branch",
-    "deploy-branch": "git add client/build -f && git commit -m 'Add `build` folder for test deployment' && git push heroku revise-bundle:master"
+    "deploy-branch": "git add client/build -f && git commit -m 'Add `build` folder for test deployment' && myBranch=$(git rev-parse --abbrev-ref HEAD) && git push heroku $myBranch:master"
   },
   "devDependencies": {
     "babel-cli": "^6.24.1",
