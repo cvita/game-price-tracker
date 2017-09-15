@@ -4,11 +4,31 @@
   "icons": [
     {
       "src": "favicon.ico",
-      "sizes": "16x16",
-      "type": "image/png"
+      "type": "image/x-icon",
+      "sizes": "16x16"
+    },
+    {
+      "src": "gamepad-48x48.png",
+      "type": "image/png",
+      "sizes": "48x48"
+    },
+    {
+      "src": "gamepad-96x96.png",
+      "type": "image/png",
+      "sizes": "96x96"
+    },
+    {
+      "src": "gamepad-192x192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "gamepad-512x512.png",
+      "type": "image/png",
+      "sizes": "512x512"
     }
   ],
-  "start_url": "./index.html",
+  "start_url": "./",
   "display": "standalone",
   "theme_color": "#000000",
   "background_color": "#ffffff"
