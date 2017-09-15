@@ -19,7 +19,9 @@
     "client": "cd client && npm start",
     "server": "node server.js",
     "lint": "eslint .",
-    "test": "jest --config=backendJestConfig.json --runInBand --forceExit"
+    "test": "jest --config=backendJestConfig.json --runInBand --forceExit",
+    "build-and-deploy": "cd client && npm run build && cd .. && npm run deploy-branch",
+    "deploy-branch": "git add client/build -f && git commit -m 'Add `build` folder for test deployment' && myCurrentBranch=$(git rev-parse --abbrev-ref HEAD) && git push heroku $myCurrentBranch:master"
   },
   "devDependencies": {
     "babel-cli": "^6.24.1",
