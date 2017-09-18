@@ -24,16 +24,13 @@ class SubmitEmailForm extends Component {
     render() {
         const emailRegExp = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
         const emailIsValid = emailRegExp.test(this.state.emailInput);
-        const color = emailIsValid ?
-            'success' :
-            'secondary';
 
         return (
             <form onSubmit={this.props.handleSubmit}>
                 <InputGroup>
                     <Input type='email' placeholder='Email for price alert' onChange={this.handleChange} value={this.state.emailInput} />
                     <InputGroupButton>
-                        <Button type='submit' onClick={this.handleSubmit} disabled={!emailIsValid} color={color}>Submit</Button>
+                        <Button type='submit' onClick={this.handleSubmit} disabled={!emailIsValid} color='primary'>Submit</Button>
                     </InputGroupButton>
                 </InputGroup>
             </form>
