@@ -51,7 +51,7 @@ class GameDetails extends Component {
                                 <dt className='col-lg-3'>Purchase</dt>
                                 <dd className='col-lg-9'><a href={url} target='_blank' rel='noopener noreferrer' >Sony store</a></dd>
 
-                                <dt className='col-xl-3'>Developer</dt>
+                                <dt className='col-xl-3'>Publisher</dt>
                                 <dd className='col-xl-9'>{gameDev}</dd>
 
                                 <dt className='col-xl-3'>Released</dt>
