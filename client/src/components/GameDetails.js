@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Container, Row, Col, Badge, Button, Collapse } from 'reactstrap';
 import YouTubePlayer from './YouTubePlayer';
+import LazyLoad from 'react-lazy-load';
 import './GameDetails.css';
 
 
@@ -65,7 +66,11 @@ class GameDetails extends Component {
                                 <dd className='col-xl-9'>{platforms.map(system => system + ' ')}</dd>
 
                                 <dt className='col-xl-3'>Rated</dt>
-                                <dd className='col-xl-9'><img className='esrbRating' src={esrbRating} alt='esrb rating' /></dd>
+                                <dd className='col-xl-9'>
+                                    <LazyLoad height={130} offset={225}>
+                                        <img className='esrbRating' src={esrbRating} alt='esrb rating' />
+                                    </LazyLoad>
+                                </dd>
                             </dl>
                         </Col>
                     </Row>
@@ -77,15 +82,17 @@ class GameDetails extends Component {
                             </div>
                         </Col>
                         <Col md={screenshots.length}>
-                            <div className='screenshotsContainer'>
-                                {screenshots.map((url, i) => {
-                                    return (
-                                        <a href={url} rel='noopener noreferrer' key={i}>
-                                            <img src={url} alt={'screenshot' + i} className='screenshot' />
-                                        </a>
-                                    );
-                                })}
-                            </div>
+                            <LazyLoad offset={225}>
+                                <div className='screenshotsContainer'>
+                                    {screenshots.map((url, i) => {
+                                        return (
+                                            <a href={url} rel='noopener noreferrer' key={i}>
+                                                <img src={url} alt={'screenshot' + i} className='screenshot' />
+                                            </a>
+                                        );
+                                    })}
+                                </div>
+                            </LazyLoad>
                         </Col>
                     </Row>
 
