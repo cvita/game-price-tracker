@@ -78,7 +78,13 @@ class GameDetails extends Component {
                         </Col>
                         <Col md={screenshots.length}>
                             <div className='screenshotsContainer'>
-                                {screenshots.map((url, i) => <img src={url} alt={'screenshot' + i} key={i} className='screenshot' />)}
+                                {screenshots.map((url, i) => {
+                                    return (
+                                        <a href={url} rel='noopener noreferrer' key={i}>
+                                            <img src={url} alt={'screenshot' + i} className='screenshot' />
+                                        </a>
+                                    );
+                                })}
                             </div>
                         </Col>
                     </Row>
