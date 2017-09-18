@@ -18,6 +18,7 @@ class SubmitEmailForm extends Component {
         const { emailInput } = this.state;
         if (emailInput !== '') {
             this.props.checkBlacklist(emailInput);
+            this.setState({ emailInput: '' }); // Prevent multiple clicks
         }
     }
     render() {

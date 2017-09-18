@@ -6,28 +6,41 @@ import { Alert, Button } from 'reactstrap';
 import './PriceAlert.css';
 
 
-function ConfirmAndResetButtons(props) {
-    return (
-        <div>
-            <Button
-                className='gamePriceTrackerButton'
-                color='success'
-                disabled={!props.validUserEmail}
-                onClick={props.handleClick}
-            >
-                Sounds good
-                </Button>
-            <Link to='/'>
+class ConfirmAndResetButtons extends Component {
+    constructor(props) {
+        super(props);
+        this.state = { submitted: false };
+        this.handleClick = this.handleClick.bind(this);
+    }
+    handleClick() {
+        this.props.handleClick();
+        this.setState({ submitted: true });
+    }
+    render() {
+        return (
+            <div>
                 <Button
                     className='gamePriceTrackerButton'
-                    color='danger'
-                    outline
+                    color='success'
+                    disabled={this.state.submitted}
+                    onClick={this.handleClick}
                 >
-                    Nevermind
+                    Sounds good
                 </Button>
-            </Link>
-        </div>
-    );
+
+                {!this.state.submitted &&
+                    <Link to='/'>
+                        <Button
+                            className='gamePriceTrackerButton'
+                            color='danger'
+                            outline
+                        >
+                            Nevermind
+                        </Button>
+                    </Link>}
+            </div>
+        );
+    }
 }
 
 class PriceAlert extends Component {
@@ -38,7 +51,6 @@ class PriceAlert extends Component {
     }
     render() {
         const { activeGame, priceAlertCreated, userInfo, createPriceAlert } = this.props;
-        const validUserEmail = userInfo.userEmail !== null;
 
         return (
             <div>
@@ -46,7 +58,7 @@ class PriceAlert extends Component {
                     <div>
                         <PriceAlertPreview {...this.props} >
                             {!priceAlertCreated && !userInfo.onBlacklist && userInfo.userEmail ?
-                                <ConfirmAndResetButtons handleClick={() => createPriceAlert(userInfo)} validUserEmail={validUserEmail} /> :
+                                <ConfirmAndResetButtons handleClick={() => createPriceAlert(userInfo)} /> :
                                 <Alert className='confirmationMessages' color='danger' toggle={() => browserHistory.push('/')} isOpen={userInfo.onBlacklist}>
                                     <strong>Unable to create your price alert. </strong>
                                     Your email is on our "do not send" list. Contact game.price.tracker@gmail.com if you feel this is in error.
