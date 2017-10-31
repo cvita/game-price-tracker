@@ -1,5 +1,5 @@
 import React from 'react';
-import AutoSuggestions from '../AutoSuggestions';
+import AutoSuggestions from '../Home/AutoSuggestions';
 import renderer from 'react-test-renderer';
 
 

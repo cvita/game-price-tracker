@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import GamePreview from './GamePreview';
+import GamePreview from '../helper/GamePreview';
 import SubmitEmailForm from './SubmitEmailForm';
 import { Alert } from 'reactstrap';
 import './PriceAlertPreview.css';

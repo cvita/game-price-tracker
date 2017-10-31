@@ -7,11 +7,11 @@ import store, { history } from './redux/store';
 
 // Components
 import App from './redux/App';
-import Home from './components/Home';
-import SearchResults from './components/SearchResults';
-import PriceAlert from './components/PriceAlert';
-import Unsubscribe from './components/Unsubscribe';
-import NotFound from './components/NotFound';
+import Home from './components/Home/Home';
+import SearchResults from './components/SearchResults/SearchResults';
+import PriceAlert from './components/ActiveGame/PriceAlert';
+import Unsubscribe from './components/Unsubscribe/Unsubscribe';
+import NotFound from './components/Main/NotFound';
 
 
 function GamePriceTracker(props) {

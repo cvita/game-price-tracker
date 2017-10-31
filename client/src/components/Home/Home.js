@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import LazyLoad from 'react-lazy-load';
 import SubmitGameForm from './SubmitGameForm';
-import GamesGrid from './GamesGrid';
+import GamesGrid from '../helper/GamesGrid';
 import { Jumbotron, Container } from 'reactstrap';
 
 
@@ -35,7 +35,7 @@ class Home extends Component {
             <GamesGrid allGames={this.props.popularGames} />
           </div>
         </LazyLoad>
-      </div >
+      </div>
     );
   }
 }

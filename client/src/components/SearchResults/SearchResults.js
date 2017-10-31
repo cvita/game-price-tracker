@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import SubmitGameForm from './SubmitGameForm';
-import GamesGrid from './GamesGrid';
+import SubmitGameForm from '../Home/SubmitGameForm';
+import GamesGrid from '../helper/GamesGrid';
 import './SearchResults.css';
 
 
