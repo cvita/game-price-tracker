@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, Badge, Card, CardImg, CardImgOverlay, CardBlock, CardSubtitle, CardFooter } from 'reactstrap';
+import { Button, Badge, Card, CardImg, CardImgOverlay, CardBody, CardSubtitle, CardFooter } from 'reactstrap';
 import LazyLoad from 'react-lazy-load';
 import './Game.css';
 
@@ -26,7 +26,7 @@ class Game extends Component {
                     </div>
                 </CardImgOverlay>
 
-                <CardBlock>
+                <CardBody>
                     <CardSubtitle><strong>{title}</strong></CardSubtitle>
                     <div>
                         <small>{gameContentType}</small><br />
@@ -39,7 +39,7 @@ class Game extends Component {
                                     <Badge pill color='info'>{discount}% off PS+</Badge>}
                             </div>}
                     </div>
-                </CardBlock>
+                </CardBody>
 
                 <CardFooter>${price}</CardFooter>
             </Card>
