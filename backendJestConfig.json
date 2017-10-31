@@ -2,6 +2,6 @@
   "automock": false,
   "testEnvironment": "node",
   "modulePathIgnorePatterns": [
-    "<rootDir>/client/"
+    "<rootDir>/frontend/"
   ]
 }
