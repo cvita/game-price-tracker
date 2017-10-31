@@ -7,13 +7,13 @@ import { Jumbotron, Container } from 'reactstrap';
 
 class Home extends Component {
   componentDidMount() {
-    this.props.resetActiveGame();
-    this.props.fetchAllGamesInDb(10);
+   this.props.resetActiveGame();
+   this.props.fetchAllGamesInDb(10);
   }
   handleGetPopularGames() {
-    if (this.props.popularGames.length === 0) {
-      this.props.findPopularGames(20);
-    }
+   if (this.props.popularGames.length === 0) {
+     this.props.findPopularGames(20);
+   }
   }
   render() {
 

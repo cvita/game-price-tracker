@@ -1,5 +1,4 @@
 import React, { PureComponent } from 'react';
-import { browserHistory } from 'react-router'
 import { Badge, InputGroupButton, Dropdown, DropdownMenu, DropdownItem } from 'reactstrap';
 import './AutoSuggestions.css';
 
@@ -27,7 +26,7 @@ class AutoSuggestions extends PureComponent {
         this.setState({ toggle: !this.state.toggle });
     }
     handleClick(gameId) {
-        browserHistory.push(`/games/${gameId}`);
+       // browserHistory.push(`/games/${gameId}`);
     }
     render() {
         const { autoSuggestions } = this.props;

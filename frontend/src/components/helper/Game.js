@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { browserHistory } from 'react-router';
 import { Button, Badge, Card, CardImg, CardImgOverlay, CardBlock, CardSubtitle, CardFooter } from 'reactstrap';
 import LazyLoad from 'react-lazy-load';
 import './Game.css';
@@ -7,7 +6,7 @@ import './Game.css';
 
 class Game extends Component {
     handleClick(gameId) {
-        browserHistory.push(`/games/${gameId}`);
+       // browserHistory.push(`/games/${gameId}`);
     }
     render() {
         const { title, _id, image, price, discount, psPlusPrice } = this.props;

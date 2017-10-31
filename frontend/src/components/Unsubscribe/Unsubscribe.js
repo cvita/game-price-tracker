@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { browserHistory } from 'react-router'
 import GamePreview from '../helper/GamePreview';
 import { Alert, Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import './Unsubscribe.css';
@@ -81,7 +80,7 @@ class Unsubscribe extends Component {
             this.props.checkBlacklist(manageId);
         } else {
             console.error('Redirecting to home page: manageId must be an encrypted string');
-            browserHistory.push('/');
+           // browserHistory.push('/');
         }
     }
     toggle() {

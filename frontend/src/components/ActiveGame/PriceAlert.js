@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Link, browserHistory } from 'react-router';
+import { Link } from 'react-router-dom';
 import PriceAlertPreview from './PriceAlertPreview';
 import GameDetails from './GameDetails';
 import { Alert, Button } from 'reactstrap';
@@ -39,7 +39,7 @@ class PriceAlert extends Component {
     render() {
         const { activeGame, priceAlertCreated, userInfo, createPriceAlert } = this.props;
         const validUserEmail = userInfo.userEmail !== null;
-
+var browserHistory;
         return (
             <div>
                 {activeGame &&

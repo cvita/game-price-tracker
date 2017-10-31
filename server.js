@@ -24,9 +24,9 @@ if (process.env.NODE_ENV === 'production') {
         next();
     });
 
-    app.use(expressStatic('client/build'));
+    app.use(expressStatic('frontend/build'));
     app.get('*', function (req, res) {
-        res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
+        res.sendFile(path.join(__dirname, 'frontend/build', 'index.html'));
     });
 }
 

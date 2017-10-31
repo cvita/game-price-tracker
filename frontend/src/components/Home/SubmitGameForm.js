@@ -1,5 +1,4 @@
 import React, { PureComponent } from 'react';
-import { browserHistory } from 'react-router'
 import AutoSuggestions from './AutoSuggestions';
 import { Button, Input, InputGroup, InputGroupButton } from 'reactstrap';
 import './SubmitGameForm.css';
@@ -22,7 +21,7 @@ class SubmitGameForm extends PureComponent {
         const { gameInput } = this.state;
         if (typeof gameInput === 'string' && gameInput !== '') {
             this.props.searchByTitle(gameInput);
-            browserHistory.push(`/search/${gameInput}`);
+         //   browserHistory.push(`/search/${gameInput}`);
         }
     }
     render() {
