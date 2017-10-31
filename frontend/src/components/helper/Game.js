@@ -1,4 +1,7 @@
 import React, { Component } from 'react';
+import { push } from 'react-router-redux';
+import store from '../../redux/store';
+
 import { Button, Badge, Card, CardImg, CardImgOverlay, CardBody, CardSubtitle, CardFooter } from 'reactstrap';
 import LazyLoad from 'react-lazy-load';
 import './Game.css';
@@ -6,7 +9,7 @@ import './Game.css';
 
 class Game extends Component {
     handleClick(gameId) {
-       // browserHistory.push(`/games/${gameId}`);
+        store.dispatch(push(`/games/${gameId}`));
     }
     render() {
         const { title, _id, image, price, discount, psPlusPrice } = this.props;

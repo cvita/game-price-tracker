@@ -1,4 +1,7 @@
 import React, { PureComponent } from 'react';
+import { push } from 'react-router-redux';
+import store from '../../redux/store';
+
 import { Badge, InputGroupButton, Dropdown, DropdownMenu, DropdownItem } from 'reactstrap';
 import './AutoSuggestions.css';
 
@@ -26,7 +29,7 @@ class AutoSuggestions extends PureComponent {
         this.setState({ toggle: !this.state.toggle });
     }
     handleClick(gameId) {
-       // browserHistory.push(`/games/${gameId}`);
+        store.dispatch(push(`/games/${gameId}`));
     }
     render() {
         const { autoSuggestions } = this.props;
@@ -35,16 +38,16 @@ class AutoSuggestions extends PureComponent {
             <InputGroupButton >
                 <Dropdown isOpen={autoSuggestions.length > 0} toggle={this.toggle}>
                     <DropdownMenu>
-                            {autoSuggestions.map((game, i) => {
-                                return (
-                                    <div key={game.cid + '-' + i}>
-                                        <DropdownItem onClick={() => this.handleClick(game._id)}>
-                                            <SuggestedResult {...game} />
-                                        </DropdownItem>
-                                        <DropdownItem divider />
-                                    </div>
-                                );
-                            })}
+                        {autoSuggestions.map((game, i) => {
+                            return (
+                                <div key={game.cid + '-' + i}>
+                                    <DropdownItem onClick={() => this.handleClick(game._id)}>
+                                        <SuggestedResult {...game} />
+                                    </DropdownItem>
+                                    <DropdownItem divider />
+                                </div>
+                            );
+                        })}
                     </DropdownMenu>
                 </Dropdown>
             </InputGroupButton>

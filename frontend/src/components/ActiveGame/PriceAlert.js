@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import { push } from 'react-router-redux';
+import store from '../../redux/store';
+
 import PriceAlertPreview from './PriceAlertPreview';
 import GameDetails from './GameDetails';
 import { Alert, Button } from 'reactstrap';
@@ -39,7 +42,6 @@ class PriceAlert extends Component {
     render() {
         const { activeGame, priceAlertCreated, userInfo, createPriceAlert } = this.props;
         const validUserEmail = userInfo.userEmail !== null;
-var browserHistory;
         return (
             <div>
                 {activeGame &&
@@ -47,12 +49,12 @@ var browserHistory;
                         <PriceAlertPreview {...this.props} >
                             {!priceAlertCreated && !userInfo.onBlacklist ?
                                 <ConfirmAndResetButtons handleClick={() => createPriceAlert(userInfo)} validUserEmail={validUserEmail} /> :
-                                <Alert className='confirmationMessages' color='danger' toggle={() => browserHistory.push('/')} isOpen={userInfo.onBlacklist}>
+                                <Alert className='confirmationMessages' color='danger' toggle={() => store.dispatch(push('/'))} isOpen={userInfo.onBlacklist}>
                                     <strong>Unable to create your price alert. </strong>
                                     Your email is on our "do not send" list. Contact game.price.tracker@gmail.com if you feel this is in error.
                                 </Alert>}
 
-                            <Alert className='confirmationMessages' isOpen={priceAlertCreated} toggle={() => browserHistory.push('/')} color='success'>
+                            <Alert className='confirmationMessages' isOpen={priceAlertCreated} toggle={() => store.dispatch(push('/'))} color='success'>
                                 <strong>You're all set! </strong>
                                 Make sure you allow messages from <strong>game.price.tracker@gmail.com</strong> or you might miss a sale.
                             </Alert>
