@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import { push } from 'react-router-redux';
 import store from '../../redux/store';
 
-import { Badge, InputGroupButton, Dropdown, DropdownMenu, DropdownItem } from 'reactstrap';
+import { Badge, InputGroupButton, Dropdown, DropdownMenu, DropdownItem, DropdownToggle } from 'reactstrap';
 import './AutoSuggestions.css';
 
 
@@ -22,21 +22,21 @@ function SuggestedResult(props) {
 class AutoSuggestions extends PureComponent {
     constructor(props) {
         super(props);
-        this.state = { toggle: false };
         this.toggle = this.toggle.bind(this);
+        this.state = { dropdownOpen: false };
     }
     toggle() {
-        this.setState({ toggle: !this.state.toggle });
+        this.setState({ dropdownOpen: !this.state.dropdownOpen });
     }
     handleClick(gameId) {
         store.dispatch(push(`/games/${gameId}`));
     }
     render() {
-        const { autoSuggestions } = this.props;
-
+        const autoSuggestions = this.props.autoSuggestions ? this.props.autoSuggestions : [];
         return (
-            <InputGroupButton >
+            <InputGroupButton>
                 <Dropdown isOpen={autoSuggestions.length > 0} toggle={this.toggle}>
+                    <DropdownToggle className='autoSuggestionsDropdownToggle' />
                     <DropdownMenu>
                         {autoSuggestions.map((game, i) => {
                             return (

@@ -4,3 +4,8 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+.autoSuggestionsDropdownToggle {
+  visibility: hidden;
+  padding: 0;
+}
