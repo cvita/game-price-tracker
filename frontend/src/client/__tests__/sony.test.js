@@ -1,4 +1,4 @@
-import sonyStore from './sonyStore';
+import sony from '../sony';
 const fetchMock = require('fetch-mock');
 const fs = require('fs');
 
@@ -49,10 +49,10 @@ describe('findGameById()', () => {
   it('returns expected values when passed a valid gameId', () => {
     fetchMock.get(
       'https://store.playstation.com/store/api/chihiro/00_09_000/container/US/en/19/UP0082-CUSA05532_00-FFXIIGAMEPS400NA',
-      fs.readFileSync('./src/sonyStore/__mockData__/sonyStoreApiSearchById.json', 'utf8')
+      fs.readFileSync('./src/client/__tests__/__mockData__/sonySearchById.json', 'utf8')
     );
     expect.assertions(2);
-    return sonyStore.findGameById('UP0082-CUSA05532_00-FFXIIGAMEPS400NA')
+    return sony.findGameById('UP0082-CUSA05532_00-FFXIIGAMEPS400NA')
       .then(resp => {
         expect(resp).toBeDefined();
         expect(resp).toEqual(singleResultSearchEx);
@@ -61,7 +61,7 @@ describe('findGameById()', () => {
   });
 
   it('throws an error when passed an invalid gameId', () => {
-    return sonyStore.findGameById('gameNumber1234').catch(e => {
+    return sony.findGameById('gameNumber1234').catch(e => {
       expect(e.message).toEqual('invalid game ID');
     });
   });
@@ -71,10 +71,10 @@ describe('findGameByTitle()', () => {
   it('returns expected values when passed a string', () => {
     fetchMock.get(
       'https://store.playstation.com/store/api/chihiro/00_09_000/tumbler/US/en/19/final%20fantasy%20XII?suggested_size=5&mode=game&mode=film&mode=tv&mode=live_event',
-      fs.readFileSync('./src/sonyStore/__mockData__/sonyStoreApiSearchByTitle.json', 'utf8')
+      fs.readFileSync('./src/client/__tests__/__mockData__/sonySearchByTitle.json', 'utf8')
     );
     expect.assertions(2);
-    return sonyStore.findGameByTitle('final fantasy XII')
+    return sony.findGameByTitle('final fantasy XII')
       .then(resp => {
         expect(resp).toBeDefined();
         expect(resp[0]).toEqual(multipleResultSearchEx);
@@ -83,7 +83,7 @@ describe('findGameByTitle()', () => {
   });
 
   it('throws an error when passed a non-string', () => {
-    return sonyStore.findGameByTitle(undefined).catch(e => {
+    return sony.findGameByTitle(undefined).catch(e => {
       expect(e.message).toEqual('invalid game title');
     });
   });
@@ -93,10 +93,10 @@ describe('findPopularGames()', () => { });
 it('returns expected values when searching sony store for new games', () => {
   fetchMock.get(
     'https://store.playstation.com/store/api/chihiro/00_09_000/container/US/en/19/STORE-MSF77008-TOPGAMES?size=25',
-    fs.readFileSync('./src/sonyStore/__mockData__/sonyStoreApiFindPopularGames.json', 'utf8')
+    fs.readFileSync('./src/client/__tests__/__mockData__/sonyFindPopularGames.json', 'utf8')
   );
   expect.assertions(2);
-  return sonyStore.findPopularGames(25)
+  return sony.findPopularGames(25)
     .then(resp => {
       expect(resp).toBeDefined();
       expect(resp[0]).toEqual(multipleResultSearchEx);

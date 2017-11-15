@@ -1,4 +1,4 @@
-import youTube from './youTube';
+import youTube from '../youTube';
 const fetchMock = require('fetch-mock');
 const fs = require('fs');
 
@@ -6,7 +6,7 @@ const fs = require('fs');
 it('should take a string and return a valid YouTube video id', () => {
   fetchMock.get(
     'begin:https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=3&q=',
-    fs.readFileSync('./src/youTube/__mockData__/youTubeApiVideoSearch.json', 'utf8')
+    fs.readFileSync('./src/client/__tests__/__mockData__/youTubeVideoSearch.json', 'utf8')
   );
   expect.assertions(2);
   return youTube.searchVideo('last of us remastered ign review')
