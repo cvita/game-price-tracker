@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Container, Row, Col, Badge, Button, Collapse } from 'reactstrap';
 import YouTubePlayer from './YouTubePlayer';
-import LazyLoad from 'react-lazy-load';
+import LazyFadeIn from '../helper/LazyFadeIn';
 import './GameDetails.css';
 
 
@@ -67,9 +67,9 @@ class GameDetails extends Component {
 
                                 <dt className='col-xl-3'>Rated</dt>
                                 <dd className='col-xl-9'>
-                                    <LazyLoad height={130} offset={225}>
+                                    <LazyFadeIn height={130} offset={225}>
                                         <img className='esrbRating' src={esrbRating} alt='esrb rating' />
-                                    </LazyLoad>
+                                    </LazyFadeIn>
                                 </dd>
                             </dl>
                         </Col>
@@ -82,7 +82,7 @@ class GameDetails extends Component {
                             </div>
                         </Col>
                         <Col md={screenshots.length}>
-                            <LazyLoad offset={225}>
+                            <LazyFadeIn offset={225}>
                                 <div className='screenshotsContainer'>
                                     {screenshots.map((url, i) => {
                                         return (
@@ -92,7 +92,7 @@ class GameDetails extends Component {
                                         );
                                     })}
                                 </div>
-                            </LazyLoad>
+                            </LazyFadeIn>
                         </Col>
                     </Row>
 

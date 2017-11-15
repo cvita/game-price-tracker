@@ -3,7 +3,7 @@ import { push } from 'react-router-redux';
 import store from '../../redux/store';
 
 import { Button, Badge, Card, CardImg, CardImgOverlay, CardBody, CardSubtitle, CardFooter } from 'reactstrap';
-import LazyLoad from 'react-lazy-load';
+import LazyFadeIn from '../helper/LazyFadeIn';
 import './Game.css';
 
 
@@ -18,9 +18,9 @@ class Game extends Component {
 
         return (
             <Card className='game'>
-                <LazyLoad height={imageHeight} offset={imageHeight * 1.5}>
+                <LazyFadeIn height={imageHeight} offset={imageHeight * 1.5}>
                     <CardImg width="100%" src={image} alt={title + ' cover image'} />
-                </LazyLoad>
+                </LazyFadeIn>
                 <CardImgOverlay id='cardImgOver'>
                     <div className='overlayBackground' onClick={() => this.handleClick(_id)}>
                         <Button id='selectButton' size='sm' color='secondary' outline>

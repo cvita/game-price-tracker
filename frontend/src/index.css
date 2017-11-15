@@ -12,3 +12,14 @@ body {
 .gamePriceTrackerButton{
     margin: 0.5em;
 }
+
+
+/* CSSTransitionGroup settings to compliment lazy loading */
+.fadeInOnLoad-appear {
+  opacity: 0.01;
+}
+
+.fadeInOnLoad-appear.fadeInOnLoad-appear-active {
+  opacity: 1;
+  transition: opacity 0.3s ease-in;
+}
