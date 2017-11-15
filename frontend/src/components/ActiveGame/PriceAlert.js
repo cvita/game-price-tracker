@@ -9,28 +9,41 @@ import { Alert, Button } from 'reactstrap';
 import './PriceAlert.css';
 
 
-function ConfirmAndResetButtons(props) {
-    return (
-        <div>
-            <Button
-                className='gamePriceTrackerButton'
-                color='success'
-                disabled={!props.validUserEmail}
-                onClick={props.handleClick}
-            >
-                Sounds good
-                </Button>
-            <Link to='/'>
+class ConfirmAndResetButtons extends Component {
+    constructor(props) {
+        super(props);
+        this.state = { submitted: false };
+        this.handleClick = this.handleClick.bind(this);
+    }
+    handleClick() {
+        this.props.handleClick();
+        this.setState({ submitted: true });
+    }
+    render() {
+        return (
+            <div>
                 <Button
                     className='gamePriceTrackerButton'
-                    color='danger'
-                    outline
+                    color='success'
+                    disabled={this.state.submitted}
+                    onClick={this.handleClick}
                 >
-                    Nevermind
+                    Sounds good
                 </Button>
-            </Link>
-        </div>
-    );
+
+                {!this.state.submitted &&
+                    <Link to='/'>
+                        <Button
+                            className='gamePriceTrackerButton'
+                            color='danger'
+                            outline
+                        >
+                            Nevermind
+                        </Button>
+                    </Link>}
+            </div>
+        );
+    }
 }
 
 class PriceAlert extends Component {
