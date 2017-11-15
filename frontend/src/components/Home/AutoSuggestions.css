@@ -1,0 +1,11 @@
+.suggestion {
+  width: 50vw;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.autoSuggestionsDropdownToggle {
+  visibility: hidden;
+  padding: 0;
+}
