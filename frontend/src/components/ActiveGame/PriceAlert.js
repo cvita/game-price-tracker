@@ -60,12 +60,15 @@ class PriceAlert extends Component {
                 {activeGame &&
                     <div>
                         <PriceAlertPreview {...this.props} >
-                            {!priceAlertCreated && !userInfo.onBlacklist ?
-                                <ConfirmAndResetButtons handleClick={() => createPriceAlert(userInfo)} validUserEmail={validUserEmail} /> :
-                                <Alert className='confirmationMessages' color='danger' toggle={() => store.dispatch(push('/'))} isOpen={userInfo.onBlacklist}>
-                                    <strong>Unable to create your price alert. </strong>
-                                    Your email is on our "do not send" list. Contact game.price.tracker@gmail.com if you feel this is in error.
+                            {userInfo.onBlacklist !== null && (
+                                <div>
+                                    {!priceAlertCreated && !userInfo.onBlacklist ?
+                                        <ConfirmAndResetButtons handleClick={() => createPriceAlert(userInfo)} validUserEmail={validUserEmail} /> :
+                                        <Alert className='confirmationMessages' color='danger' toggle={() => store.dispatch(push('/'))} isOpen={userInfo.onBlacklist}>
+                                            <strong>Unable to create your price alert. </strong>
+                                            Your email is on our "do not send" list. Contact game.price.tracker@gmail.com if you feel this is in error.
                                 </Alert>}
+                                </div>)}
 
                             <Alert className='confirmationMessages' isOpen={priceAlertCreated} toggle={() => store.dispatch(push('/'))} color='success'>
                                 <strong>You're all set! </strong>
