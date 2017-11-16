@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import TitleSearch from '../Home/TitleSearch';
 import GamesGrid from '../helper/GamesGrid';
-import './SearchResults.css';
 
 
 class SearchResults extends Component {
     componentDidMount() {
+        // Enables a search result url that can be bookmarked/shared
         setTimeout(() => {
             if (this.props.searchResults.length === 0) {
                 const url = window.location.toString();
@@ -20,8 +20,7 @@ class SearchResults extends Component {
         return (
             <div>
                 <TitleSearch {...this.props} />
-
-                <p className='lead searchResultsTitle'>{this.props.searchResults.length} results</p>
+                <p className='lead' style={{ margin: '1em' }}>{this.props.searchResults.length} results</p>
                 <GamesGrid allGames={this.props.searchResults} />
             </div>
         );
