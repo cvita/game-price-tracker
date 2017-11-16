@@ -15,6 +15,10 @@ body {
   box-shadow: none;
 }
 
+.alertMessage {
+  padding: 2em;
+}
+
 .gamePriceTrackerButton{
     margin: 0.5em;
 }
