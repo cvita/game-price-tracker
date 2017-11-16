@@ -2,7 +2,8 @@ import React, { PureComponent } from 'react';
 import { push } from 'react-router-redux';
 import store from '../../redux/store';
 
-import { Badge, InputGroupButton, Dropdown, DropdownMenu, DropdownItem, DropdownToggle } from 'reactstrap';
+import { InputGroupButton, Dropdown, DropdownMenu, DropdownItem, DropdownToggle } from 'reactstrap';
+import ListOfPlatforms from '../helper/ListOfPlatforms';
 import './AutoSuggestions.css';
 
 
@@ -11,7 +12,7 @@ const Suggestion = props => {
     const { platforms } = props.details;
     return (
         <div className='suggestion'>
-            {platforms.map(system => <span key={system}><Badge pill>{system}</Badge>{' '}</span>)}
+            <ListOfPlatforms platforms={platforms} />
             <small>{title}</small>
             <img className='suggestionImage' src={image} alt={title} />
         </div>
