@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import SubmitGameForm from '../Home/SubmitGameForm';
+import TitleSearch from '../Home/TitleSearch';
 import GamesGrid from '../helper/GamesGrid';
 import './SearchResults.css';
 
@@ -19,7 +19,7 @@ class SearchResults extends Component {
     render() {
         return (
             <div>
-                <SubmitGameForm {...this.props} />
+                <TitleSearch {...this.props} />
 
                 <p className='lead searchResultsTitle'>{this.props.searchResults.length} results</p>
                 <GamesGrid allGames={this.props.searchResults} />

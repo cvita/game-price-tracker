@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import SubmitGameForm from './SubmitGameForm';
+import { Jumbotron } from 'reactstrap';
+import TitleSearch from './TitleSearch';
 import GamesGrid from '../helper/GamesGrid';
-import { Jumbotron, Container } from 'reactstrap';
 
 
 class Home extends Component {
@@ -18,11 +18,9 @@ class Home extends Component {
 
     return (
       <div>
-        <Jumbotron fluid>
-          <Container fluid>
-            <p className='lead'>Get an email when your game goes on sale.</p>
-            <SubmitGameForm {...this.props} />
-          </Container>
+        <Jumbotron>
+          <p className='lead'>Get an email when your game goes on sale.</p>
+          <TitleSearch {...this.props} />
         </Jumbotron>
 
         {this.props.allGames.length > 0 && (
