@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { push } from 'react-router-redux';
 import store from '../../redux/store';
 
-import GamePreview from '../helper/GamePreview';
+import GameOverview from '../ActiveGame/GameOverview';
 import { Alert, Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import './Unsubscribe.css';
 
@@ -15,14 +15,14 @@ function UserPriceAlert(props) {
             {activeGame &&
                 <div className='manage'>
                     <p className='lead'>Manage your price alert</p>
-                    <GamePreview  {...activeGame}>
+                    <GameOverview  {...activeGame}>
                         {activeGame.onSale &&
                             <p>Here's <a href={activeGame.url}>the link</a> to purchase on the Sony PlayStation store</p>}
 
                         <p>You're all signed up to receive a message at <strong>{userEmail}</strong> if {gameTitle}'s price drops below ${price} before {new Date(expiration).toDateString()}.</p>
                         <PriceAlertButton handleClick={() => props.createPriceAlert(props.userInfo)} message={'Renew price alert'} color={'success'} />
                         <PriceAlertButton handleClick={() => props.deletePriceAlert(props.userInfo)} message={'Delete'} />
-                    </GamePreview>
+                    </GameOverview>
                 </div>}
         </div>
     );
