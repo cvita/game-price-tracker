@@ -5,6 +5,11 @@
   text-overflow: ellipsis;
 }
 
+.suggestionImage{
+  width: 10%;
+  float: right;
+}
+
 .autoSuggestionsDropdownToggle {
   visibility: hidden;
   padding: 0;
