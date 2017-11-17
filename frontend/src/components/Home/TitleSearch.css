@@ -1,0 +1,9 @@
+.titleSearchInput {
+    width: 100%;
+    transition: 0.3s;
+}
+
+.titleSearchInput:focus {  
+    background: #faffbd;
+    color: black;
+}

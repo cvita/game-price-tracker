@@ -11,7 +11,8 @@ function errors(state = initialState.errors, action) {
     case types.MAKE_ACTIVE_GAME_FAILED:
     case types.SEARCH_BY_TITLE_FAILED:
     case types.SUBMIT_PRICE_ALERT_FAILED:
-      return [...state, action.message];
+      console.error(action);
+      return [...state, action];
     case types.RESET_ACTIVE_GAME:
       return initialState.errors;
     default:

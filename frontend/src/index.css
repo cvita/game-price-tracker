@@ -9,6 +9,27 @@ body {
   font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif;
 }
 
+.form-control:focus {
+  outline: none;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+
+.alertMessage {
+  padding: 2em;
+}
+
 .gamePriceTrackerButton{
     margin: 0.5em;
+}
+
+
+/* CSSTransitionGroup settings to compliment lazy loading */
+.fadeInOnLoad-appear {
+  opacity: 0.01;
+}
+
+.fadeInOnLoad-appear.fadeInOnLoad-appear-active {
+  opacity: 1;
+  transition: opacity 0.3s ease-in;
 }
