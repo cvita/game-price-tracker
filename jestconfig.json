@@ -1,0 +1,7 @@
+{
+  "automock": false,
+  "testEnvironment": "node",
+  "modulePathIgnorePatterns": [
+    "<rootDir>/frontend/"
+  ]
+}
