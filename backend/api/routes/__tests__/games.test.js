@@ -2,7 +2,7 @@ const request = require('supertest');
 const fs = require('fs');
 const app = require('../../../app');
 const { deleteGame } = require('../Model');
-const exampleGameInfo = JSON.parse(fs.readFileSync('./api/routes/__mockData__/exampleGameInfo.json', 'utf8'));
+const exampleGameInfo = JSON.parse(fs.readFileSync('./backend/api/routes/__mockData__/exampleGameInfo.json', 'utf8'));
 afterAll(() => deleteGame(exampleGameInfo._id));
 
 const requiredKeys = [
