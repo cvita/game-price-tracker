@@ -1,14 +1,14 @@
-const express = require('express');
-const app = express();
-const bodyParserJSON = require('body-parser').json;
-app.use(bodyParserJSON());
+import express from 'express';
+import bodyParser from 'body-parser';
+import db from './db/database';
+import games from './routes/games';
 
-const gamesRoutes = require('./api/routes/games');
-const priceAlertsRoutes = require('./api/routes/priceAlerts');
-const blacklistRoutes = require('./api/routes/blacklist');
-gamesRoutes(app);
-priceAlertsRoutes(app);
-blacklistRoutes(app);
+
+const app = express();
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+
+app.use('/games', games);
 
 
 module.exports = app;
