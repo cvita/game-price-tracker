@@ -1,19 +1,18 @@
 import React from 'react';
-import { Route, Switch, Link } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 
-import gamepad from '../../assets/gamepad.svg';
 import { Container } from 'reactstrap';
 import LoadingBar from 'react-redux-loading-bar';
 import ErrorAlert from './ErrorAlert';
 import Navigation from './Navigation';
 import Footer from './Footer';
-import './Main.css';
 
 import Home from '../Home/Home';
 import SearchResults from '../SearchResults/SearchResults';
 import PriceAlert from '../ActiveGame/PriceAlert';
 import Unsubscribe from '../Unsubscribe/Unsubscribe';
 import NotFound from './NotFound';
+import './Main.css';
 
 
 const Main = props => (
