@@ -4,7 +4,7 @@ import store from '../../redux/store';
 
 import LazyFadeIn from '../helper/LazyFadeIn';
 import ListOfPlatforms from '../helper/ListOfPlatforms';
-import { Button, Badge, Card, CardImg, CardImgOverlay, CardBody, CardSubtitle, CardFooter } from 'reactstrap';
+import { Row, Col, Button, Badge, Card, CardImg, CardImgOverlay, CardBody, CardSubtitle, CardFooter } from 'reactstrap';
 import './GamesGrid.css';
 
 
@@ -62,14 +62,16 @@ const GamesGrid = props => {
         if (activeGame && game._id === activeGame._id) {
             return <div key={`${game._id} ${i}`} />;
         }
-        return <Game key={`${game._id} ${i}`} {...game} />;
+        return (
+            <Col lg='3' md='4' sm='6' xs='12' key={`${game._id} ${i}`} >
+                <Game  {...game} />
+            </Col>
+        );
     });
     return (
-        <div className='gamesGridContainer'>
-            <div className='gamesGrid'>
-                {gamesGrid}
-            </div>
-        </div>
+        <Row>
+            {gamesGrid}
+        </Row>
     );
 };
 
