@@ -52,11 +52,11 @@ class GameDetails extends Component {
         return (
             <Container>
                 <Row className='descriptionDetails'>
-                    <Col md='9'>
+                    <Col md='9' sm='12' xs='12'>
                         <Description description={description} />
                     </Col>
 
-                    <Col md='3'>
+                    <Col md='3' sm='12' xs='12'>
                         <dl className='row'>
                             <dt className='col-md-6'>Purchase</dt>
                             <dd className='col-md-6'><a href={url} target='_blank' rel='noopener noreferrer' >Sony store</a></dd>
