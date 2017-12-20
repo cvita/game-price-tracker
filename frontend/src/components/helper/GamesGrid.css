@@ -1,14 +1,7 @@
-.gamesGrid{
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: flex-start;
-}
-
 /* Game subcomponent */
 .game {
-    width: 225px; 
-    margin: 1em;
+    max-width: 225px;
+    margin: 1em auto;
     transition: 0.3s; 
 }
 
