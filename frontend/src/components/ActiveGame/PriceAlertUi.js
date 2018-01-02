@@ -46,7 +46,7 @@ class EmailForm extends Component {
               color='primary'
             >
               Submit
-                      </Button>
+            </Button>
           </InputGroupButton>
         </InputGroup>
       </form>
@@ -85,7 +85,7 @@ class ConfirmAndResetButtons extends Component {
               outline
             >
               Nevermind
-                      </Button>
+            </Button>
           </Link>)}
       </div>
     );
