@@ -1,14 +1,3 @@
-CREATE TABLE games (
-  game_id           char(36) UNIQUE,
-  title             text not null,
-  release_date      TIMESTAMP not null,
-  star_rating       real not null,
-  esrb_rating       text not null,
-  developer         text not null,
-  platforms         jsonb not null,
-  updated           timestamp default current_timestamp
-);
-
 CREATE TABLE price_history (
   game_id           char(36) not null,
   sale_general      boolean not null,
