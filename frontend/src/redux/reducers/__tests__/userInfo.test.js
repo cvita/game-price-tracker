@@ -26,11 +26,18 @@ describe('userInfo reducer', () => {
     ).toEqual(expectedResult);
   });
 
-  it('should handle CHECK_BLACKLIST_SUCCEEDED', () => {
-    const stubData = { onBlacklist: false, userEmail: 'anyone@gmail.com' };
+  it('should handle CHECK_BLACKLIST_REQUESTED', () => {
+    const expected = { userEmail: 'anyone@gmail.com' };
     expect(
-      reducer([], { type: types.CHECK_BLACKLIST_SUCCEEDED, payload: stubData })
-    ).toEqual(stubData);
+      reducer({}, { type: types.CHECK_BLACKLIST_REQUESTED, payload: expected.userEmail })
+    ).toEqual(expected);
+  });
+
+  it('should handle CHECK_BLACKLIST_SUCCEEDED', () => {
+    const expected = { onBlacklist: false };
+    expect(
+      reducer({}, { type: types.CHECK_BLACKLIST_SUCCEEDED, payload: false })
+    ).toEqual(expected);
   });
 
   it('should handle ADD_TO_BLACKLIST_SUCCEEDED', () => {

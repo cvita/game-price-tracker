@@ -8,6 +8,7 @@ import * as types from './constants/actionTypes';
 import * as actionCreators from './actions/actionCreators';
 import sony from '../client/sony';
 import mongo from '../client/mongo';
+import db from '../client/db';
 import youTube from '../client/youTube';
 
 
@@ -174,7 +175,7 @@ describe('saga: checkBlacklist', () => {
   it('checks blacklist for user email', () => {
     return expectSaga(sagas.checkBlacklist, actionCreators.checkBlacklist(stubData))
       .provide([
-        [matchers.call.fn(mongo.checkBlacklist), stubData]
+        [matchers.call.fn(db.checkBlacklist), stubData]
       ])
       .put({ type: types.CHECK_BLACKLIST_SUCCEEDED, payload: stubData })
       .run();
@@ -183,7 +184,7 @@ describe('saga: checkBlacklist', () => {
   it('handles errors', () => {
     return expectSaga(sagas.checkBlacklist, actionCreators.checkBlacklist(stubData))
       .provide([
-        [matchers.call.fn(mongo.checkBlacklist), throwError(error)]
+        [matchers.call.fn(db.checkBlacklist), throwError(error)]
       ])
       .put({ type: types.CHECK_BLACKLIST_FAILED, message: error.message })
       .run();

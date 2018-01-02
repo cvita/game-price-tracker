@@ -11,7 +11,16 @@ function userInfo(state = initialState.userInfo, action) {
                 gameTitle: action.payload.title,
                 price: action.payload.price
             };
+        case types.CHECK_BLACKLIST_REQUESTED:
+            return {
+                ...state,
+                userEmail: action.payload
+            };
         case types.CHECK_BLACKLIST_SUCCEEDED:
+            return {
+                ...state,
+                onBlacklist: action.payload
+            };
         case types.ADD_TO_BLACKLIST_SUCCEEDED:
             return {
                 ...state,

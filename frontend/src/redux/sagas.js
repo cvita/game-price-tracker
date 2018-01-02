@@ -1,5 +1,6 @@
 import { all, call, put, takeLatest } from 'redux-saga/effects';
 import mongo from '../client/mongo';
+import db from '../client/db';
 import sony from '../client/sony';
 import youTube from '../client/youTube';
 import { showLoading, hideLoading } from 'react-redux-loading-bar';
@@ -84,8 +85,8 @@ export function* deletePriceAlert(action) {
 
 export function* checkBlacklist(action) {
     try {
-        const blacklistInfo = yield call(mongo.checkBlacklist, action.payload);
-        yield put({ type: types.CHECK_BLACKLIST_SUCCEEDED, payload: blacklistInfo });
+        const onBlacklist = yield call(db.checkBlacklist, action.payload);
+        yield put({ type: types.CHECK_BLACKLIST_SUCCEEDED, payload: onBlacklist });
     } catch (e) {
         yield put({ type: types.CHECK_BLACKLIST_FAILED, message: e.message });
     }
