@@ -17,8 +17,8 @@ describe('userInfo reducer', () => {
       price: 19.99
     };
     const expectedResult = {
-      gameTitle: 'Last Of Us',
-      game_id: 'UP9000-NPUA80960_00-THELASTOFUSDIG01',
+      title: 'Last Of Us',
+      gameId: 'UP9000-NPUA80960_00-THELASTOFUSDIG01',
       price: 19.99
     };
     expect(
@@ -27,9 +27,9 @@ describe('userInfo reducer', () => {
   });
 
   it('should handle CHECK_BLACKLIST_REQUESTED', () => {
-    const expected = { userEmail: 'anyone@gmail.com' };
+    const expected = { email: 'anyone@gmail.com' };
     expect(
-      reducer({}, { type: types.CHECK_BLACKLIST_REQUESTED, payload: expected.userEmail })
+      reducer({}, { type: types.CHECK_BLACKLIST_REQUESTED, payload: expected.email })
     ).toEqual(expected);
   });
 
@@ -41,7 +41,7 @@ describe('userInfo reducer', () => {
   });
 
   it('should handle ADD_TO_BLACKLIST_SUCCEEDED', () => {
-    const stubData = { onBlacklist: false, userEmail: 'anyone@gmail.com' };
+    const stubData = { onBlacklist: false, email: 'anyone@gmail.com' };
     expect(
       reducer([], { type: types.ADD_TO_BLACKLIST_SUCCEEDED, payload: stubData })
     ).toEqual(stubData);

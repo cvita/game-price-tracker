@@ -6,12 +6,13 @@ const initialState = {
   activeGame: null,
   priceAlertCreated: false,
   userInfo: {
-    userEmail: null,
+    email: null,
     onBlacklist: null,
-    game_id: null,
+    gameId: null,
+    title: null,
     price: null,
-    dateAdded: null,
-    expiration: null
+    created: null,
+    expires: null
   },
   errors: []
 };
