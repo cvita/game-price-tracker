@@ -1,8 +1,8 @@
 import express from 'express';
 import bodyParser from 'body-parser';
-import db from './db/database';
 import sony from './routes/sony';
 import users from './routes/users';
+import priceAlerts from './routes/priceAlerts';
 const app = express();
 
 
@@ -29,6 +29,7 @@ app.use('/*', (req, res, next) => {
 // Routes
 app.use('/sony', sony);
 app.use('/users', users);
+app.use('/priceAlerts', priceAlerts);
 
 
 module.exports = app;
