@@ -1,4 +1,3 @@
-// Isolated method for check user's blacklist status
 const checkBlacklist = async email => {
   const init = { method: 'GET' };
   try {
@@ -9,7 +8,22 @@ const checkBlacklist = async email => {
   }
 };
 
+const upsertPriceAlert = async info => {
+  const init = {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(info)
+  };
+  try {
+    const request = await fetch('/priceAlerts', init);
+    return Promise.resolve(await request.json());
+  } catch (e) {
+    return Promise.reject(e);
+  }
+};
+
 
 export default {
-  checkBlacklist
+  checkBlacklist,
+  upsertPriceAlert
 };

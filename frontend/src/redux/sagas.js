@@ -57,8 +57,8 @@ export function* makeActiveGame(action) {
 
 export function* submitPriceAlert(action) {
     try {
-        const priceAlert = yield call(mongo.createPriceAlert, action.payload);
-        yield put({ type: types.SUBMIT_PRICE_ALERT_SUCCEEDED, payload: priceAlert });
+        const priceAlertSaved = yield call(db.upsertPriceAlert, action.payload);
+        yield put({ type: types.SUBMIT_PRICE_ALERT_SUCCEEDED, payload: priceAlertSaved });
     } catch (e) {
         yield put({ type: types.SUBMIT_PRICE_ALERT_FAILED, message: e.message });
     }

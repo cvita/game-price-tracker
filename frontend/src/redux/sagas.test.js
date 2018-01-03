@@ -115,7 +115,7 @@ describe('saga: submitPriceAlert', () => {
   it('creates a new price alert', () => {
     return expectSaga(sagas.submitPriceAlert, actionCreators.createPriceAlert(stubData))
       .provide([
-        [matchers.call.fn(mongo.createPriceAlert), stubData]
+        [matchers.call.fn(db.upsertPriceAlert), stubData]
       ])
       .put({ type: types.SUBMIT_PRICE_ALERT_SUCCEEDED, payload: stubData })
       .run();
@@ -123,7 +123,7 @@ describe('saga: submitPriceAlert', () => {
 
   it('handles errors', () => {
     return expectSaga(sagas.submitPriceAlert, actionCreators.createPriceAlert(stubData))
-      .provide([[matchers.call.fn(mongo.createPriceAlert), throwError(error)]
+      .provide([[matchers.call.fn(db.upsertPriceAlert), throwError(error)]
       ])
       .put({ type: types.SUBMIT_PRICE_ALERT_FAILED, message: error.message })
       .run();

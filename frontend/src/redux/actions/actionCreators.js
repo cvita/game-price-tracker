@@ -51,9 +51,6 @@ export function resetActiveGame() {
 
 export function createPriceAlert(priceAlertInfo) {
     console.log(`createPriceAlert(${priceAlertInfo})`);
-    const today = new Date(new Date().toDateString()).getTime();
-    priceAlertInfo.dateAdded = today;
-    priceAlertInfo.expiration = today + 10886400000; // 18 weeks
     return {
         type: types.SUBMIT_PRICE_ALERT_REQUESTED,
         payload: priceAlertInfo
