@@ -1,48 +1,40 @@
 const nodemailer = require('nodemailer');
-const { checkIfUserIsOnBlacklist } = require('./routes/Model');
 const { encrypt } = require('./encrypt');
 
 
 function sendEmail(email, subject, message) {
-    checkIfUserIsOnBlacklist(email).then(result => {
-        if (result) {
-            return console.warn(`Email not sent: ${email} is on blacklist.`);
+    const transport = nodemailer.createTransport({
+        service: 'Gmail',
+        auth: {
+            user: 'game.price.tracker@gmail.com',
+            pass: process.env.emailPassword || require('../local-dev-creds').emailPassword
         }
-        const transport = nodemailer.createTransport({
-            service: 'Gmail',
-            auth: {
-                user: 'game.price.tracker@gmail.com',
-                pass: process.env.emailPassword || require('../local-dev-creds').emailPassword
-            }
-        });
-        const mailOptions = {
-            from: 'game.price.tracker@gmail.com',
-            to: email,
-            subject: subject,
-            html: message
-        };
-        transport.sendMail(mailOptions, (err, info) => {
-            if (err) {
-                throw new Error(err.message);
-                return;
-            }
-            console.log(`Message sent to: ${email}`);
-        });
+    });
+    const mailOptions = {
+        from: 'game.price.tracker@gmail.com',
+        to: email,
+        subject: subject,
+        html: message
+    };
+    transport.sendMail(mailOptions, (err, info) => {
+        if (err) {
+            throw new Error(err.message);
+            return;
+        }
+        console.log(`Message sent to: ${email}`);
     });
 }
 
 
 function sendConfirmation(info) {
-    console.log(`sendConfirmation(${info.userEmail})`);
-    const { gameTitle, userEmail, price, expiration } = info;
-    const subject = gameTitle + ' is now being tracked';
+    console.log(info);
+    const { title, email, price, expires } = info;
+    const subject = `${title} is now being tracked`;
     const message = (
-        'Game Price Tracker is now tracking the price of <strong>' + gameTitle + '</strong>. ' +
-        'If it drops below $' + price + ' before ' + new Date(expiration).toDateString() + ', ' +
-        'you will be messaged again at this email address.<br><br>' +
-        'Use ' + generateManagePriceAlertLink(info, 'this link') + ' to manage your price alert, or to unsubscribe completely.'
+        `<p>Game Price Tracker is now tracking the price of <strong>${title}</strong>. If it drops below $${price} before ${new Date(expires).toDateString()}, you will be messaged again at this email address.</p>
+        <p>Use ${generateManagePriceAlertLink(info, 'this link')} to manage your price alert, or to unsubscribe completely.</p>`
     );
-    sendEmail(userEmail, subject, message);
+    sendEmail(email, subject, message);
 }
 
 function sendSalePrice(info, salePrice, url) {
@@ -70,12 +62,11 @@ function sendRemovingPriceAlert(info) {
 }
 
 function generateManagePriceAlertLink(info, linkText) {
-    const { _id, userEmail } = info;
-    const userDetails = encrypt('id:' + _id + 'user:' + userEmail);
-    const managePriceAlertUrl = process.env.NODE_ENV === 'production' ?
-        'https://game-price-tracker.herokuapp.com/manage/' :
-        'http://localhost:3000/manage/';
-    return '<a href=' + managePriceAlertUrl + userDetails + '>' + linkText + '</a>';
+    const { alert_id, email } = info;
+    const url = process.env.NODE_ENV === 'production' ?
+        'https://game-price-tracker.herokuapp.com/manage' :
+        'http://localhost:3000/manage';
+    return (`<a href=${url}/?alert_id=${encrypt(alert_id.toString())}&email=${encrypt(email)}>${linkText}</a>`);
 }
 
 

@@ -1,5 +1,6 @@
 import Router from 'express-promise-router';
 import db from '../db/database';
+import nodemail from '../api/email';
 const router = new Router();
 
 
@@ -29,7 +30,8 @@ router.post('/', async (req, res) => {
       ON CONFLICT (game_id, email)
       DO UPDATE SET
         price = ${price},
-        created = now()`
+        created = now()
+      RETURNING alert_id, expires`
   );
   const createUserQueryText = (
     `INSERT INTO users
@@ -43,6 +45,9 @@ router.post('/', async (req, res) => {
     const results = await Promise.all([createPriceAlert, createUser]);
     const priceAlertSaved = results[0].rowCount === 1;
     res.status(200).send(priceAlertSaved);
+    if (priceAlertSaved) {
+      nodemail.sendConfirmation(Object.assign(results[0].rows[0], req.body));
+    }
   } catch (e) {
     console.error(e);
     res.status(500).send(e.message);
