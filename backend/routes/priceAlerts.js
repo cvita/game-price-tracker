@@ -1,6 +1,6 @@
 import Router from 'express-promise-router';
 import db from '../db/database';
-import nodemail from '../api/email';
+import nodemail from '../support/email';
 import helper from './helper';
 const router = new Router();
 

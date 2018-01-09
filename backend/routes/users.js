@@ -1,6 +1,6 @@
 import Router from 'express-promise-router';
 import db from '../db/database';
-import { decrypt } from '../api/encrypt';
+import { decrypt } from '../support/encrypt';
 import helper from './helper';
 const router = new Router();
 

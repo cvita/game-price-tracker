@@ -1,4 +1,4 @@
-import sonyStore from '../api/querySony';
+import sonyStore from '../support/querySony';
 import Router from 'express-promise-router';
 const router = new Router();
 

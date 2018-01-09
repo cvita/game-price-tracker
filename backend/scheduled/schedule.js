@@ -1,6 +1,6 @@
 import db from '../db/database';
-import sony from '../api/querySony';
-import nodemail from '../api/email';
+import sony from '../support/querySony';
+import nodemail from '../support/email'
 import helper from '../routes/helper';
 
 

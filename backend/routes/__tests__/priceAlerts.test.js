@@ -1,5 +1,5 @@
 import request from 'supertest';
-import { encrypt } from '../../api/encrypt';
+import { encrypt } from '../../support/encrypt';
 import app from '../../app';
 
 
