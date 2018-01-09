@@ -1,4 +1,4 @@
-# Game Price Tracker ![travis-ci](https://travis-ci.org/VitaC123/game-price-tracker.svg?branch=master)
+# Game Price Tracker <a href="https://travis-ci.org/VitaC123/game-price-tracker"><img src="https://travis-ci.org/VitaC123/game-price-tracker.svg?branch=master" alt="travis"/></a>
 
 
 
