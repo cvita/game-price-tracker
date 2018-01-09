@@ -7,22 +7,26 @@ function userInfo(state = initialState.userInfo, action) {
         case types.MAKE_ACTIVE_GAME_SUCCEEDED:
             return {
                 ...state,
-                game_id: action.payload._id,
-                gameTitle: action.payload.title,
+                gameId: action.payload._id,
+                title: action.payload.title,
                 price: action.payload.price
             };
-        case types.CHECK_BLACKLIST_SUCCEEDED:
-        case types.ADD_TO_BLACKLIST_SUCCEEDED:
+        case types.CHECK_BLACKLIST_REQUESTED:
             return {
                 ...state,
-                onBlacklist: action.payload.onBlacklist,
-                userEmail: action.payload.userEmail
+                email: action.payload
             };
-        case types.FETCH_PRICE_ALERT_SUCCEEDED:
-            delete action.payload.userInfo.onBlacklist;
+        case types.CHECK_BLACKLIST_SUCCEEDED:
             return {
                 ...state,
-                ...action.payload.userInfo
+                onBlacklist: action.payload
+            };
+        case types.ADD_TO_BLACKLIST_SUCCEEDED:
+            return { on_blacklist: action.payload };
+        case types.FETCH_PRICE_ALERT_SUCCEEDED:
+            return {
+                ...state,
+                ...action.payload
             };
         case types.RESET_ACTIVE_GAME:
             return initialState.userInfo;

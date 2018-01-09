@@ -27,8 +27,11 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
+    "build-client": "npm run build && npm run gzip-bundles",
     "gzip-bundles": "gzip -r build/static/js & gzip -r build/static/css",
     "test": "react-scripts test --env=jsdom",
+    "test-ci": "CI=true react-scripts test --env=jsdom",
+    "coverage": "react-scripts test --env=jsdom --coverage",
     "eject": "react-scripts eject",
     "acceptance": "/Applications/Google\\ Chrome\\ Canary.app/Contents/MacOS/Google\\ Chrome\\ Canary --remote-debugging-port=9222 --disable-gpu --headless | node acceptanceTest.js",
     "analyze": "source-map-explorer build/static/js/main.*"

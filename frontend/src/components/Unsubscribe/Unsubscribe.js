@@ -8,31 +8,32 @@ import './Unsubscribe.css';
 
 
 function UserPriceAlert(props) {
-    const { userEmail, price, gameTitle, expiration } = props.userInfo;
-    const activeGame = props.activeGame;
-    return (
-        <div>
-            {activeGame &&
-                <div className='manage'>
-                    <p className='lead'>Manage your price alert</p>
-                    <GameOverview  {...activeGame}>
-                        {activeGame.onSale &&
-                            <p>Here's <a href={activeGame.url}>the link</a> to purchase on the Sony PlayStation store</p>}
+    if (props.activeGame) {
+        const { title, url, onSale } = props.activeGame;
+        const { email, price, expires } = props.userInfo;
 
-                        <p>You're all signed up to receive a message at <strong>{userEmail}</strong> if {gameTitle}'s price drops below ${price} before {new Date(expiration).toDateString()}.</p>
-                        <PriceAlertButton handleClick={() => props.createPriceAlert(props.userInfo)} message={'Renew price alert'} color={'success'} />
-                        <PriceAlertButton handleClick={() => props.deletePriceAlert(props.userInfo)} message={'Delete'} />
-                    </GameOverview>
-                </div>}
-        </div>
-    );
+        return (
+            <div className='manage'>
+                <p className='lead'>Manage your price alert</p>
+                <GameOverview  {...props.activeGame}>
+                    {onSale && (
+                        <p>Here's <a href={url}>the link</a> to purchase on the Sony PlayStation store</p>)}
+
+                    <p>You're all signed up to receive a message at <strong>{email}</strong> if {title}'s price drops below ${price} before {new Date(expires).toDateString()}.</p>
+                    <PriceAlertButton handleClick={() => props.createPriceAlert({ title, ...props.userInfo })} message={'Renew price alert'} color={'success'} />
+                    <PriceAlertButton handleClick={() => props.deletePriceAlert(props.userInfo.game_id, email)} message={'Delete'} />
+                </GameOverview>
+            </div>
+        );
+    }
+    return null;
 }
 
 function Blacklist(props) {
-    const { userEmail, onBlacklist } = props.userInfo;
+    const { email, on_blacklist } = props.userInfo;
     return (
         <div>
-            {!onBlacklist && userEmail &&
+            {!on_blacklist && email &&
                 <div>
                     <p className='lead'>Danger zone</p>
                     <Alert color='danger'>
@@ -41,7 +42,7 @@ function Blacklist(props) {
                     </Alert>
                 </div>}
 
-            {onBlacklist &&
+            {on_blacklist &&
                 <Alert color='danger'>
                     You are unsubscribed and will never receive another email from Game Price Tracker.
                 </Alert>}
@@ -76,11 +77,11 @@ class Unsubscribe extends Component {
         this.confirmAddToBlacklist = this.confirmAddToBlacklist.bind(this);
     }
     componentDidMount() {
-        const url = window.location.toString();
-        const manageId = url.slice(url.indexOf('manage/') + 7) || null;
-        if (manageId && manageId.indexOf('@') === -1) {
-            this.props.fetchPriceAlert(manageId);
-            this.props.checkBlacklist(manageId);
+        const params = new URLSearchParams(window.location.search);
+        const alertId = params.get('alert_id');
+        const email = params.get('email');
+        if (alertId && email) {
+            this.props.fetchPriceAlert(alertId, email);
         } else {
             console.error('Redirecting to home page: manageId must be an encrypted string');
             store.dispatch(push('/'));
@@ -99,12 +100,11 @@ class Unsubscribe extends Component {
         this.setState({ backdrop: value });
     }
     confirmAddToBlacklist() {
-        this.props.addToBlacklist(this.props.userInfo.userEmail);
-        this.props.deletePriceAlert(this.props.userInfo);
+        this.props.addToBlacklist(this.props.userInfo.email);
+        this.props.resetActiveGame();
         this.toggle();
     }
     render() {
-
         return (
             <div>
                 <UserPriceAlert {...this.props } />

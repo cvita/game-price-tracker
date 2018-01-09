@@ -51,28 +51,23 @@ export function resetActiveGame() {
 
 export function createPriceAlert(priceAlertInfo) {
     console.log(`createPriceAlert(${priceAlertInfo})`);
-    const today = new Date(new Date().toDateString()).getTime();
-    priceAlertInfo.dateAdded = today;
-    priceAlertInfo.expiration = today + 10886400000; // 18 weeks
     return {
         type: types.SUBMIT_PRICE_ALERT_REQUESTED,
         payload: priceAlertInfo
     };
 }
 
-export function fetchPriceAlert(_id) {
-    console.log(`fetchPriceAlert(${_id.slice(0, 10)}...)`);
+export function fetchPriceAlert(alertId, email) {
     return {
         type: types.FETCH_PRICE_ALERT_REQUESTED,
-        payload: _id
+        payload: [alertId, email]
     };
 }
 
-export function deletePriceAlert(userInfo) {
-    console.log(`deletePriceAlert(${userInfo})`);
+export function deletePriceAlert(gameId, email) {
     return {
         type: types.DELETE_PRICE_ALERT_REQUESTED,
-        payload: userInfo
+        payload: [gameId, email]
     };
 }
 
@@ -85,7 +80,6 @@ export function checkBlacklist(userEmail) {
 }
 
 export function addToBlacklist(userEmail) {
-    console.log(`addToBlacklist(${userEmail})`);
     return {
         type: types.ADD_TO_BLACKLIST_REQUESTED,
         payload: userEmail

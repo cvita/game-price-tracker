@@ -1,5 +1,18 @@
 language: node_js
 node_js:
-  - '7.9.0'
-before_install:
-  - 'npm i -g npm@4.2.0'
+  - 'stable'
+script:
+  - npm test
+  - npm run build-server
+  - cd ./frontend
+  - npm install
+  - npm run test-ci
+  - npm run build-client
+  - cd ..
+deploy:
+  provider: heroku
+  skip_cleanup: true
+  api_key: $heroku_api_key
+  app: game-price-tracker
+  run:
+    - restart

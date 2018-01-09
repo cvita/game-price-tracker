@@ -1,6 +1,8 @@
 node_modules
 npm-debug.log
 dist
-local-dev-creds.js
+build
+backend/local-dev-creds.js
 settings.json
 schedule-logs
+.DS_Store

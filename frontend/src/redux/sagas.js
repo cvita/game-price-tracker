@@ -1,5 +1,6 @@
 import { all, call, put, takeLatest } from 'redux-saga/effects';
 import mongo from '../client/mongo';
+import db from '../client/db';
 import sony from '../client/sony';
 import youTube from '../client/youTube';
 import { showLoading, hideLoading } from 'react-redux-loading-bar';
@@ -56,8 +57,8 @@ export function* makeActiveGame(action) {
 
 export function* submitPriceAlert(action) {
     try {
-        const priceAlert = yield call(mongo.createPriceAlert, action.payload);
-        yield put({ type: types.SUBMIT_PRICE_ALERT_SUCCEEDED, payload: priceAlert });
+        const priceAlertSaved = yield call(db.upsertPriceAlert, action.payload);
+        yield put({ type: types.SUBMIT_PRICE_ALERT_SUCCEEDED, payload: priceAlertSaved });
     } catch (e) {
         yield put({ type: types.SUBMIT_PRICE_ALERT_FAILED, message: e.message });
     }
@@ -65,9 +66,13 @@ export function* submitPriceAlert(action) {
 
 export function* fetchPriceAlert(action) {
     try {
-        const userInfo = yield call(mongo.findOnePriceAlert, action.payload);
-        const activeGame = yield call(sony.findGameById, userInfo.game_id);
-        yield put({ type: types.FETCH_PRICE_ALERT_SUCCEEDED, payload: { activeGame, userInfo } });
+        const userInfo = yield call(db.fetchPriceAlert, ...action.payload);
+        yield put({ type: types.FETCH_PRICE_ALERT_SUCCEEDED, payload: userInfo });
+
+        if (userInfo.game_id) {
+            const activeGame = yield call(sony.findGameById, userInfo.game_id);
+            yield put({ type: types.MAKE_ACTIVE_GAME_SUCCEEDED, payload: activeGame });
+        }
     } catch (e) {
         yield put({ type: types.FETCH_PRICE_ALERT_FAILED, message: e.message });
     }
@@ -75,7 +80,7 @@ export function* fetchPriceAlert(action) {
 
 export function* deletePriceAlert(action) {
     try {
-        const priceAlert = yield call(mongo.deletePriceAlert, action.payload);
+        const priceAlert = yield call(db.deletePriceAlert, ...action.payload);
         yield put({ type: types.DELETE_PRICE_ALERT_SUCCEEDED, payload: priceAlert });
     } catch (e) {
         yield put({ type: types.DELETE_PRICE_ALERT_FAILED, message: e.message });
@@ -84,8 +89,8 @@ export function* deletePriceAlert(action) {
 
 export function* checkBlacklist(action) {
     try {
-        const blacklistInfo = yield call(mongo.checkBlacklist, action.payload);
-        yield put({ type: types.CHECK_BLACKLIST_SUCCEEDED, payload: blacklistInfo });
+        const onBlacklist = yield call(db.checkBlacklist, action.payload);
+        yield put({ type: types.CHECK_BLACKLIST_SUCCEEDED, payload: onBlacklist });
     } catch (e) {
         yield put({ type: types.CHECK_BLACKLIST_FAILED, message: e.message });
     }
@@ -93,7 +98,7 @@ export function* checkBlacklist(action) {
 
 export function* addToBlacklist(action) {
     try {
-        const blacklistInfo = yield call(mongo.addToBlacklist, action.payload);
+        const blacklistInfo = yield call(db.addToBlacklist, action.payload);
         yield put({ type: types.ADD_TO_BLACKLIST_SUCCEEDED, payload: blacklistInfo });
     } catch (e) {
         yield put({ type: types.ADD_TO_BLACKLIST_FAILED, message: e.message });

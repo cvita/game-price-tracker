@@ -11,7 +11,7 @@ describe('priceAlertCreated reducer', () => {
   });
 
   it('should handle SUBMIT_PRICE_ALERT_SUCCEEDED', () => {
-    const stubData = { ok: 1 };
+    const stubData = true;
     expect(
       reducer([], { type: types.SUBMIT_PRICE_ALERT_SUCCEEDED, payload: stubData })
     ).toEqual(true);

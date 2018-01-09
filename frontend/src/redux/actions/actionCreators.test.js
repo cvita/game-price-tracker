@@ -67,21 +67,23 @@ describe('action creators', () => {
   });
 
   it('should create an action to fetch an existing price alert', () => {
-    const _id = '5970da5dd6070cc46c9e6b90';
+    const alertId = 103;
+    const email = 'test@email.com';
     const expectedAction = {
       type: types.FETCH_PRICE_ALERT_REQUESTED,
-      payload: _id
+      payload: [alertId, email]
     };
-    expect(actions.fetchPriceAlert(_id)).toEqual(expectedAction);
+    expect(actions.fetchPriceAlert(alertId, email)).toEqual(expectedAction);
   });
 
   it('should create an action to delete an existing price alert', () => {
-    const userInfo = { mockInfo: 'info' };
+    const gameId = 'UP0082-CUSA05532_00-FFXIIGAMEPS400NA';
+    const email = 'test@email.com';
     const expectedAction = {
       type: types.DELETE_PRICE_ALERT_REQUESTED,
-      payload: userInfo
+      payload: [gameId, email]
     };
-    expect(actions.deletePriceAlert(userInfo)).toEqual(expectedAction);
+    expect(actions.deletePriceAlert(gameId, email)).toEqual(expectedAction);
   });
 
   it('should create an action to check the email blacklist for a user', () => {

@@ -8,6 +8,7 @@ import * as types from './constants/actionTypes';
 import * as actionCreators from './actions/actionCreators';
 import sony from '../client/sony';
 import mongo from '../client/mongo';
+import db from '../client/db';
 import youTube from '../client/youTube';
 
 
@@ -114,7 +115,7 @@ describe('saga: submitPriceAlert', () => {
   it('creates a new price alert', () => {
     return expectSaga(sagas.submitPriceAlert, actionCreators.createPriceAlert(stubData))
       .provide([
-        [matchers.call.fn(mongo.createPriceAlert), stubData]
+        [matchers.call.fn(db.upsertPriceAlert), stubData]
       ])
       .put({ type: types.SUBMIT_PRICE_ALERT_SUCCEEDED, payload: stubData })
       .run();
@@ -122,7 +123,7 @@ describe('saga: submitPriceAlert', () => {
 
   it('handles errors', () => {
     return expectSaga(sagas.submitPriceAlert, actionCreators.createPriceAlert(stubData))
-      .provide([[matchers.call.fn(mongo.createPriceAlert), throwError(error)]
+      .provide([[matchers.call.fn(db.upsertPriceAlert), throwError(error)]
       ])
       .put({ type: types.SUBMIT_PRICE_ALERT_FAILED, message: error.message })
       .run();
@@ -131,19 +132,22 @@ describe('saga: submitPriceAlert', () => {
 
 describe('saga: fetchPriceAlert', () => {
   it('fetches an existing price alert', () => {
-    return expectSaga(sagas.fetchPriceAlert, actionCreators.fetchPriceAlert(stubData))
+    const alertId = 123;
+    const email = 'test@email.com';
+    return expectSaga(sagas.fetchPriceAlert, actionCreators.fetchPriceAlert(alertId, email))
       .provide([
-        [matchers.call.fn(mongo.findOnePriceAlert), stubData],
+        [matchers.call.fn(db.fetchPriceAlert), { game_id: '123' }],
         [matchers.call.fn(sony.findGameById), stubData]
       ])
-      .put({ type: types.FETCH_PRICE_ALERT_SUCCEEDED, payload: { activeGame: stubData, userInfo: stubData } })
+      .put({ type: types.FETCH_PRICE_ALERT_SUCCEEDED, payload: { game_id: '123' } })
+      .put({ type: types.MAKE_ACTIVE_GAME_SUCCEEDED, payload: stubData })
       .run();
   });
 
   it('handles errors', () => {
     return expectSaga(sagas.fetchPriceAlert, actionCreators.fetchPriceAlert(stubData))
       .provide([
-        [matchers.call.fn(mongo.findOnePriceAlert), throwError(error)]
+        [matchers.call.fn(db.fetchPriceAlert), throwError(error)]
       ])
       .put({ type: types.FETCH_PRICE_ALERT_FAILED, message: error.message })
       .run();
@@ -154,7 +158,7 @@ describe('saga: deletePriceAlert', () => {
   it('deletes an existing price alert', () => {
     return expectSaga(sagas.deletePriceAlert, actionCreators.deletePriceAlert(stubData))
       .provide([
-        [matchers.call.fn(mongo.deletePriceAlert), stubData]
+        [matchers.call.fn(db.deletePriceAlert), stubData]
       ])
       .put({ type: types.DELETE_PRICE_ALERT_SUCCEEDED, payload: stubData })
       .run();
@@ -163,7 +167,7 @@ describe('saga: deletePriceAlert', () => {
   it('handles errors', () => {
     return expectSaga(sagas.deletePriceAlert, actionCreators.deletePriceAlert(stubData))
       .provide([
-        [matchers.call.fn(mongo.deletePriceAlert), throwError(error)]
+        [matchers.call.fn(db.deletePriceAlert), throwError(error)]
       ])
       .put({ type: types.DELETE_PRICE_ALERT_FAILED, message: error.message })
       .run();
@@ -174,7 +178,7 @@ describe('saga: checkBlacklist', () => {
   it('checks blacklist for user email', () => {
     return expectSaga(sagas.checkBlacklist, actionCreators.checkBlacklist(stubData))
       .provide([
-        [matchers.call.fn(mongo.checkBlacklist), stubData]
+        [matchers.call.fn(db.checkBlacklist), stubData]
       ])
       .put({ type: types.CHECK_BLACKLIST_SUCCEEDED, payload: stubData })
       .run();
@@ -183,7 +187,7 @@ describe('saga: checkBlacklist', () => {
   it('handles errors', () => {
     return expectSaga(sagas.checkBlacklist, actionCreators.checkBlacklist(stubData))
       .provide([
-        [matchers.call.fn(mongo.checkBlacklist), throwError(error)]
+        [matchers.call.fn(db.checkBlacklist), throwError(error)]
       ])
       .put({ type: types.CHECK_BLACKLIST_FAILED, message: error.message })
       .run();
@@ -194,7 +198,7 @@ describe('saga: addToBlacklist', () => {
   it('adds user email to blacklist', () => {
     return expectSaga(sagas.addToBlacklist, actionCreators.addToBlacklist(stubData))
       .provide([
-        [matchers.call.fn(mongo.addToBlacklist), stubData]
+        [matchers.call.fn(db.addToBlacklist), stubData]
       ])
       .put({ type: types.ADD_TO_BLACKLIST_SUCCEEDED, payload: stubData })
       .run();
@@ -203,7 +207,7 @@ describe('saga: addToBlacklist', () => {
   it('handles errors', () => {
     return expectSaga(sagas.addToBlacklist, actionCreators.addToBlacklist(stubData))
       .provide([
-        [matchers.call.fn(mongo.addToBlacklist), throwError(error)]
+        [matchers.call.fn(db.addToBlacklist), throwError(error)]
       ])
       .put({ type: types.ADD_TO_BLACKLIST_FAILED, message: error.message })
       .run();

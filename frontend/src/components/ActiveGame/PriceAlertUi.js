@@ -46,7 +46,7 @@ class EmailForm extends Component {
               color='primary'
             >
               Submit
-                      </Button>
+            </Button>
           </InputGroupButton>
         </InputGroup>
       </form>
@@ -75,7 +75,7 @@ class ConfirmAndResetButtons extends Component {
           color='success'
         >
           Sounds good!
-              </Button>
+        </Button>
 
         {!submitted && (
           <Link to='/'>
@@ -85,7 +85,7 @@ class ConfirmAndResetButtons extends Component {
               outline
             >
               Nevermind
-                      </Button>
+            </Button>
           </Link>)}
       </div>
     );
@@ -95,10 +95,10 @@ class ConfirmAndResetButtons extends Component {
 const PriceAlertUi = props => {
   const { userInfo, priceAlertCreated, createPriceAlert } = props;
   const { price } = props.activeGame;
-  const { userEmail } = props.userInfo;
+  const { email } = props.userInfo;
   const expiration = new Date(new Date().getTime() + 10886400000).toDateString().slice(3);
 
-  const stageSubmit = !userEmail;
+  const stageSubmit = !email;
   const stageConfirm = !userInfo.onBlacklist && !priceAlertCreated;
   const stageFailure = userInfo.onBlacklist;
   const stageSuccess = priceAlertCreated;
@@ -114,7 +114,7 @@ const PriceAlertUi = props => {
   if (stageConfirm) {
     return (
       <div>
-        <p>You will receive a message at <strong>{userEmail}</strong> if the price drops below ${price} before {expiration}.</p>
+        <p>You will receive a message at <strong>{email}</strong> if the price drops below ${price} before {expiration}.</p>
         <ConfirmAndResetButtons handleClick={() => createPriceAlert(userInfo)} />
       </div>
     );
