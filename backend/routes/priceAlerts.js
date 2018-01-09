@@ -1,6 +1,7 @@
 import Router from 'express-promise-router';
 import db from '../db/database';
 import nodemail from '../api/email';
+import helper from './helper';
 const router = new Router();
 
 
@@ -16,12 +17,12 @@ router.post('/', async (req, res, next) => {
     }
     next();
   } catch (e) {
-    res.status(500).send(e.message);
+    helper.handleError(e, res);
   }
 });
 
 
-// Add/update price alert. Creates user if it doesn't already exist
+// Upsert price alert. Creates user if it doesn't already exist
 router.post('/', async (req, res) => {
   const { gameId, email, price } = req.body;
   const createPriceAlertQueryText = (
@@ -40,17 +41,18 @@ router.post('/', async (req, res) => {
       DO NOTHING`
   );
   try {
-    const createPriceAlert = promiseWrapper(db.query(createPriceAlertQueryText));
-    const createUser = promiseWrapper(db.query(createUserQueryText));
+    const createPriceAlert = helper.promiseWrapper(db.query(createPriceAlertQueryText));
+    const createUser = helper.promiseWrapper(db.query(createUserQueryText));
     const results = await Promise.all([createPriceAlert, createUser]);
     const priceAlertSaved = results[0].rowCount === 1;
-    res.status(200).send(priceAlertSaved);
     if (priceAlertSaved) {
+      res.status(200).send({ priceAlertSaved, alert_id: results[0].rows[0].alert_id });
       nodemail.sendConfirmation(Object.assign(results[0].rows[0], req.body));
+    } else {
+      res.status(200).send({ priceAlertSaved });
     }
   } catch (e) {
-    console.error(e);
-    res.status(500).send(e.message);
+    helper.handleError(e, res);
   }
 });
 
@@ -63,17 +65,9 @@ router.delete('/:game_id/:email', async (req, res) => {
     const priceAlertDeleted = result.rowCount === 1;
     res.status(200).send(priceAlertDeleted);
   } catch (e) {
-    console.error(e);
-    res.status(500).send(e.message);
+    helper.handleError(e, res);
   }
 });
-
-// Helper functions.
-const promiseWrapper = myFunc => (
-  new Promise((resolve, reject) => myFunc
-    .then(res => resolve(res)))
-    .catch(e => reject(e))
-);
 
 
 module.exports = router;
