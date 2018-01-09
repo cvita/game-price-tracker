@@ -41,23 +41,20 @@ describe('userInfo reducer', () => {
   });
 
   it('should handle ADD_TO_BLACKLIST_SUCCEEDED', () => {
-    const stubData = { onBlacklist: false, email: 'anyone@gmail.com' };
+    const stubData = { on_blacklist: false };
     expect(
-      reducer([], { type: types.ADD_TO_BLACKLIST_SUCCEEDED, payload: stubData })
+      reducer([], { type: types.ADD_TO_BLACKLIST_SUCCEEDED, payload: stubData.on_blacklist })
     ).toEqual(stubData);
   });
 
   it('should handle FETCH_PRICE_ALERT_SUCCEEDED', () => {
     const stubData = {
-      userInfo: {
-        onBlacklist: false,
-        userEmail: 'anyone@gmail.com'
-      }
+      onBlacklist: false,
+      userEmail: 'anyone@gmail.com'
     };
-    const expectedResult = { userEmail: 'anyone@gmail.com' };
     expect(
       reducer([], { type: types.FETCH_PRICE_ALERT_SUCCEEDED, payload: stubData })
-    ).toEqual(expectedResult);
+    ).toEqual(stubData);
   });
 
   it('should handle RESET_ACTIVE_GAME', () => {

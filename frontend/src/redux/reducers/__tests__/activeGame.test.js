@@ -26,14 +26,6 @@ describe('activeGame reducer', () => {
     ).toEqual(expectedResult);
   });
 
-  it('should handle FETCH_PRICE_ALERT_SUCCEEDED', () => {
-    const stubData = { activeGame: { title: 'Last Of Us' } };
-    const expectedResult = { title: 'Last Of Us' };
-    expect(
-      reducer({}, { type: types.FETCH_PRICE_ALERT_SUCCEEDED, payload: stubData })
-    ).toEqual(expectedResult);
-  });
-
   it('should handle RESET_ACTIVE_GAME', () => {
     expect(
       reducer({}, { type: types.RESET_ACTIVE_GAME, payload: null })

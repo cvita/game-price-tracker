@@ -8,8 +8,6 @@ function activeGame(state = initialState.activeGame, action) {
       return action.payload;
     case types.SEARCH_VIDEO_SUCCEEDED:
       return { ...state, videos: action.payload };
-    case types.FETCH_PRICE_ALERT_SUCCEEDED:
-      return action.payload.activeGame;
     case types.RESET_ACTIVE_GAME:
     case types.DELETE_PRICE_ALERT_SUCCEEDED:
       return initialState.activeGame;

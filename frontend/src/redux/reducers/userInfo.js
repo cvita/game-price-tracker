@@ -22,16 +22,11 @@ function userInfo(state = initialState.userInfo, action) {
                 onBlacklist: action.payload
             };
         case types.ADD_TO_BLACKLIST_SUCCEEDED:
-            return {
-                ...state,
-                onBlacklist: action.payload.onBlacklist,
-                email: action.payload.email
-            };
+            return { on_blacklist: action.payload };
         case types.FETCH_PRICE_ALERT_SUCCEEDED:
-            delete action.payload.userInfo.onBlacklist;
             return {
                 ...state,
-                ...action.payload.userInfo
+                ...action.payload
             };
         case types.RESET_ACTIVE_GAME:
             return initialState.userInfo;
