@@ -13,6 +13,7 @@
   "scripts": {
     "start": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
     "dev:server": "nodemon --exec npm run babel-node -- ./backend/server.js",
+    "dev:schedule": "npm run babel-node -- ./backend/scheduled/schedule.js",
     "dev:client": "cd frontend && npm start",
     "babel-node": "babel-node --presets env,stage-2",
     "server": "node ./build/server.js",
