@@ -1,5 +1,6 @@
 import express from 'express';
 import bodyParser from 'body-parser';
+import 'babel-polyfill'; // https://stackoverflow.com/questions/33527653/babel-6-regeneratorruntime-is-not-defined
 import sony from './routes/sony';
 import users from './routes/users';
 import priceAlerts from './routes/priceAlerts';

@@ -2,5 +2,10 @@
   "presets": [
     "flow",
     "env"
+  ],
+  "plugins": [
+    "syntax-async-functions",
+    "transform-regenerator",
+    "babel-polyfill"
   ]
 }
