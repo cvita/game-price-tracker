@@ -5,15 +5,7 @@ const initialState = {
   searchResults: [],
   activeGame: null,
   priceAlertCreated: false,
-  userInfo: {
-    email: null,
-    onBlacklist: null,
-    gameId: null,
-    title: null,
-    price: null,
-    created: null,
-    expires: null
-  },
+  userInfo: {},
   errors: []
 };
 
