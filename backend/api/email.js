@@ -37,28 +37,31 @@ function sendConfirmation(info) {
     sendEmail(email, subject, message);
 }
 
-function sendSalePrice(info, salePrice, url) {
-    console.log(`sendSalePrice(${info.userEmail})`);
-    const { gameTitle, userEmail } = info;
-    const subject = gameTitle + ' is on sale';
+function sendSalePrice(priceAlert, info) {
+    console.log(`sendSalePrice(${priceAlert.email})`);
+    const { email } = priceAlert;
+    const { title, game_id, price_general } = info;
+    const url = `https://store.playstation.com/#!/en-us/games/cid=${game_id}`;
+    const subject = `${title} is on sale`;
     const message = (
-        gameTitle + ' is currently on sale for $' + salePrice + ' on the Sony PlayStation store. ' +
-        'Check it out <a href=' + url + '>here</a>' +
-        '<br><br>' +
-        'No more? ' + generateManagePriceAlertLink(info, 'unsubscribe')
+        `<p>${title} is currently on sale for $${price_general} on the Sony PlayStation store. Check it out <a href=${url}>here</a></p>
+        <p>No more? ${generateManagePriceAlertLink(Object.assign(info, priceAlert), 'unsubscribe')}</p>`
     );
-    sendEmail(userEmail, subject, message);
+    sendEmail(email, subject, message);
 }
 
 function sendRemovingPriceAlert(info) {
-    console.log(`sendRemovingPriceAlert(${info.userEmail})`);
-    const { gameTitle, userEmail } = info;
-    const subject = 'Removing Game Price Tracker alert for ' + gameTitle;
+    console.log(`sendRemovingPriceAlert(${info.email})`);
+    const { game_id, email } = info;
+    const url = process.env.NODE_ENV === 'production' ?
+        `https://game-price-tracker.herokuapp.com/games/${game_id}` :
+        `http://localhost:3000/games/${game_id}`;
+    const subject = `Removing Game Price Tracker alert for game id: ${game_id}`;
     const message = (
-        gameTitle + ' has not gone on sale for 18 weeks. We are removing this price alert. ' +
-        'Feel free to visit Game Price Tracker to sign up for another 18 week period.'
+        `<p><a href=${url}>You\'re selected game</a> has not gone on sale for 18 weeks. We are removing this price alert.</p>
+        <p>Feel free to visit Game Price Tracker to sign up again.</p>`
     );
-    sendEmail(userEmail, subject, message);
+    sendEmail(email, subject, message);
 }
 
 function generateManagePriceAlertLink(info, linkText) {
