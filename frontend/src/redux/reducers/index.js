@@ -3,7 +3,6 @@ import { routerReducer } from 'react-router-redux';
 
 
 // Reducers
-import allGames from './allGames';
 import activeGame from './activeGame';
 import popularGames from './popularGames';
 import autoSuggestions from './autoSuggestions';
@@ -15,7 +14,6 @@ import { loadingBarReducer } from 'react-redux-loading-bar';
 
 
 const rootReducer = combineReducers({
-    allGames,
     popularGames,
     autoSuggestions,
     searchResults,

@@ -1,5 +1,4 @@
 const initialState = {
-  allGames: [],
   popularGames: [],
   autoSuggestions: [],
   searchResults: [],

@@ -1,14 +1,6 @@
 import * as types from '../constants/actionTypes'
 
 
-export function fetchAllGamesInDb(maxResults) {
-    console.log(`fetchAllGamesInDb(${maxResults})`);
-    return {
-        type: types.FETCH_ALL_GAMES_IN_DB_REQUESTED,
-        payload: maxResults
-    };
-}
-
 export function findPopularGames(maxResults) {
     console.log(`findPopularGames(${maxResults})`);
     return {

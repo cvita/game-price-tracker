@@ -1,20 +1,10 @@
 import { all, call, put, takeLatest } from 'redux-saga/effects';
-import mongo from '../client/mongo';
 import db from '../client/db';
 import sony from '../client/sony';
 import youTube from '../client/youTube';
 import { showLoading, hideLoading } from 'react-redux-loading-bar';
 import * as types from './constants/actionTypes'
 
-
-export function* fetchAllGamesInDb(action) {
-    try {
-        const allGames = yield call(mongo.findAllGames, action.payload);
-        yield put({ type: types.FETCH_ALL_GAMES_IN_DB_SUCCEEDED, payload: allGames });
-    } catch (e) {
-        yield put({ type: types.FETCH_ALL_GAMES_IN_DB_FAILED, message: e.message });
-    }
-}
 
 export function* findPopularGames(action) {
     try {
@@ -118,7 +108,6 @@ export function* searchVideo(action) {
 
 function* gamePriceTrackerSagas() {
     yield all([
-        takeLatest(types.FETCH_ALL_GAMES_IN_DB_REQUESTED, fetchAllGamesInDb),
         takeLatest(types.FIND_POPULAR_GAMES_REQUESTED, findPopularGames),
         takeLatest(types.GENERATE_AUTO_SUGGESTIONS_REQUESTED, generateAutoSuggestions),
         takeLatest(types.SEARCH_BY_TITLE_REQUESTED, searchTitle),
