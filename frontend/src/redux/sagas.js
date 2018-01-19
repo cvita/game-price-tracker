@@ -97,7 +97,6 @@ export function* addToBlacklist(action) {
 
 export function* searchVideo(action) {
     try {
-        console.log('SAGA: searchVideo() called');
         const videoId = yield call(youTube.searchVideo, action.payload);
         yield put({ type: types.SEARCH_VIDEO_SUCCEEDED, payload: videoId });
     } catch (e) {
