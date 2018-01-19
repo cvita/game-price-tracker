@@ -2,12 +2,10 @@ import { call } from 'redux-saga/effects';
 import { expectSaga } from 'redux-saga-test-plan';
 import * as matchers from 'redux-saga-test-plan/matchers';
 import { throwError } from 'redux-saga-test-plan/providers';
-
 import * as sagas from './sagas';
 import * as types from './constants/actionTypes';
 import * as actionCreators from './actions/actionCreators';
 import sony from '../client/sony';
-import mongo from '../client/mongo';
 import db from '../client/db';
 import youTube from '../client/youTube';
 
@@ -15,25 +13,6 @@ import youTube from '../client/youTube';
 const stubData = [{ placeholderData: 'some data' }];
 const error = new Error('An error message');
 
-
-describe('saga: fetchAllGamesInDb', () => {
-  it('fetches all games in db', () => {
-    return expectSaga(sagas.fetchAllGamesInDb, actionCreators.fetchAllGamesInDb())
-      .provide([
-        [matchers.call.fn(mongo.findAllGames), stubData]
-      ])
-      .put({ type: types.FETCH_ALL_GAMES_IN_DB_SUCCEEDED, payload: stubData })
-      .run();
-  });
-
-  it('handles errors', () => {
-    return expectSaga(sagas.fetchAllGamesInDb, actionCreators.fetchAllGamesInDb())
-      .provide([[matchers.call.fn(mongo.findAllGames), throwError(error)]
-      ])
-      .put({ type: types.FETCH_ALL_GAMES_IN_DB_FAILED, message: error.message })
-      .run();
-  });
-});
 
 describe('saga: findPopularGames', () => {
   it('finds new games from sony', () => {

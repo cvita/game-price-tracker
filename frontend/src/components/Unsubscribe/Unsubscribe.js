@@ -1,19 +1,16 @@
 import React, { Component } from 'react';
 import { push } from 'react-router-redux';
 import store from '../../redux/store';
-
 import GameOverview from '../ActiveGame/GameOverview';
 import { Alert, Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
-import './Unsubscribe.css';
 
 
-function UserPriceAlert(props) {
+const UserPriceAlert = props => {
     if (props.activeGame) {
         const { title, url, onSale } = props.activeGame;
         const { email, price, expires } = props.userInfo;
-
         return (
-            <div className='manage'>
+            <div style={{ marginBottom: '5%' }}>
                 <p className='lead'>Manage your price alert</p>
                 <GameOverview  {...props.activeGame}>
                     {onSale && (
@@ -29,52 +26,51 @@ function UserPriceAlert(props) {
     return null;
 }
 
-function Blacklist(props) {
+const Blacklist = props => {
     const { email, on_blacklist } = props.userInfo;
-    return (
-        <div>
-            {!on_blacklist && email &&
-                <div>
-                    <p className='lead'>Danger zone</p>
-                    <Alert color='danger'>
-                        <PriceAlertButton handleClick={props.handleClick} message={'No more'} />
-                        Never receive another email from Game Price Tracker.
-                    </Alert>
-                </div>}
-
-            {on_blacklist &&
+    if (on_blacklist) {
+        return (
+            <Alert color='danger'>
+                You are unsubscribed and will never receive another email from Game Price Tracker.
+            </Alert>
+        );
+    }
+    if (!on_blacklist && email) {
+        return (
+            <div>
+                <p className='lead'>Danger zone</p>
                 <Alert color='danger'>
-                    You are unsubscribed and will never receive another email from Game Price Tracker.
-                </Alert>}
-        </div>
-    );
+                    <PriceAlertButton handleClick={props.handleClick} message={'No more'} />
+                    Never receive another email from Game Price Tracker.
+                </Alert>
+            </div>
+        );
+    }
+    return null;
 }
 
-function PriceAlertButton(props) {
-    const { message, color, handleClick } = props;
-    return (
-        <Button
-            className='gamePriceTrackerButton'
-            onClick={handleClick}
-            color={color || 'danger'}
-            outline={!color}
-        >
-            {message}
-        </Button>
-    );
-}
+const PriceAlertButton = props => (
+    <Button
+        className='gamePriceTrackerButton'
+        onClick={props.handleClick}
+        color={props.color || 'danger'}
+        outline={!props.color}
+    >
+        {props.message}
+    </Button>
+);
 
 
 class Unsubscribe extends Component {
     constructor(props) {
         super(props);
+        this.toggle = this.toggle.bind(this);
+        this.changeBackdrop = this.changeBackdrop.bind(this);
+        this.confirmAddToBlacklist = this.confirmAddToBlacklist.bind(this);
         this.state = {
             modal: false,
             backdrop: true
         };
-        this.toggle = this.toggle.bind(this);
-        this.changeBackdrop = this.changeBackdrop.bind(this);
-        this.confirmAddToBlacklist = this.confirmAddToBlacklist.bind(this);
     }
     componentDidMount() {
         const params = new URLSearchParams(window.location.search);
@@ -88,9 +84,7 @@ class Unsubscribe extends Component {
         }
     }
     toggle() {
-        this.setState({
-            modal: !this.state.modal
-        });
+        this.setState({ modal: !this.state.modal });
     }
     changeBackdrop(e) {
         let value = e.target.value;
@@ -109,13 +103,11 @@ class Unsubscribe extends Component {
             <div>
                 <UserPriceAlert {...this.props } />
 
-                <div className='unsubscribe'>
+                <div style={{ marginBottom: '10%' }}>
                     <Blacklist {...this.props} handleClick={this.toggle} />
 
                     <Modal className={this.props.className} isOpen={this.state.modal} toggle={this.toggle}>
-                        <ModalHeader toggle={this.toggle}>
-                            Permanently unsubscribe?
-                        </ModalHeader>
+                        <ModalHeader toggle={this.toggle}>Permanently unsubscribe?</ModalHeader>
                         <ModalBody>
                             By clicking 'confirm' you will add yourself to our 'Do not send list' and will <strong>delete</strong> any current price alerts.
                         </ModalBody>
@@ -125,7 +117,6 @@ class Unsubscribe extends Component {
                         </ModalFooter>
                     </Modal>
                 </div>
-
             </div>
         );
     }
