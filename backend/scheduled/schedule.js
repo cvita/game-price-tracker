@@ -18,15 +18,20 @@ const handleExpiredAlerts = async () => {
 const handleCurrentAlerts = async () => {
   try {
     const request = await db.query('SELECT * FROM price_alerts WHERE expires > now()');
+    const searched = {};
     const processes = request.rows.map(priceAlert => (
       new Promise(resolve => {
-        sony.fetchGame(priceAlert.game_id).then(currentInfo => {
+        (async () => {
+          if (!searched.hasOwnProperty(priceAlert.game_id)) {
+            searched[priceAlert.game_id] = await sony.fetchGame(priceAlert.game_id);
+          }
+          const currentInfo = searched[priceAlert.game_id];
           const onSale = currentInfo.price_general < priceAlert.price;
           if (onSale) {
             nodemail.sendSalePrice(priceAlert, currentInfo);
           }
           resolve({ onSale: onSale, title: currentInfo.title });
-        });
+        })();
       }))
     );
     return await Promise.all(processes);
