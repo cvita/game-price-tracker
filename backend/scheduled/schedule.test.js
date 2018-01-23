@@ -22,14 +22,18 @@ afterAll(async (done) => {
 })
 
 describe('schedule.js', () => {
-  it('should pass', async () => {
+  it('should handle sample current price alerts', async () => {
     const status = await schedule.updateInfoAndInformUsers();
     expect(status).toBeInstanceOf(Object);
     expect(status.expiredAlerts.length).toEqual(0);
     status.currentGames.forEach(game => {
       if (game.title === 'Call of Duty®: WWII') {
         expect(game.onSale).toBe(true);
-      } else {
+      }
+      if (game.title === 'Grand Theft Auto V') {
+        expect(game.onSale).toBe(false);
+      }
+      if (game.title === 'STAR WARS™ Battlefront™ II: Elite Trooper Deluxe Edition') {
         expect(game.onSale).toBe(false);
       }
     });
